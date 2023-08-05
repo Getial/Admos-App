@@ -9,9 +9,9 @@ const IsClientRegistered = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>¿El cliente esta registrado?</Text>
-      <View>
-        <Button title='Si, Buscar cliente' onPress={() => navigation.navigate('SearchClient')} />
-        <Button title='No, Registrar nuevo cliente' onPress={() => navigation.navigate('NewClientRegister')} />
+      <View style={styles.buttonsContainer}>
+        <Button title='Si, Buscar cliente' style={styles.buton} onPress={() => navigation.navigate('SearchClient')} />
+        <Button title='No, Registrar nuevo cliente' style={styles.buton} onPress={() => navigation.navigate('NewClientRegister')} />
       </View>
     </SafeAreaView>
   )
@@ -27,7 +27,16 @@ const styles = StyleSheet.create({
     title: {
         color: colors[theme].title,
         fontSize: 25,
-        marginBottom: 40
+        marginBottom: 40,
+        fontFamily: fontFamily,
+    },
+    buttonsContainer: {
+        height: 100,
+        flexDirection: 'column',
+        justifyContent: 'space-around'
+    },
+    buton: {
+        fontFamily: fontFamily,
     }
 })
 

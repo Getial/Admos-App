@@ -19,4 +19,4 @@ export const colors = {
 
 export const theme = 'dark'
 
-export const fontFamily = 'sans-serif-light'
+export const fontFamily = 'sans-serif'
