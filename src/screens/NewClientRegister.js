@@ -1,53 +1,217 @@
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native'
-import React from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context';
+import axios from "axios";
+import React, { useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  TextInput,
+  ActivityIndicator,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
-import { colors, fontFamily, theme } from '../utils/desing';
+import { API_HOST } from "../utils/constants";
+import { colors, fontFamily, theme } from "../utils/desing";
 
-const NewClientRegister = () => {
+export default function NewClientRegister({ navigation }) {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const formik = useFormik({
+    initialValues: initialValues(),
+    validationSchema: Yup.object(validationSchema()),
+    validateOnChange: false,
+    onSubmit: (formValues) => {
+      onSubmitFormHandler(formValues)
+    },
+  });
+
+  const onSubmitFormHandler = async (formValues) => {
+
+    setIsLoading(true);
+
+    try {
+      const config = {
+        method: "post",
+        url: `${API_HOST}/users/`,
+        headers: {
+          Accept: "application/json",
+          "content-type": "multipart/form-data",
+        },
+        data: formValues
+        // data: {
+        //   fullname: fullName,
+        //   document: document,
+        //   phone_number: cellphone,
+        //   email: email,
+        //   municipality: city,
+        //   address: address,
+        // },
+      };
+      // const response = await axios.post(`${API_HOST}/users/`,{
+      //   fullname: fullName,
+      //   document: document,
+      //   phone_number: cellphone,
+      //   email: email,
+      //   municipality: city,
+      //   address: address,
+      // });
+
+      const response = await axios(config);
+      const { id } = response.data
+
+      if (response.status === 201) {
+        setIsLoading(false);
+        // setFullName("");
+        // setDocument("");
+        // setCellphone("");
+        // setEmail("");
+        // setAddress("");
+        // setCity("");
+        navigation.navigate("NewOrderForm", {id: id});
+      } else {
+        throw new Error("Ha ocurrido un error con el servidor");
+      }
+    } catch (error) {
+      console.log(error);
+      alert("Ha ocurrido un error", error);
+      setIsLoading(false);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Nuevo Cliente</Text>
-      <View style={styles.form}>
-        <TextInput placeholder="Nombre completo" placeholderTextColor={colors[theme].placeholder} style={styles.input}/>
-        <TextInput placeholder="Numero de documento" placeholderTextColor={colors[theme].placeholder} style={styles.input}/>
-        <TextInput placeholder="Celular" placeholderTextColor={colors[theme].placeholder} style={styles.input}/>
-        <TextInput placeholder="Direccion" placeholderTextColor={colors[theme].placeholder} style={styles.input}/>
-        <TextInput placeholder="Ciudad o Municipio" placeholderTextColor={colors[theme].placeholder} style={styles.input}/>
-      </View>
-      <Button title='Guardar' style={styles.buton} onPress={() => console.log('crear nuevo usuario')} />
+      {!isLoading ? (
+        <>
+          <View>
+            <View style={styles.wrapper}>
+              <Text style={styles.title}>Nuevo cliente</Text>
+            </View>
+            <View style={styles.wrapper}>
+              <TextInput
+                placeholder="Nombre completo"
+                placeholderTextColor={colors[theme].placeholder}
+                style={styles.input}
+                value={formik.values.fullName}
+                onChangeText={(text) => formik.setFieldValue("fullname", text)}
+              />
+              <TextInput
+                placeholder="Numero de documento"
+                placeholderTextColor={colors[theme].placeholder}
+                style={styles.input}
+                value={formik.values.document}
+                onChangeText={(text) => formik.setFieldValue("document", text)}
+              />
+              <TextInput
+                placeholder="Celular"
+                placeholderTextColor={colors[theme].placeholder}
+                style={styles.input}
+                value={formik.values.phone_number}
+                inputMode="tel"
+                onChangeText={(text) =>
+                  formik.setFieldValue("phone_number", text)
+                }
+              />
+              <TextInput
+                placeholder="Email"
+                placeholderTextColor={colors[theme].placeholder}
+                style={styles.input}
+                value={formik.values.email}
+                inputMode="email"
+                onChangeText={(text) => formik.setFieldValue("email", text)}
+              />
+              <TextInput
+                placeholder="Direccion"
+                placeholderTextColor={colors[theme].placeholder}
+                style={styles.input}
+                value={formik.values.address}
+                onChangeText={(text) => formik.setFieldValue("address", text)}
+              />
+              <TextInput
+                placeholder="Ciudad o Municipio"
+                placeholderTextColor={colors[theme].placeholder}
+                style={styles.input}
+                value={formik.values.municipality}
+                onChangeText={(text) => formik.setFieldValue("municipality", text)}
+              />
+            </View>
+            <View>
+              <Button
+                title="Submit"
+                onPress={formik.handleSubmit}
+                disabled={isLoading}
+              />
+            </View>
+          </View>
+          {formik.errors.fullname && (<Text style={styles.error}>{formik.errors.fullname}</Text>)}
+          {formik.errors.document && (<Text style={styles.error}>{formik.errors.document}</Text>)}
+          {formik.errors.phone_number && (<Text style={styles.error}>{formik.errors.phone_number}</Text>)}
+          {formik.errors.municipality && (<Text style={styles.error}>{formik.errors.municipality}</Text>)}
+
+          {/* <Text style={styles.error}>Error</Text> */}
+        </>
+      ) : (
+        <View>
+          <Text style={styles.title}>Guardando nuevo cliente</Text>
+          <ActivityIndicator size="large" color={colors[theme].card} />
+        </View>
+      )}
     </SafeAreaView>
-  )
+  );
+}
+
+function initialValues() {
+  return {
+    fullname: "",
+    document: "",
+    phone_number: "",
+    email: "",
+    municipality: "",
+    address: "",
+  };
+}
+
+function validationSchema() {
+  return {
+    fullname: Yup.string().required("El nombre es obligatirio"),
+    document: Yup.string().required("El documento es obligatirio"),
+    phone_number: Yup.string().required("El numero de celular es obligatirio"),
+    email: Yup.string(),
+    municipality: Yup.string().required("La ciudad o municipio es obligatirio"),
+    address: Yup.string(),
+  };
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: colors[theme].background,
-        alignItems: 'center',
-        justifyContent: 'space-evenly'
-    },
-    title: {
-        // flex: 1,
-        color: colors[theme].title,
-        fontFamily: fontFamily,
-        fontSize: 35,
-        textAlign: 'center'
-    },
-    form: {
-        // flex: 2,
-        justifyContent: 'space-around'
-    },
-    input: {
-        backgroundColor: colors[theme].input,
-        color: colors[theme].text,
-        minWidth: '50%',
-        height: 40,
-        borderRadius: 4,
-        paddingLeft: 5,
-        marginBottom: 15,
-        fontFamily: fontFamily,
-    },
-})
-
-export default NewClientRegister
+  container: {
+    flex: 1,
+    backgroundColor: colors[theme].background,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  title: {
+    color: colors[theme].title,
+    fontFamily: fontFamily,
+    fontSize: 32,
+    textAlign: "center",
+    marginBottom: 25,
+  },
+  wrapper: {
+    marginBottom: 10,
+  },
+  input: {
+    backgroundColor: colors[theme].input,
+    color: colors[theme].text,
+    minWidth: "70%",
+    height: 40,
+    borderRadius: 5,
+    paddingLeft: 5,
+    marginBottom: 25,
+    fontFamily: fontFamily,
+  },
+  error: {
+    color: colors[theme].error,
+    marginTop: 20
+  },
+});

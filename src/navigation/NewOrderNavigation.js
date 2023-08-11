@@ -1,24 +1,27 @@
-import React from 'react'
+import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import IsClientRegistered from "../screens/IsClientRegistered";
 import NewClientRegister from "../screens/NewClientRegister";
 import SearchClient from "../screens/SearchClient";
+import NewOrderForm from "../screens/NewOrderForm";
 
-const Stack = createNativeStackNavigator()
+const Stack = createNativeStackNavigator();
 
-const NewOrderNavigation = ({navigation}) => {
-    React.useLayoutEffect(() => {
-        navigation.setOptions({tabBarStyle: { display: 'none'}})
-    }, [navigation])
-    return (
-        <Stack.Navigator screenOptions={{
-            headerShown: false
-        }}>
-            <Stack.Screen name="IsClientRegistered" component={IsClientRegistered} />
-            <Stack.Screen name="NewClientRegister" component={NewClientRegister} />
-            <Stack.Screen name="SearchClient" component={SearchClient} />
-        </Stack.Navigator>
-    )
-}
+const NewOrderNavigation = ({ navigation }) => {
+  React.useLayoutEffect(() => {
+    navigation.setOptions({ tabBarStyle: { display: "none" } });
+  }, [navigation]);
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}>
+      <Stack.Screen name="IsClientRegistered" component={IsClientRegistered} />
+      <Stack.Screen name="NewClientRegister" component={NewClientRegister} />
+      <Stack.Screen name="SearchClient" component={SearchClient} />
+      <Stack.Screen name="NewOrderForm" component={NewOrderForm} />
+    </Stack.Navigator>
+  );
+};
 
-export default NewOrderNavigation
+export default NewOrderNavigation;

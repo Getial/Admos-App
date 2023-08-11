@@ -1,4 +1,5 @@
 import React from "react";
+import { StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from "react-native-vector-icons/FontAwesome5";
 
@@ -16,9 +17,12 @@ const Navigation = () => {
             headerShown: false,
             tabBarStyle: {
                 backgroundColor: colors[theme].background,
-                paddingBottom: 10
+                paddingBottom: 10,
+                borderColor: colors[theme].card,
+                borderTopWidth: 2
             },
-            tabBarActiveTintColor: colors[theme].card
+            tabBarActiveTintColor: colors[theme].text,
+            tabBarInactiveTintColor: colors[theme].card
         }}>
             <Tab.Screen name="Home" component={HomeNavigation} options={{
                 tabBarLabel: "Ordenes",
@@ -28,8 +32,14 @@ const Navigation = () => {
             }}/>
             <Tab.Screen name="NewOrder" component={NewOrderNavigation} options={{
                 tabBarLabel: "Nueva Orden",
-                tabBarIcon: ({color}) => (
-                    <Icon name="plus" color={color}/>
+                tabBarLabelStyle: styles.labelPlus,
+                tabBarIcon: () => (
+                    <Icon
+                        name="plus"
+                        color={colors[theme].card}
+                        size={30}
+                        style={styles.iconPlus}
+                    />
                 ),
                 tabBar: false
             }} />
@@ -42,5 +52,25 @@ const Navigation = () => {
         </Tab.Navigator>
     )
 }
+
+const styles = StyleSheet.create({
+    iconPlus: {
+        position: 'absolute',
+        top: -35,
+        width: 75,
+        height: 75,
+        backgroundColor: colors[theme].background,
+        borderWidth: 2,
+        borderColor: colors[theme].card,
+        borderRadius: 20,
+        alignItems: 'center',
+        textAlign: 'center',
+        paddingTop: 10,
+    },
+    labelPlus: {
+        paddingBottom: 10,
+        color: colors[theme].card
+    }
+})
 
 export default Navigation
