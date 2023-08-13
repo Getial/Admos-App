@@ -23,12 +23,11 @@ export default function NewClientRegister({ navigation }) {
     validationSchema: Yup.object(validationSchema()),
     validateOnChange: false,
     onSubmit: (formValues) => {
-      onSubmitFormHandler(formValues)
+      onSubmitFormHandler(formValues);
     },
   });
 
   const onSubmitFormHandler = async (formValues) => {
-
     setIsLoading(true);
 
     try {
@@ -39,15 +38,7 @@ export default function NewClientRegister({ navigation }) {
           Accept: "application/json",
           "content-type": "multipart/form-data",
         },
-        data: formValues
-        // data: {
-        //   fullname: fullName,
-        //   document: document,
-        //   phone_number: cellphone,
-        //   email: email,
-        //   municipality: city,
-        //   address: address,
-        // },
+        data: formValues,
       };
       // const response = await axios.post(`${API_HOST}/users/`,{
       //   fullname: fullName,
@@ -59,17 +50,11 @@ export default function NewClientRegister({ navigation }) {
       // });
 
       const response = await axios(config);
-      const { id } = response.data
+      const { id } = response.data;
 
       if (response.status === 201) {
         setIsLoading(false);
-        // setFullName("");
-        // setDocument("");
-        // setCellphone("");
-        // setEmail("");
-        // setAddress("");
-        // setCity("");
-        navigation.navigate("NewOrderForm", {id: id});
+        navigation.navigate("NewOrderForm", { id: id });
       } else {
         throw new Error("Ha ocurrido un error con el servidor");
       }
@@ -133,7 +118,9 @@ export default function NewClientRegister({ navigation }) {
                 placeholderTextColor={colors[theme].placeholder}
                 style={styles.input}
                 value={formik.values.municipality}
-                onChangeText={(text) => formik.setFieldValue("municipality", text)}
+                onChangeText={(text) =>
+                  formik.setFieldValue("municipality", text)
+                }
               />
             </View>
             <View>
@@ -144,10 +131,18 @@ export default function NewClientRegister({ navigation }) {
               />
             </View>
           </View>
-          {formik.errors.fullname && (<Text style={styles.error}>{formik.errors.fullname}</Text>)}
-          {formik.errors.document && (<Text style={styles.error}>{formik.errors.document}</Text>)}
-          {formik.errors.phone_number && (<Text style={styles.error}>{formik.errors.phone_number}</Text>)}
-          {formik.errors.municipality && (<Text style={styles.error}>{formik.errors.municipality}</Text>)}
+          {formik.errors.fullname && (
+            <Text style={styles.error}>{formik.errors.fullname}</Text>
+          )}
+          {formik.errors.document && (
+            <Text style={styles.error}>{formik.errors.document}</Text>
+          )}
+          {formik.errors.phone_number && (
+            <Text style={styles.error}>{formik.errors.phone_number}</Text>
+          )}
+          {formik.errors.municipality && (
+            <Text style={styles.error}>{formik.errors.municipality}</Text>
+          )}
 
           {/* <Text style={styles.error}>Error</Text> */}
         </>
@@ -212,6 +207,6 @@ const styles = StyleSheet.create({
   },
   error: {
     color: colors[theme].error,
-    marginTop: 20
+    marginTop: 20,
   },
 });

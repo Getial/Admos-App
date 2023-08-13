@@ -10,7 +10,7 @@ const IsClientRegistered = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>¿El cliente esta registrado?</Text>
       <View style={styles.buttonsContainer}>
-        <Button title='Si, Buscar cliente' style={styles.buton} onPress={() => navigation.navigate('PostExample')} />
+        <Button title='Si, Buscar cliente' style={styles.buton} onPress={() => navigation.navigate('SearchClient')} />
         <Button title='No, Registrar nuevo cliente' style={styles.buton} onPress={() => navigation.navigate('NewClientRegister')} />
       </View>
     </SafeAreaView>
