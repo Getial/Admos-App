@@ -54,12 +54,11 @@ export default function NewClientRegister({ navigation }) {
 
       if (response.status === 201) {
         setIsLoading(false);
-        navigation.navigate("NewOrderForm", { id: id });
+        navigation.navigate("NewOrderRegister", { id: id });
       } else {
         throw new Error("Ha ocurrido un error con el servidor");
       }
     } catch (error) {
-      console.log(error);
       alert("Ha ocurrido un error", error);
       setIsLoading(false);
     }
@@ -125,7 +124,8 @@ export default function NewClientRegister({ navigation }) {
             </View>
             <View>
               <Button
-                title="Submit"
+                title="Guardar"
+                color={colors[theme].card}
                 onPress={formik.handleSubmit}
                 disabled={isLoading}
               />

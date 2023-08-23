@@ -3,7 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import IsClientRegistered from "../screens/IsClientRegistered";
 import NewClientRegister from "../screens/NewClientRegister";
 import SearchClient from "../screens/SearchClient";
-import NewOrderForm from "../screens/NewOrderForm";
+import NewOrderRegister from "../screens/NewOrderRegister";
 
 const Stack = createNativeStackNavigator();
 
@@ -19,7 +19,7 @@ const NewOrderNavigation = ({ navigation }) => {
       <Stack.Screen name="IsClientRegistered" component={IsClientRegistered} />
       <Stack.Screen name="NewClientRegister" component={NewClientRegister} />
       <Stack.Screen name="SearchClient" component={SearchClient} />
-      <Stack.Screen name="NewOrderForm" component={NewOrderForm} />
+      <Stack.Screen name="NewOrderRegister" component={NewOrderRegister} />
     </Stack.Navigator>
   );
 };
