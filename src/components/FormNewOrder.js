@@ -148,7 +148,8 @@ export default function NewOrderForm({ user }) {
       entry_date: getDateTime(),
       user,
       received_by: 1,
-      service_number: "00005",
+      service_number: "00003",
+      state: "received",
     };
     try {
       setLoading(true);
