@@ -13,6 +13,7 @@ const NewOrderNavigation = ({ navigation }) => {
   }, [navigation]);
   return (
     <Stack.Navigator
+      initialRouteName="IsClientRegistered"
       screenOptions={{
         headerShown: false,
       }}>

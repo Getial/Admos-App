@@ -5,6 +5,7 @@ import {
   Text,
   SafeAreaView,
   StyleSheet,
+  ActivityIndicator,
 } from "react-native";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -35,6 +36,7 @@ const LoginScreen = ({ navigation }) => {
 
   const onSubmitFormHandler = async (form) => {
     setIsLoading(true);
+    setError("");
 
     try {
       const options = {
@@ -44,16 +46,33 @@ const LoginScreen = ({ navigation }) => {
         data: form,
       };
 
+      // axios
+      //   .request(options)
+      //   .then(function (response) {
+      //     console.log(response.data);
+      //   })
+      //   .catch(function (error) {
+      //     console.error(error.message);
+      //   });
+
       const response = await axios(options);
 
       if (response.status === 200) {
         setIsLoading(false);
+        setError("");
         login(response.data);
       } else {
-        throw new Error("Ha ocurrido un error con el servidor");
+        console.log("status--->", response.status);
+        // throw new Error("Ha ocurrido un error con el servidor");
       }
     } catch (error) {
-      alert(error);
+      if (error.message === "Request failed with status code 404") {
+        setError(
+          "Usuario no encontrado, revise que el email y la contraseña sean correctos"
+        );
+      } else {
+        setError("Error con el servidor");
+      }
       setIsLoading(false);
     }
   };
@@ -82,6 +101,20 @@ const LoginScreen = ({ navigation }) => {
         color={colors[theme].card}
         onPress={formik.handleSubmit}
       />
+      <Text style={styles.error}>{error}</Text>
+      {formik.errors.email && (
+        <Text style={styles.error}>{formik.errors.email}</Text>
+      )}
+      {formik.errors.password && (
+        <Text style={styles.error}>{formik.errors.password}</Text>
+      )}
+      {isLoading && (
+        <ActivityIndicator
+          size="large"
+          color={colors[theme].card}
+          style={styles.error}
+        />
+      )}
     </SafeAreaView>
   );
 };
@@ -125,6 +158,10 @@ const styles = StyleSheet.create({
   },
   button: {
     fontFamily: fontFamily,
+  },
+  error: {
+    color: colors[theme].error,
+    marginTop: 30,
   },
 });
 

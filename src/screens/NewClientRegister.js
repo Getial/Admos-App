@@ -46,7 +46,7 @@ export default function NewClientRegister({ navigation }) {
 
       if (response.status === 201) {
         setIsLoading(false);
-        navigation.navigate("NewOrderRegister", { id: id });
+        navigation.navigate("NewOrderRegister", { client: id });
       } else {
         throw new Error("Ha ocurrido un error con el servidor");
       }

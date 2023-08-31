@@ -21,6 +21,7 @@ export default function NewOrderForm({ client }) {
   const navigation = useNavigation();
   const { handleSubmit, watch, control } = useForm();
   const { auth } = useAuth();
+  const [loading, setLoading] = useState(false);
 
   const [typeServiceOpen, setTypeServiceOpen] = useState(false);
   const [typeServiceValue, setTypeServiceValue] = useState(null);
@@ -40,8 +41,6 @@ export default function NewOrderForm({ client }) {
   const [referenceOpen, setReferenceOpen] = useState(false);
   const [referenceValue, setReferenceValue] = useState(null);
   const [reference, setReference] = useState([]);
-
-  const [loading, setLoading] = useState(false);
 
   const onCategoryOpen = useCallback(() => {
     setBrandOpen(false);
