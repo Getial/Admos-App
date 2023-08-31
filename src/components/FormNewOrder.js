@@ -9,14 +9,18 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import DropDownPicker from "react-native-dropdown-picker";
 import { useForm, Controller, useWatch } from "react-hook-form";
+import { shareAsync } from "expo-sharing";
 import axios from "axios";
+import useAuth from "../hooks/useAuth";
 
 import { API_HOST } from "../utils/constants";
 import { colors, fontFamily, theme } from "../utils/desing";
+import generatePDF from "../utils/generatePDF";
 
-export default function NewOrderForm({ user }) {
+export default function NewOrderForm({ client }) {
   const navigation = useNavigation();
   const { handleSubmit, watch, control } = useForm();
+  const { auth } = useAuth();
 
   const [typeServiceOpen, setTypeServiceOpen] = useState(false);
   const [typeServiceValue, setTypeServiceValue] = useState(null);
@@ -109,12 +113,12 @@ export default function NewOrderForm({ user }) {
   //get referencies
   useEffect(() => {
     (async () => {
-      if (watch("brand_id") && watch("category")) {
+      if (watch("brand") && watch("category")) {
         try {
           const responseReferencies = await axios.get(
-            `${API_HOST}/referencies/?brand=${watch(
-              "brand_id"
-            )}&category=${watch("category")}`
+            `${API_HOST}/referencies/?brand=${watch("brand")}&category=${watch(
+              "category"
+            )}`
           );
           if (responseReferencies.status === 200) {
             const newDataReferencies = [];
@@ -136,7 +140,7 @@ export default function NewOrderForm({ user }) {
         }
       }
     })();
-  }, [watch("brand_id"), watch("category")]);
+  }, [watch("brand"), watch("category")]);
 
   const getDateTime = () => {
     return new Date();
@@ -146,9 +150,9 @@ export default function NewOrderForm({ user }) {
     const formData = {
       ...data,
       entry_date: getDateTime(),
-      user,
-      received_by: 1,
-      service_number: "00003",
+      client,
+      received_by: auth.id,
+      service_number: "00007",
       state: "received",
     };
     try {
@@ -167,7 +171,13 @@ export default function NewOrderForm({ user }) {
 
       if (response.status === 201) {
         setLoading(false);
-        alert("Orden de servicio guardada con exito");
+        // (async () => {
+        //   const file = await generatePDF(response.data);
+        //   await shareAsync(file.uri);
+        // })();
+        generatePDF(response.data).then(
+          async (result) => await shareAsync(result.uri)
+        );
         navigation.navigate("Home");
       } else {
         throw new Error("Ha ocurrido un error con el servidor");
@@ -248,7 +258,7 @@ export default function NewOrderForm({ user }) {
 
         <Text style={styles.labelText}>Marca</Text>
         <Controller
-          name="brand_id"
+          name="brand"
           defaultValue=""
           control={control}
           render={({ field: { onChange, value } }) => (
@@ -333,7 +343,7 @@ export default function NewOrderForm({ user }) {
           />
           <Text style={styles.labelText}>Serial</Text>
           <Controller
-            name="reason_for_entry"
+            name="serial"
             defaultValue=""
             control={control}
             render={({ field: { onChange, value } }) => (

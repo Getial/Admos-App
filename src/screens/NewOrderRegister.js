@@ -36,7 +36,7 @@ export default function NewOrderRegister({ navigation, route }) {
     try {
       const config = {
         method: "post",
-        url: `${API_HOST}/users/`,
+        url: `${API_HOST}/clients/`,
         headers: {
           Accept: "application/json",
           "content-type": "multipart/form-data",
@@ -64,7 +64,7 @@ export default function NewOrderRegister({ navigation, route }) {
   return (
     <SafeAreaView style={styles.container}>
       {!isLoading ? (
-        <NewOrderForm user={id} />
+        <NewOrderForm client={id} />
       ) : (
         <View>
           <Text style={styles.title}>Guardando nuevo cliente</Text>

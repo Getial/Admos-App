@@ -11,11 +11,13 @@ const IsClientRegistered = ({ navigation }) => {
       <View style={styles.buttonsContainer}>
         <Button
           title="Si, Buscar cliente"
+          color={colors[theme].card}
           style={styles.buton}
           onPress={() => navigation.navigate("SearchClient")}
         />
         <Button
           title="No, Registrar nuevo cliente"
+          color={colors[theme].card}
           style={styles.buton}
           onPress={() => navigation.navigate("NewClientRegister")}
         />

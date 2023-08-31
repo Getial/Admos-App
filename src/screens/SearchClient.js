@@ -23,7 +23,7 @@ export default function SearchClient({ navigation }) {
   const searchClients = async () => {
     setIsLoading(true);
     try {
-      response = await axios.get(`${API_HOST}/users/?name=${name}`);
+      response = await axios.get(`${API_HOST}/clients/?name=${name}`);
       if (response.status === 200) {
         setIsLoading(false);
         setClients(response.data);

@@ -17,10 +17,10 @@ export default function OrderCard(props) {
           <Text style={styles.title}>
             Orden de servicio {order.service_number}
           </Text>
-          <Text style={styles.subtitle}>{order.user_name}</Text>
+          <Text style={styles.subtitle}>{order.client_name}</Text>
         </View>
         <View style={styles.stateContainer}>
-          <Text>{order.state_description}</Text>
+          <Text style={styles.textState}>{order.state_description}</Text>
         </View>
       </View>
     </TouchableWithoutFeedback>
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   infoContainer: {
-    width: "65%",
+    width: "70%",
   },
   title: {
     color: colors[theme].title,
@@ -53,6 +53,14 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
   stateContainer: {
-    width: "30%",
+    width: "25%",
+    borderWidth: 2,
+    borderColor: colors[theme].input,
+    borderRadius: 30,
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+  },
+  textState: {
+    color: colors[theme].text,
   },
 });

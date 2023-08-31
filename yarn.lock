@@ -3241,6 +3241,16 @@ expo-modules-core@1.5.9:
     compare-versions "^3.4.0"
     invariant "^2.2.4"
 
+expo-print@^12.4.2:
+  version "12.4.2"
+  resolved "https://registry.yarnpkg.com/expo-print/-/expo-print-12.4.2.tgz#116f9d86d971531cf682718e23869d14e8089e63"
+  integrity sha512-kI3yYxEzu+aSDXMndFr8RTTBnahP98zdbRgSkeOHEHzPQ/0cM4dk0LOwIe83q1eLND0gRANM3Qm6eN+hUpnyCA==
+
+expo-sharing@^11.5.0:
+  version "11.5.0"
+  resolved "https://registry.yarnpkg.com/expo-sharing/-/expo-sharing-11.5.0.tgz#a8cad65874d882b7f75b12856b4ef55ea9b60a2d"
+  integrity sha512-uerM5YH1FKDZXfkP9ORebvlMVOPP/AfoYgYBez6a8G9fztNYHnRCA6mgK+3aQmpnb3ltmjnAZC39kH18bTNcVw==
+
 expo-status-bar@~1.6.0:
   version "1.6.0"
   resolved "https://registry.npmjs.org/expo-status-bar/-/expo-status-bar-1.6.0.tgz"

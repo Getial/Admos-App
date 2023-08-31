@@ -33,21 +33,13 @@ export default function NewClientRegister({ navigation }) {
     try {
       const config = {
         method: "post",
-        url: `${API_HOST}/users/`,
+        url: `${API_HOST}/clients/`,
         headers: {
           Accept: "application/json",
           "content-type": "multipart/form-data",
         },
         data: formValues,
       };
-      // const response = await axios.post(`${API_HOST}/users/`,{
-      //   fullname: fullName,
-      //   document: document,
-      //   phone_number: cellphone,
-      //   email: email,
-      //   municipality: city,
-      //   address: address,
-      // });
 
       const response = await axios(config);
       const { id } = response.data;
