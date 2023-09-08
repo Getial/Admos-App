@@ -1,33 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { Text, StyleSheet, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import axios from "axios";
 
 import OrderCard from "../components/OrderCard";
-
 import { colors, fontFamily, theme } from "../utils/desing";
-import { API_HOST } from "../utils/constants";
+import { getSimpleOrdersApi } from "../api/orders";
 
-const HomeScreen = () => {
+const HomeScreen = ({ route }) => {
+  const { reload } = route.params || 0;
+  console.log(reload);
   const [orders, setOrders] = useState([]);
 
   // get orders
   useEffect(() => {
     (async () => {
       try {
-        const response = await axios.get(`${API_HOST}/orders/`);
-        if (response.status === 200) {
-          setOrders(response.data);
-        } else {
-          throw new Error(
-            "Ha ocurrido un error con el servidor en la peticion get orders"
-          );
-        }
+        const response = await getSimpleOrdersApi();
+        setOrders(response);
       } catch (error) {
         console.log("ha ocurrido un error: ", error);
       }
+      console.log("UsseEffect HomeScreen");
     })();
-  }, []);
+  }, [reload]);
 
   return (
     <SafeAreaView style={styles.container}>

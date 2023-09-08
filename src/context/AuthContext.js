@@ -1,4 +1,9 @@
 import React, { useState, createContext } from "react";
+import {
+  setLoginSesionApi,
+  setLogoutSesionApi,
+  getSesionApi,
+} from "../api/sesionStorage";
 
 export const AuthContext = createContext({
   auth: undefined,
@@ -10,12 +15,14 @@ export function AuthProvider(props) {
   const { children } = props;
   const [auth, setAuth] = useState(undefined);
 
-  const login = (userData) => {
+  const login = async (userData) => {
     setAuth(userData);
+    await setLoginSesionApi(userData);
   };
 
-  const logout = () => {
+  const logout = async () => {
     setAuth(undefined);
+    await setLogoutSesionApi();
   };
 
   const valueContext = {

@@ -8,7 +8,7 @@ export default function OrderCard(props) {
   const navigation = useNavigation();
 
   const goToDetailsOrder = () => {
-    console.log(order);
+    navigation.navigate("DetailOrder", { id: order.id });
   };
   return (
     <TouchableWithoutFeedback onPress={goToDetailsOrder}>

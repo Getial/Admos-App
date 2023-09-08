@@ -70,6 +70,7 @@ export default function SearchClient({ navigation }) {
         data={clients}
         renderItem={({ item }) => <Item client={item} />}
         keyExtractor={(item) => item.id}
+        style={styles.flatlistcontainer}
       />
     </SafeAreaView>
   );
@@ -92,18 +93,25 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: colors[theme].input,
     color: colors[theme].text,
-    minWidth: "50%",
+    minWidth: "75%",
     height: 40,
     borderRadius: 5,
     paddingLeft: 5,
     marginBottom: 25,
     fontFamily: fontFamily,
   },
+  flatlistcontainer: {
+    marginTop: 50,
+    maxHeight: 400,
+    width: "50%",
+  },
   item: {
-    backgroundColor: colors[theme].input,
+    borderColor: colors[theme].input,
+    borderWidth: 1,
     padding: 5,
     marginVertical: 8,
     width: "100%",
+    height: 40,
   },
   name: {
     fontFamily: fontFamily,

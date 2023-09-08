@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 
 import { colors, theme } from "../utils/desing";
@@ -9,11 +10,18 @@ import NewOrderNavigation from "./NewOrderNavigation";
 import useAuth from "../hooks/useAuth";
 import SettingsScreen from "../screens/SettingsScreen";
 import AuthNavigation from "./AuthNavigation";
+import { getSesionApi } from "../api/sesionStorage";
 
 const Tab = createBottomTabNavigator();
 
 const Navigation = () => {
-  const { auth } = useAuth();
+  const { auth, login } = useAuth();
+  useEffect(() => {
+    (async () => {
+      const response = await getSesionApi();
+      if (response) login(response);
+    })();
+  }, []);
   return (
     <Tab.Navigator
       screenOptions={{
@@ -32,10 +40,26 @@ const Navigation = () => {
           <Tab.Screen
             name="Home"
             component={HomeNavigation}
-            options={{
+            // options={{
+            //   tabBarLabel: "Ordenes",
+            //   tabBarIcon: ({ color }) => <Icon name="list" color={color} />,
+            // }}
+            options={({ route }) => ({
+              tabBarStyle: ((route) => {
+                const routeName = getFocusedRouteNameFromRoute(route) ?? "";
+                if (routeName === "DetailOrder") {
+                  return { display: "none" };
+                }
+                return {
+                  backgroundColor: colors[theme].background,
+                  // paddingVertical: 10,
+                  borderColor: colors[theme].card,
+                  borderTopWidth: 2,
+                };
+              })(route),
               tabBarLabel: "Ordenes",
               tabBarIcon: ({ color }) => <Icon name="list" color={color} />,
-            }}
+            })}
           />
           <Tab.Screen
             name="NewOrder"

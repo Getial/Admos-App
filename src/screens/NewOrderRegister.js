@@ -17,6 +17,7 @@ import useAuth from "../hooks/useAuth";
 import { API_HOST } from "../utils/constants";
 import { colors, fontFamily, theme } from "../utils/desing";
 import generatePDF from "../utils/generatePDF";
+import { addNewOrderApi } from "../api/orders";
 
 export default function NewOrderRegister({ navigation, route }) {
   const { client } = route.params;
@@ -148,14 +149,10 @@ export default function NewOrderRegister({ navigation, route }) {
   };
 
   const getServiceNumber = async () => {
-    console.log("getServiceNumber");
     if (watch("is_guarantee")) {
       return watch("os_garanty");
     } else {
-      console.log("obteniendo ultima orden");
       response = await axios.get(`${API_HOST}/orders/lastorder/`);
-      console.log(response.data);
-      console.log(response.data[0].service_number);
       let lastOS = parseInt(response.data[0].service_number);
       lastOS += 1;
       const newOS = lastOS.toString().padStart(5, "0");
@@ -180,32 +177,14 @@ export default function NewOrderRegister({ navigation, route }) {
     };
     try {
       setIsLoading(true);
-      const config = {
-        method: "post",
-        url: `${API_HOST}/orders/`,
-        headers: {
-          Accept: "application/json",
-          "content-type": "multipart/form-data",
-        },
-        data: formData,
-      };
 
-      const response = await axios(config);
-
-      if (response.status === 201) {
-        setIsLoading(false);
-        // (async () => {
-        //   const file = await generatePDF(response.data);
-        //   await shareAsync(file.uri);
-        // })();
-        generatePDF(response.data).then(async (result) => {
-          await shareAsync(result.uri);
-          navigation.popToTop();
-          navigation.navigate("Home");
-        });
-      } else {
-        throw new Error("Ha ocurrido un error con el servidor");
-      }
+      const response = await addNewOrderApi(formData);
+      setIsLoading(false);
+      generatePDF(response).then(async (result) => {
+        await shareAsync(result.uri);
+        navigation.popToTop();
+        navigation.navigate("Home", { reload: 1 });
+      });
     } catch (error) {
       throw new Error(error);
     }

@@ -14,6 +14,7 @@ import * as Yup from "yup";
 
 import { API_HOST } from "../utils/constants";
 import { colors, fontFamily, theme } from "../utils/desing";
+import { addNewClient, addNewClientApi } from "../api/clients";
 
 export default function NewClientRegister({ navigation }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -29,27 +30,11 @@ export default function NewClientRegister({ navigation }) {
 
   const onSubmitFormHandler = async (formValues) => {
     setIsLoading(true);
-
     try {
-      const config = {
-        method: "post",
-        url: `${API_HOST}/clients/`,
-        headers: {
-          Accept: "application/json",
-          "content-type": "multipart/form-data",
-        },
-        data: formValues,
-      };
-
-      const response = await axios(config);
-      const { id } = response.data;
-
-      if (response.status === 201) {
-        setIsLoading(false);
-        navigation.navigate("NewOrderRegister", { client: id });
-      } else {
-        throw new Error("Ha ocurrido un error con el servidor");
-      }
+      const response = await addNewClientApi(formValues);
+      const { id } = response;
+      navigation.navigate("NewOrderRegister", { client: id });
+      setIsLoading(false);
     } catch (error) {
       alert("Ha ocurrido un error", error);
       setIsLoading(false);
