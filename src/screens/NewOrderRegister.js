@@ -3,11 +3,14 @@ import {
   StyleSheet,
   Text,
   View,
+  ScrollView,
   TextInput,
   ActivityIndicator,
   TouchableOpacity,
+  Pressable,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Icon from "react-native-vector-icons/FontAwesome5";
 import DropDownPicker from "react-native-dropdown-picker";
 import { useForm, Controller } from "react-hook-form";
 import { shareAsync } from "expo-sharing";
@@ -192,162 +195,187 @@ export default function NewOrderRegister({ navigation, route }) {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Pressable onPress={navigation.goBack} style={styles.buttonBack}>
+        <Icon
+          name="arrow-left"
+          color={colors[theme].card}
+          size={30}
+          style={styles.iconPlus}
+        />
+      </Pressable>
       {!isLoading ? (
-        // <NewOrderForm client={id} />
-        <View style={styles.form}>
-          <View>
-            <Text style={styles.labelText}>Tipo de servicio</Text>
-            {/* por cuestiones del formulario backend este campo se guarda como is_guarantee pero 
-        sus opciones en la app se manejan como typeService */}
-            <Controller
-              name="is_guarantee"
-              defaultValue=""
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <View style={styles.dropdownCompany}>
-                  <DropDownPicker
-                    style={styles.dropdown}
-                    textStyle={styles.textStyle}
-                    dropDownContainerStyle={styles.dropDownContainerStyle}
-                    placeholderStyle={styles.placeholderStyles}
-                    activityIndicatorColor={colors[theme].card}
-                    searchContainerStyle={styles.searchContainerStyle}
-                    searchTextInputStyle={styles.searchTextInputStyle}
-                    open={typeServiceOpen}
-                    value={typeServiceValue} //categoryValue
-                    items={typeService}
-                    setOpen={setTypeServiceOpen}
-                    setValue={setTypeServiceValue}
-                    setItems={setTypeService}
-                    onOpen={onTypeServiceOpen}
-                    onChangeValue={onChange}
-                    loading={isLoading}
-                    placeholder="Seleccionar tipo de servicio"
-                    zIndex={5000}
-                    zIndexInverse={1000}
-                  />
-                </View>
-              )}
-            />
-            <Text style={styles.labelText}>Categoria</Text>
-            <Controller
-              name="category"
-              defaultValue=""
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <View style={styles.dropdownCompany}>
-                  <DropDownPicker
-                    style={styles.dropdown}
-                    textStyle={styles.textStyle}
-                    dropDownContainerStyle={styles.dropDownContainerStyle}
-                    placeholderStyle={styles.placeholderStyles}
-                    activityIndicatorColor={colors[theme].card}
-                    searchContainerStyle={styles.searchContainerStyle}
-                    searchTextInputStyle={styles.searchTextInputStyle}
-                    open={categoryOpen}
-                    value={categoryValue} //categoryValue
-                    items={category}
-                    setOpen={setCategoryOpen}
-                    setValue={setCategoryValue}
-                    setItems={setCategory}
-                    onOpen={onCategoryOpen}
-                    onChangeValue={onChange}
-                    loading={isLoading}
-                    searchable={true}
-                    placeholder="Seleccionar categoria"
-                    searchPlaceholder="Buscar categoria"
-                    zIndex={4000}
-                    zIndexInverse={2000}
-                  />
-                </View>
-              )}
-            />
-
-            <Text style={styles.labelText}>Marca</Text>
-            <Controller
-              name="brand"
-              defaultValue=""
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <View style={styles.dropdownCompany}>
-                  <DropDownPicker
-                    style={styles.dropdown}
-                    textStyle={styles.textStyle}
-                    dropDownContainerStyle={styles.dropDownContainerStyle}
-                    placeholderStyle={styles.placeholderStyles}
-                    activityIndicatorColor={colors[theme].card}
-                    searchContainerStyle={styles.searchContainerStyle}
-                    searchTextInputStyle={styles.searchTextInputStyle}
-                    open={brandOpen}
-                    value={brandValue} //brandValue
-                    items={brand}
-                    setOpen={setBrandOpen}
-                    setValue={setBrandValue}
-                    setItems={setBrand}
-                    onOpen={onBrandOpen}
-                    onChangeValue={onChange}
-                    loading={isLoading}
-                    searchable={true}
-                    placeholder="Seleccionar marca"
-                    searchPlaceholder="Buscar marca"
-                    zIndex={3000}
-                    zIndexInverse={3000}
-                  />
-                </View>
-              )}
-            />
-
-            <Text style={styles.labelText}>Referencia</Text>
-            <Controller
-              name="reference"
-              defaultValue=""
-              control={control}
-              render={({ field: { onChange, value } }) => (
-                <View style={styles.dropdownCompany}>
-                  <DropDownPicker
-                    style={styles.dropdown}
-                    textStyle={styles.textStyle}
-                    dropDownContainerStyle={styles.dropDownContainerStyle}
-                    placeholderStyle={styles.placeholderStyles}
-                    activityIndicatorColor={colors[theme].card}
-                    searchContainerStyle={styles.searchContainerStyle}
-                    searchTextInputStyle={styles.searchTextInputStyle}
-                    open={referenceOpen}
-                    value={referenceValue} //brandValue
-                    items={reference}
-                    setOpen={setReferenceOpen}
-                    setValue={setReferenceValue}
-                    setItems={setReference}
-                    onOpen={onReferenceOpen}
-                    onChangeValue={onChange}
-                    loading={isLoading}
-                    searchable={true}
-                    placeholder="Seleccionar referencia"
-                    searchPlaceholder="Buscar referencia"
-                    zIndex={2000}
-                    zIndexInverse={4000}
-                  />
-                </View>
-              )}
-            />
-          </View>
-
-          {watch("is_guarantee") === true && (
-            <>
-              <Text style={styles.labelText}>Orden de servicio</Text>
+        <>
+          <ScrollView style={styles.scrollView}>
+            <View>
+              <Text style={styles.labelText}>Tipo de servicio</Text>
+              {/* por cuestiones del formulario backend este campo se guarda como is_guarantee pero 
+          sus opciones en la app se manejan como typeService */}
               <Controller
-                name="os_garanty"
+                name="is_guarantee"
                 defaultValue=""
                 control={control}
                 render={({ field: { onChange, value } }) => (
-                  <TextInput
-                    style={styles.input}
-                    selectionColor={"#5188E3"}
-                    onChangeText={onChange}
-                    value={value}
-                  />
+                  <View style={styles.dropdownCompany}>
+                    <DropDownPicker
+                      listMode="SCROLLVIEW"
+                      style={styles.dropdown}
+                      textStyle={styles.textStyle}
+                      dropDownContainerStyle={styles.dropDownContainerStyle}
+                      placeholderStyle={styles.placeholderStyles}
+                      activityIndicatorColor={colors[theme].card}
+                      searchContainerStyle={styles.searchContainerStyle}
+                      searchTextInputStyle={styles.searchTextInputStyle}
+                      open={typeServiceOpen}
+                      value={typeServiceValue} //categoryValue
+                      items={typeService}
+                      setOpen={setTypeServiceOpen}
+                      setValue={setTypeServiceValue}
+                      setItems={setTypeService}
+                      onOpen={onTypeServiceOpen}
+                      onChangeValue={onChange}
+                      loading={isLoading}
+                      placeholder="Seleccionar tipo de servicio"
+                      zIndex={5000}
+                      zIndexInverse={1000}
+                    />
+                  </View>
                 )}
               />
+            </View>
+
+            <View>
+              <Text style={styles.labelText}>Categoria</Text>
+              <Controller
+                name="category"
+                defaultValue=""
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <View style={styles.dropdownCompany}>
+                    <DropDownPicker
+                      listMode="SCROLLVIEW"
+                      style={styles.dropdown}
+                      textStyle={styles.textStyle}
+                      dropDownContainerStyle={styles.dropDownContainerStyle}
+                      placeholderStyle={styles.placeholderStyles}
+                      activityIndicatorColor={colors[theme].card}
+                      searchContainerStyle={styles.searchContainerStyle}
+                      searchTextInputStyle={styles.searchTextInputStyle}
+                      open={categoryOpen}
+                      value={categoryValue} //categoryValue
+                      items={category}
+                      setOpen={setCategoryOpen}
+                      setValue={setCategoryValue}
+                      setItems={setCategory}
+                      onOpen={onCategoryOpen}
+                      onChangeValue={onChange}
+                      loading={isLoading}
+                      searchable={true}
+                      placeholder="Seleccionar categoria"
+                      searchPlaceholder="Buscar categoria"
+                      zIndex={4000}
+                      zIndexInverse={2000}
+                    />
+                  </View>
+                )}
+              />
+            </View>
+
+            <View>
+              <Text style={styles.labelText}>Marca</Text>
+              <Controller
+                name="brand"
+                defaultValue=""
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <View style={styles.dropdownCompany}>
+                    <DropDownPicker
+                      listMode="SCROLLVIEW"
+                      style={styles.dropdown}
+                      textStyle={styles.textStyle}
+                      dropDownContainerStyle={styles.dropDownContainerStyle}
+                      placeholderStyle={styles.placeholderStyles}
+                      activityIndicatorColor={colors[theme].card}
+                      searchContainerStyle={styles.searchContainerStyle}
+                      searchTextInputStyle={styles.searchTextInputStyle}
+                      open={brandOpen}
+                      value={brandValue} //brandValue
+                      items={brand}
+                      setOpen={setBrandOpen}
+                      setValue={setBrandValue}
+                      setItems={setBrand}
+                      onOpen={onBrandOpen}
+                      onChangeValue={onChange}
+                      loading={isLoading}
+                      searchable={true}
+                      placeholder="Seleccionar marca"
+                      searchPlaceholder="Buscar marca"
+                      zIndex={3000}
+                      zIndexInverse={3000}
+                    />
+                  </View>
+                )}
+              />
+            </View>
+
+            <View>
+              <Text style={styles.labelText}>Referencia</Text>
+              <Controller
+                name="reference"
+                defaultValue=""
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <View style={styles.dropdownCompany}>
+                    <DropDownPicker
+                      listMode="SCROLLVIEW"
+                      style={styles.dropdown}
+                      textStyle={styles.textStyle}
+                      dropDownContainerStyle={styles.dropDownContainerStyle}
+                      placeholderStyle={styles.placeholderStyles}
+                      activityIndicatorColor={colors[theme].card}
+                      searchContainerStyle={styles.searchContainerStyle}
+                      searchTextInputStyle={styles.searchTextInputStyle}
+                      open={referenceOpen}
+                      value={referenceValue} //brandValue
+                      items={reference}
+                      setOpen={setReferenceOpen}
+                      setValue={setReferenceValue}
+                      setItems={setReference}
+                      onOpen={onReferenceOpen}
+                      onChangeValue={onChange}
+                      loading={isLoading}
+                      searchable={true}
+                      placeholder="Seleccionar referencia"
+                      searchPlaceholder="Buscar referencia"
+                      zIndex={2000}
+                      zIndexInverse={4000}
+                    />
+                  </View>
+                )}
+              />
+            </View>
+
+            <View>
+              {watch("is_guarantee") === true && (
+                <View>
+                  <Text style={styles.labelText}>Orden de servicio</Text>
+                  <Controller
+                    name="os_garanty"
+                    defaultValue=""
+                    control={control}
+                    render={({ field: { onChange, value } }) => (
+                      <TextInput
+                        style={styles.input}
+                        selectionColor={"#5188E3"}
+                        onChangeText={onChange}
+                        value={value}
+                      />
+                    )}
+                  />
+                </View>
+              )}
+            </View>
+
+            <View>
               <Text style={styles.labelText}>Serial</Text>
               <Controller
                 name="serial"
@@ -362,46 +390,12 @@ export default function NewOrderRegister({ navigation, route }) {
                   />
                 )}
               />
-            </>
-          )}
+            </View>
 
-          <Text style={styles.labelText}>Motivo de ingreso</Text>
-          <Controller
-            name="reason_for_entry"
-            defaultValue=""
-            control={control}
-            render={({ field: { onChange, value } }) => (
-              <TextInput
-                style={styles.input}
-                selectionColor={"#5188E3"}
-                onChangeText={onChange}
-                value={value}
-                multiline={true}
-              />
-            )}
-          />
-
-          <Text style={styles.labelText}>Observaciones</Text>
-          <Controller
-            name="observations"
-            defaultValue=""
-            control={control}
-            render={({ field: { onChange, value } }) => (
-              <TextInput
-                style={styles.input}
-                selectionColor={"#5188E3"}
-                onChangeText={onChange}
-                value={value}
-                multiline={true}
-              />
-            )}
-          />
-
-          {watch("is_guarantee") === false && (
-            <>
-              <Text style={styles.labelText}>Valor de la revision</Text>
+            <View>
+              <Text style={styles.labelText}>Motivo de ingreso</Text>
               <Controller
-                name="payment_for_revision"
+                name="reason_for_entry"
                 defaultValue=""
                 control={control}
                 render={({ field: { onChange, value } }) => (
@@ -414,13 +408,53 @@ export default function NewOrderRegister({ navigation, route }) {
                   />
                 )}
               />
-            </>
-          )}
+            </View>
 
+            <View>
+              <Text style={styles.labelText}>Observaciones</Text>
+              <Controller
+                name="observations"
+                defaultValue=""
+                control={control}
+                render={({ field: { onChange, value } }) => (
+                  <TextInput
+                    style={styles.input}
+                    selectionColor={"#5188E3"}
+                    onChangeText={onChange}
+                    value={value}
+                    multiline={true}
+                  />
+                )}
+              />
+            </View>
+
+            <View>
+              {watch("is_guarantee") === false && (
+                <>
+                  <Text style={styles.labelText}>Valor de la revision</Text>
+                  <Controller
+                    name="payment_for_revision"
+                    defaultValue=""
+                    control={control}
+                    render={({ field: { onChange, value } }) => (
+                      <TextInput
+                        style={styles.input}
+                        selectionColor={"#5188E3"}
+                        onChangeText={onChange}
+                        value={value}
+                        multiline={true}
+                        inputMode="numeric"
+                      />
+                    )}
+                  />
+                </>
+              )}
+            </View>
+          </ScrollView>
           <TouchableOpacity onPress={handleSubmit(onSubmit)}>
             <Text style={styles.getStarted}>Guardar</Text>
           </TouchableOpacity>
-        </View>
+        </>
       ) : (
         <View>
           <Text style={styles.title}>Guardando nueva orden de servicio</Text>
@@ -438,8 +472,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  buttonBack: {
+    position: "absolute",
+    top: 100,
+    left: 100,
+  },
+  scrollView: {
+    maxHeight: 620,
+    width: "70%",
+  },
   form: {
-    width: "75%",
+    width: "100%",
   },
   input: {
     borderStyle: "solid",
@@ -449,14 +492,14 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     borderWidth: 1,
     fontSize: 15,
-    height: 50,
+    height: 45,
     marginHorizontal: 10,
     paddingStart: 10,
     marginBottom: 15,
   },
   labelText: {
     color: colors[theme].text,
-    width: "50%",
+    // width: "50%",
     fontSize: 15,
     marginHorizontal: 10,
     marginBottom: 10,
@@ -498,6 +541,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors[theme].card,
     color: colors[theme].text,
     textAlign: "center",
+    width: 100,
     marginHorizontal: 60,
     paddingVertical: 15,
     borderRadius: 50,

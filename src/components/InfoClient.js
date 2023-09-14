@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Linking,
+} from "react-native";
 
 import { colors, theme, fontFamily } from "../utils/desing";
 import { getClientApi } from "../api/clients";
@@ -22,6 +28,11 @@ export default function InfoClient({ clientId }) {
       }
     })();
   }, []);
+
+  const callClient = async () => {
+    Linking.openURL(`tel:${client.phone_number}`);
+  };
+
   return (
     <View>
       <Text style={styles.subtitle}>Informacion del cliente</Text>
@@ -32,6 +43,9 @@ export default function InfoClient({ clientId }) {
       <View style={styles.infoContainer}>
         <Text style={styles.titleInfo}>Celular: </Text>
         <Text style={styles.info}>{client.phone_number}</Text>
+        <TouchableOpacity onPress={callClient}>
+          <Text style={styles.txtBtnCall}>Llamar</Text>
+        </TouchableOpacity>
       </View>
       {client.email && (
         <View style={styles.infoContainer}>
@@ -80,5 +94,15 @@ const styles = StyleSheet.create({
     textAlign: "right",
     marginBottom: 25,
     fontSize: 15,
+  },
+  txtBtnCall: {
+    backgroundColor: colors[theme].card,
+    color: colors[theme].text,
+    textAlign: "center",
+    width: 100,
+    marginHorizontal: 60,
+    paddingVertical: 15,
+    borderRadius: 50,
+    marginTop: 20,
   },
 });

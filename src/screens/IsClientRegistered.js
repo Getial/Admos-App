@@ -1,12 +1,21 @@
-import { StyleSheet, Text, View, Button } from "react-native";
+import { StyleSheet, Text, View, Button, Pressable } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Icon from "react-native-vector-icons/FontAwesome5";
 
 import { colors, fontFamily, theme } from "../utils/desing";
 
 const IsClientRegistered = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
+      <Pressable onPress={navigation.goBack} style={styles.buttonBack}>
+        <Icon
+          name="arrow-left"
+          color={colors[theme].card}
+          size={30}
+          style={styles.iconPlus}
+        />
+      </Pressable>
       <Text style={styles.title}>¿El cliente esta registrado?</Text>
       <View style={styles.buttonsContainer}>
         <Button
@@ -32,6 +41,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors[theme].background,
     justifyContent: "center",
     alignItems: "center",
+  },
+  buttonBack: {
+    position: "absolute",
+    top: 100,
+    left: 100,
   },
   title: {
     color: colors[theme].title,

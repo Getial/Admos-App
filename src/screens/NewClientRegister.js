@@ -7,14 +7,15 @@ import {
   Button,
   TextInput,
   ActivityIndicator,
+  Pressable,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import Icon from "react-native-vector-icons/FontAwesome5";
 
-import { API_HOST } from "../utils/constants";
 import { colors, fontFamily, theme } from "../utils/desing";
-import { addNewClient, addNewClientApi } from "../api/clients";
+import { addNewClientApi } from "../api/clients";
 
 export default function NewClientRegister({ navigation }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -43,6 +44,14 @@ export default function NewClientRegister({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Pressable onPress={navigation.goBack} style={styles.buttonBack}>
+        <Icon
+          name="arrow-left"
+          color={colors[theme].card}
+          size={30}
+          style={styles.iconPlus}
+        />
+      </Pressable>
       {!isLoading ? (
         <>
           <View>
@@ -161,6 +170,11 @@ const styles = StyleSheet.create({
     backgroundColor: colors[theme].background,
     alignItems: "center",
     justifyContent: "center",
+  },
+  buttonBack: {
+    position: "absolute",
+    top: 100,
+    left: 100,
   },
   title: {
     color: colors[theme].title,
