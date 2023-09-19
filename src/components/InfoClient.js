@@ -31,10 +31,29 @@ export default function InfoClient({ clientId }) {
 
   const callClient = async () => {
     Linking.openURL(`tel:${client.phone_number}`);
+    // Linking.canOpenURL();
+  };
+
+  const sendWhatsAppMessage = () => {
+    let msg = `Buenas tardes don ${client.fullname}`;
+    let message = msg.replaceAll(" ", "%20");
+    let mobile = `57${client.phone_number}`;
+    let url = `https://wa.me/${mobile}?text=${message}`;
+    Linking.canOpenURL(url)
+      .then((supported) => {
+        if (!supported) {
+          Alert.alert(
+            "Por favor instala whatsapp para enviar mensajes directos"
+          );
+        } else {
+          return Linking.openURL(url);
+        }
+      })
+      .catch((err) => console.error("An error occurred", err));
   };
 
   return (
-    <View>
+    <View style={styles.container}>
       <Text style={styles.subtitle}>Informacion del cliente</Text>
       <View style={styles.infoContainer}>
         <Text style={styles.titleInfo}>Nombre: </Text>
@@ -45,6 +64,9 @@ export default function InfoClient({ clientId }) {
         <Text style={styles.info}>{client.phone_number}</Text>
         <TouchableOpacity onPress={callClient}>
           <Text style={styles.txtBtnCall}>Llamar</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={sendWhatsAppMessage}>
+          <Text style={styles.txtBtnCall}>whatsapp</Text>
         </TouchableOpacity>
       </View>
       {client.email && (
@@ -62,6 +84,9 @@ export default function InfoClient({ clientId }) {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    width: "75%",
+  },
   title: {
     color: colors[theme].title,
     fontFamily: fontFamily,
@@ -96,13 +121,12 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   txtBtnCall: {
-    backgroundColor: colors[theme].card,
+    backgroundColor: colors[theme].input,
     color: colors[theme].text,
     textAlign: "center",
-    width: 100,
-    marginHorizontal: 60,
-    paddingVertical: 15,
+    width: 80,
+    marginHorizontal: 10,
+    paddingVertical: 10,
     borderRadius: 50,
-    marginTop: 20,
   },
 });
