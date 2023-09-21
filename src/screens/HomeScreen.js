@@ -6,6 +6,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import OrderCard from "../components/OrderCard";
 import { colors, fontFamily, theme } from "../utils/desing";
 import { getSimpleOrdersApi } from "../api/orders";
+import { verticalScale } from "../utils/metrics";
 
 const HomeScreen = ({ navigation }) => {
   // const { reload } = route.params || 0;
@@ -63,7 +64,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors[theme].background,
   },
   flatlistContainer: {
-    marginTop: 20,
+    marginTop: verticalScale(20),
   },
 });
 

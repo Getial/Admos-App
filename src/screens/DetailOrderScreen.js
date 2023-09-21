@@ -15,6 +15,11 @@ import InfoClient from "../components/InfoClient";
 import ModalManageOrder from "../components/ModalManageOrder";
 import { getOrderDetailsApi } from "../api/orders";
 import { colors, theme, fontFamily } from "../utils/desing";
+import {
+  verticalScale,
+  horizontalScale,
+  moderateScale,
+} from "../utils/metrics";
 
 export default function DetailOrderScreen({ route, navigation }) {
   const { id } = route.params;
@@ -46,7 +51,7 @@ export default function DetailOrderScreen({ route, navigation }) {
         <Icon
           name="arrow-left"
           color={colors[theme].card}
-          size={30}
+          size={moderateScale(30)}
           style={styles.iconPlus}
         />
       </Pressable>
@@ -75,12 +80,16 @@ export default function DetailOrderScreen({ route, navigation }) {
             <Text style={styles.info}>{order.reason_for_entry}</Text>
           </View>
           <View style={styles.btnsContainer}>
-            <TouchableOpacity onPress={() => console.log("imprimir")}>
-              <Text style={styles.txtBtnCall}>Imprimir orden</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => console.log("Ver mas detalles")}>
-              <Text style={styles.txtBtnCall}>Ver mas detalles</Text>
-            </TouchableOpacity>
+            <Pressable
+              style={styles.btn}
+              onPress={() => console.log("imprimir")}>
+              <Text style={styles.textBtn}>Imprimir orden</Text>
+            </Pressable>
+            <Pressable
+              style={styles.btn}
+              onPress={() => console.log("Ver mas detalles")}>
+              <Text style={styles.textBtn}>Ver mas detalles</Text>
+            </Pressable>
           </View>
         </View>
       </View>
@@ -102,19 +111,19 @@ const styles = StyleSheet.create({
     backgroundColor: colors[theme].background,
     alignItems: "center",
     justifyContent: "space-evenly",
-    paddingVertical: 50,
+    paddingVertical: verticalScale(50),
   },
   buttonBack: {
     position: "absolute",
-    top: 100,
-    left: 100,
+    top: verticalScale(60),
+    left: horizontalScale(30),
   },
   title: {
     color: colors[theme].title,
     fontFamily: fontFamily,
     textAlign: "center",
-    marginBottom: 25,
-    fontSize: 25,
+    marginBottom: verticalScale(25),
+    fontSize: moderateScale(25),
   },
   detailsOrderContainer: {
     width: "75%",
@@ -129,16 +138,17 @@ const styles = StyleSheet.create({
   stateContainer: {
     display: "flex",
     flexDirection: "row",
-    width: 200,
+    width: "60%",
+    maxWidth: 250,
     borderColor: colors[theme].card,
     borderWidth: 1,
-    borderRadius: 10,
+    borderRadius: moderateScale(10),
     justifyContent: "space-around",
     alignItems: "center",
     alignSelf: "center",
-    paddingTop: 7,
-    paddingBottom: 5,
-    marginBottom: 30,
+    paddingTop: verticalScale(7),
+    paddingBottom: verticalScale(5),
+    marginBottom: verticalScale(30),
   },
   infoContainer: {
     display: "flex",
@@ -151,28 +161,37 @@ const styles = StyleSheet.create({
   titleInfo: {
     color: colors[theme].title,
     fontFamily: fontFamily,
+    fontWeight: "bold",
     textAlign: "left",
-    marginBottom: 25,
-    fontSize: 18,
+    marginBottom: verticalScale(25),
+    fontSize: moderateScale(16),
   },
   info: {
     color: colors[theme].title,
     fontFamily: fontFamily,
     textAlign: "right",
-    marginBottom: 25,
-    fontSize: 15,
+    marginBottom: verticalScale(25),
+    fontSize: moderateScale(13),
   },
   btnsContainer: {
     display: "flex",
     flexDirection: "row",
+    justifyContent: "space-around",
+    width: "100%",
+    // backgroundColor: "aqua",
   },
-  txtBtnCall: {
-    backgroundColor: colors[theme].card,
+  btn: {
+    width: "45%",
+    maxWidth: 150,
+    borderColor: colors[theme].input,
+    borderWidth: 1,
+    borderRadius: moderateScale(10),
+    paddingTop: verticalScale(7),
+    paddingBottom: verticalScale(10),
+    // marginBottom: verticalScale(30),
+  },
+  textBtn: {
     color: colors[theme].text,
     textAlign: "center",
-    width: 120,
-    marginHorizontal: 60,
-    paddingVertical: 10,
-    borderRadius: 50,
   },
 });

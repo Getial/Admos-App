@@ -2,6 +2,11 @@ import React from "react";
 import { View, Text, TouchableWithoutFeedback, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { colors, theme } from "../utils/desing";
+import {
+  verticalScale,
+  horizontalScale,
+  moderateScale,
+} from "../utils/metrics";
 
 export default function OrderCard(props) {
   const { order } = props;
@@ -30,14 +35,16 @@ export default function OrderCard(props) {
 const styles = StyleSheet.create({
   cardContainer: {
     width: "90%",
-    height: 80,
-    marginBottom: 20,
+    height: verticalScale(80),
+    marginBottom: verticalScale(15),
     borderColor: colors[theme].card,
     borderWidth: 1,
-    borderRadius: 10,
-    padding: 10,
+    borderRadius: moderateScale(10),
+    paddingTop: verticalScale(18),
+    paddingHorizontal: horizontalScale(10),
     alignSelf: "center",
     flexDirection: "row",
+    justifyContent: "center",
   },
   infoContainer: {
     width: "70%",
@@ -45,22 +52,24 @@ const styles = StyleSheet.create({
   title: {
     color: colors[theme].title,
     fontWeight: "bold",
-    fontSize: 20,
+    fontSize: moderateScale(18),
   },
   subtitle: {
     color: colors[theme].title,
     fontWeight: "300",
-    fontSize: 10,
+    fontSize: moderateScale(12),
   },
   stateContainer: {
     width: "25%",
+    maxHeight: verticalScale(35),
     borderWidth: 2,
     borderColor: colors[theme].input,
-    borderRadius: 30,
-    paddingVertical: 15,
-    paddingHorizontal: 30,
+    borderRadius: moderateScale(20),
+    paddingTop: verticalScale(5),
   },
   textState: {
     color: colors[theme].text,
+    fontSize: moderateScale(12),
+    textAlign: "center",
   },
 });

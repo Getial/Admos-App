@@ -164,10 +164,13 @@ export default function NewOrderRegister({ navigation, route }) {
     }
   };
 
-  // useEffect(() => {
-  //   console.log("useeffect");
-  //   getServiceNumber();
-  // }, []);
+  const setStateOrder = () => {
+    if (watch("is_guarantee")) {
+      return watch("os_garanty") ? "admitted" : "received";
+    } else {
+      return "admitted";
+    }
+  };
 
   const onSubmit = async (data) => {
     const formData = {
@@ -176,7 +179,7 @@ export default function NewOrderRegister({ navigation, route }) {
       client,
       service_number: await getServiceNumber(),
       received_by: auth.id,
-      state: "received",
+      state: setStateOrder(),
     };
     try {
       setIsLoading(true);
@@ -206,6 +209,7 @@ export default function NewOrderRegister({ navigation, route }) {
       {!isLoading ? (
         <>
           <ScrollView style={styles.scrollView}>
+            {/* is_guarantee */}
             <View>
               <Text style={styles.labelText}>Tipo de servicio</Text>
               {/* por cuestiones del formulario backend este campo se guarda como is_guarantee pero 
@@ -243,6 +247,7 @@ export default function NewOrderRegister({ navigation, route }) {
               />
             </View>
 
+            {/* category */}
             <View>
               <Text style={styles.labelText}>Categoria</Text>
               <Controller
@@ -280,6 +285,7 @@ export default function NewOrderRegister({ navigation, route }) {
               />
             </View>
 
+            {/* brand */}
             <View>
               <Text style={styles.labelText}>Marca</Text>
               <Controller
@@ -317,6 +323,7 @@ export default function NewOrderRegister({ navigation, route }) {
               />
             </View>
 
+            {/* reference */}
             <View>
               <Text style={styles.labelText}>Referencia</Text>
               <Controller
@@ -354,6 +361,7 @@ export default function NewOrderRegister({ navigation, route }) {
               />
             </View>
 
+            {/* os_garanty */}
             <View>
               {watch("is_guarantee") === true && (
                 <View>
@@ -375,6 +383,7 @@ export default function NewOrderRegister({ navigation, route }) {
               )}
             </View>
 
+            {/* serial */}
             <View>
               <Text style={styles.labelText}>Serial</Text>
               <Controller
@@ -392,6 +401,7 @@ export default function NewOrderRegister({ navigation, route }) {
               />
             </View>
 
+            {/* reason_for_entry */}
             <View>
               <Text style={styles.labelText}>Motivo de ingreso</Text>
               <Controller
@@ -410,6 +420,7 @@ export default function NewOrderRegister({ navigation, route }) {
               />
             </View>
 
+            {/* observations */}
             <View>
               <Text style={styles.labelText}>Observaciones</Text>
               <Controller
@@ -428,6 +439,7 @@ export default function NewOrderRegister({ navigation, route }) {
               />
             </View>
 
+            {/* payment_for_revision */}
             <View>
               {watch("is_guarantee") === false && (
                 <>
