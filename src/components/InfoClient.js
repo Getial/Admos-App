@@ -10,7 +10,6 @@ import {
 } from "../utils/metrics";
 
 export default function InfoClient({ clientId }) {
-  console.log("info client--->>", clientId);
   const [isLoading, setIsLoading] = useState(false);
   const [client, setClient] = useState("");
 

@@ -4,26 +4,30 @@ import Icon from "react-native-vector-icons/FontAwesome";
 
 import { colors, theme } from "../utils/desing";
 
-export default function ModalManageOrder({ toggleModal }) {
+export default function ModalManageOrder({ toggleModal, is_guarantee }) {
   const options = [
     {
       id: 1,
       title: "Recibido",
+      name: "received",
       type: "A",
     },
     {
       id: 2,
       title: "Ingresado",
+      name: "admitted",
       type: "A",
     },
     {
       id: 3,
       title: "En revision",
+      name: "in_revision",
       type: "A",
     },
     {
       id: 4,
       title: "Revisado",
+      name: "revised",
       type: "A",
     },
     {
@@ -44,24 +48,40 @@ export default function ModalManageOrder({ toggleModal }) {
     {
       id: 8,
       title: "En espera de repuestos",
+      name: "waiting_for_spare_parts",
       type: "A",
     },
     {
       id: 9,
       title: "En Reparacion",
+      name: "in_repair",
       type: "A",
     },
     {
       id: 10,
       title: "Listo para entregar",
+      name: "repaired",
       type: "A",
     },
     {
       id: 11,
       title: "Entregado",
+      name: "delivered",
       type: "A",
     },
   ];
+
+  const getOptions = () => {
+    if (is_guarantee) {
+      let list = options.filter((item) => item.type !== "C");
+      console.log("garantia==>", list);
+      return list;
+    } else {
+      let list = options.filter((item) => item.type !== "G");
+      console.log("cobro==>", list);
+      return list;
+    }
+  };
 
   const Item = ({ title }) => (
     <View style={styles.itemContainer}>
@@ -76,7 +96,7 @@ export default function ModalManageOrder({ toggleModal }) {
         </Pressable>
 
         <FlatList
-          data={options}
+          data={getOptions()}
           renderItem={({ item }) => <Item title={item.title} />}
           style={styles.flatlistContainer}
         />

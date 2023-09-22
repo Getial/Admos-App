@@ -99,7 +99,10 @@ export default function DetailOrderScreen({ route, navigation }) {
         transparent={true}
         visible={modalVisible}
         onRequestClose={toggleModal}>
-        <ModalManageOrder toggleModal={toggleModal} />
+        <ModalManageOrder
+          toggleModal={toggleModal}
+          is_guarantee={order.is_guarantee}
+        />
       </Modal>
     </SafeAreaView>
   );
