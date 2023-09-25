@@ -19,6 +19,11 @@ import useAuth from "../hooks/useAuth";
 
 import { API_HOST } from "../utils/constants";
 import { colors, fontFamily, theme } from "../utils/desing";
+import {
+  verticalScale,
+  horizontalScale,
+  moderateScale,
+} from "../utils/metrics";
 import generatePDF from "../utils/generatePDF";
 import { addNewOrderApi } from "../api/orders";
 
@@ -464,7 +469,7 @@ export default function NewOrderRegister({ navigation, route }) {
             </View>
           </ScrollView>
           <TouchableOpacity onPress={handleSubmit(onSubmit)}>
-            <Text style={styles.getStarted}>Guardar</Text>
+            <Text style={styles.btnSave}>Guardar</Text>
           </TouchableOpacity>
         </>
       ) : (
@@ -486,11 +491,11 @@ const styles = StyleSheet.create({
   },
   buttonBack: {
     position: "absolute",
-    top: 100,
-    left: 100,
+    top: verticalScale(60),
+    left: horizontalScale(30),
   },
   scrollView: {
-    maxHeight: 620,
+    maxHeight: verticalScale(550),
     width: "70%",
   },
   form: {
@@ -501,26 +506,26 @@ const styles = StyleSheet.create({
     backgroundColor: colors[theme].input,
     borderColor: colors[theme].card,
     color: colors[theme].text,
-    borderRadius: 7,
+    borderRadius: moderateScale(7),
     borderWidth: 1,
-    fontSize: 15,
-    height: 45,
-    marginHorizontal: 10,
-    paddingStart: 10,
-    marginBottom: 15,
+    fontSize: moderateScale(15),
+    height: verticalScale(45),
+    marginHorizontal: horizontalScale(10),
+    paddingStart: horizontalScale(10),
+    marginBottom: verticalScale(15),
   },
   labelText: {
     color: colors[theme].text,
     // width: "50%",
-    fontSize: 15,
-    marginHorizontal: 10,
-    marginBottom: 10,
+    fontSize: moderateScale(15),
+    marginHorizontal: horizontalScale(10),
+    marginBottom: verticalScale(10),
   },
   dropdown: {
     backgroundColor: colors[theme].input,
     borderColor: colors[theme].card,
     color: colors[theme].text,
-    height: 50,
+    height: verticalScale(50),
   },
   textStyle: {
     backgroundColor: colors[theme].input,
@@ -541,35 +546,22 @@ const styles = StyleSheet.create({
     color: colors[theme].placeholder,
   },
   dropdownGender: {
-    marginHorizontal: 10,
+    marginHorizontal: horizontalScale(10),
     width: "50%",
-    marginBottom: 15,
+    marginBottom: verticalScale(15),
   },
   dropdownCompany: {
-    marginHorizontal: 10,
-    marginBottom: 15,
+    marginHorizontal: horizontalScale(10),
+    marginBottom: verticalScale(15),
   },
-  getStarted: {
+  btnSave: {
     backgroundColor: colors[theme].card,
     color: colors[theme].text,
     textAlign: "center",
-    width: 100,
-    marginHorizontal: 60,
-    paddingVertical: 15,
-    borderRadius: 50,
-    marginTop: 20,
-  },
-  logIn: {
-    flex: 1,
-    justifyContent: "flex-end",
-    marginBottom: 10,
-  },
-  links: {
-    textAlign: "center",
-    textDecorationLine: "underline",
-    color: colors[theme].text,
-  },
-  checkbox: {
-    alignSelf: "center",
+    width: horizontalScale(100),
+    marginHorizontal: horizontalScale(60),
+    paddingVertical: verticalScale(15),
+    borderRadius: moderateScale(50),
+    marginTop: verticalScale(20),
   },
 });

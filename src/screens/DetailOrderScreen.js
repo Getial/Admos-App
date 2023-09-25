@@ -141,8 +141,8 @@ const styles = StyleSheet.create({
   stateContainer: {
     display: "flex",
     flexDirection: "row",
-    width: "60%",
-    maxWidth: 250,
+    width: "65%",
+    maxWidth: moderateScale(190),
     borderColor: colors[theme].card,
     borderWidth: 1,
     borderRadius: moderateScale(10),
