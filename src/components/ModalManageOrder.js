@@ -10,7 +10,11 @@ import {
   moderateScale,
 } from "../utils/metrics";
 
-export default function ModalManageOrder({ toggleModal, is_guarantee }) {
+export default function ModalManageOrder({
+  toggleModal,
+  is_guarantee,
+  stateOrder,
+}) {
   const options = [
     {
       id: 1,
@@ -39,16 +43,19 @@ export default function ModalManageOrder({ toggleModal, is_guarantee }) {
     {
       id: 5,
       title: "En espera de respuesta de la marca",
+      name: "waiting_response_brand",
       type: "G",
     },
     {
       id: 6,
       title: "Negacion de garantia",
+      name: "warranty denial",
       type: "G",
     },
     {
       id: 7,
       title: "Cotizado",
+      name: "quoted",
       type: "C",
     },
     {
@@ -59,18 +66,24 @@ export default function ModalManageOrder({ toggleModal, is_guarantee }) {
     },
     {
       id: 9,
+      title: "Repuestos en taller",
+      name: "spare_parts_ready",
+      type: "A",
+    },
+    {
+      id: 10,
       title: "En Reparacion",
       name: "in_repair",
       type: "A",
     },
     {
-      id: 10,
+      id: 11,
       title: "Listo para entregar",
       name: "repaired",
       type: "A",
     },
     {
-      id: 11,
+      id: 12,
       title: "Entregado",
       name: "delivered",
       type: "A",
@@ -87,11 +100,54 @@ export default function ModalManageOrder({ toggleModal, is_guarantee }) {
     }
   };
 
+  const isSelectedState = (title) => {
+    if (title === stateOrder) {
+      return {
+        backgroundColor: colors[theme].input,
+        borderWidth: 1,
+        borderColor: colors[theme].card,
+      };
+    } else {
+      return {};
+    }
+  };
+
+  const goToOption = () => {
+    const list = getOptions();
+    const index = list.findIndex((object) => {
+      return object.title === stateOrder;
+    });
+    return index;
+  };
+
+  const changeState = (title) => {
+    const list = getOptions();
+    const indexOption = list.findIndex((object) => {
+      return object.title === title;
+    });
+    const indexActualState = list.findIndex((object) => {
+      return object.title === stateOrder;
+    });
+    const optionSelected = list[indexOption];
+    const actualState = list[indexActualState];
+    console.log(optionSelected.name);
+    console.log(actualState.name);
+  };
+
   const Item = ({ title }) => (
-    <View style={styles.itemContainer}>
+    <Pressable
+      onPress={() => changeState(title)}
+      style={[styles.itemContainer, isSelectedState(title)]}>
       <Text style={styles.itemTitle}>{title}</Text>
-    </View>
+    </Pressable>
   );
+  const getItemLayout = (data, index) => {
+    return {
+      length: moderateScale(100),
+      offset: verticalScale(46) * index,
+      index,
+    };
+  };
   return (
     <BlurView
       intensity={10}
@@ -104,6 +160,8 @@ export default function ModalManageOrder({ toggleModal, is_guarantee }) {
         <FlatList
           data={getOptions()}
           renderItem={({ item }) => <Item title={item.title} />}
+          getItemLayout={getItemLayout}
+          initialScrollIndex={goToOption()}
           style={styles.flatlistContainer}
         />
       </View>
@@ -131,7 +189,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: horizontalScale(35),
     paddingVertical: verticalScale(5),
     marginBottom: moderateScale(60),
-    maxHeight: verticalScale(200),
+    maxHeight: verticalScale(180),
     width: moderateScale(250),
   },
   headerContainer: {
@@ -146,8 +204,16 @@ const styles = StyleSheet.create({
   },
   itemContainer: {
     marginVertical: verticalScale(10),
+    width: moderateScale(160),
+    // height: verticalScale(25),
+    paddingBottom: verticalScale(5),
+    paddingLeft: horizontalScale(10),
+    borderWidth: 1,
+    borderColor: colors[theme].input,
+    borderRadius: moderateScale(10),
   },
   itemTitle: {
     color: colors[theme].text,
+    // backgroundColor: "red",
   },
 });

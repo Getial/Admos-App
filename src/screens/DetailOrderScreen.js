@@ -52,7 +52,6 @@ export default function DetailOrderScreen({ route, navigation }) {
           name="arrow-left"
           color={colors[theme].card}
           size={moderateScale(30)}
-          style={styles.iconPlus}
         />
       </Pressable>
       <Text style={styles.title}>Orden de servicio {order.service_number}</Text>
@@ -62,12 +61,7 @@ export default function DetailOrderScreen({ route, navigation }) {
         <View>
           <Pressable onPress={toggleModal} style={styles.stateContainer}>
             <Text style={styles.titleState}> {order.state_description}</Text>
-            <Icon
-              name="angle-down"
-              color={colors[theme].card}
-              size={30}
-              style={styles.iconPlus}
-            />
+            <Icon name="angle-down" color={colors[theme].card} size={30} />
           </Pressable>
           <View style={styles.infoContainer}>
             <Text style={styles.titleInfo}>Producto: </Text>
@@ -102,6 +96,7 @@ export default function DetailOrderScreen({ route, navigation }) {
         <ModalManageOrder
           toggleModal={toggleModal}
           is_guarantee={order.is_guarantee}
+          stateOrder={order.state_description}
         />
       </Modal>
     </SafeAreaView>
