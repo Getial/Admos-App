@@ -53,3 +53,22 @@ export async function getOrderDetailsApi(id) {
     throw error;
   }
 }
+
+export async function updateOrder(id, newState) {
+  const url = `${API_HOST}/orders/${id}/`;
+  const config = {
+    method: "patch",
+    url: url,
+    headers: {
+      Accept: "application/json",
+    },
+    data: { state: newState },
+  };
+  try {
+    const response = await axios(config);
+    const result = await response.data;
+    return result;
+  } catch (error) {
+    throw error;
+  }
+}

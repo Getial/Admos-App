@@ -1,5 +1,12 @@
-import { View, FlatList, Text, Pressable, StyleSheet } from "react-native";
-import React from "react";
+import {
+  View,
+  FlatList,
+  Text,
+  Pressable,
+  StyleSheet,
+  ActivityIndicator,
+} from "react-native";
+import React, { useState } from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { BlurView } from "expo-blur";
 
@@ -9,11 +16,14 @@ import {
   horizontalScale,
   moderateScale,
 } from "../utils/metrics";
+import { updateOrder } from "../api/orders";
 
 export default function ModalManageOrder({
   toggleModal,
   is_guarantee,
   stateOrder,
+  id,
+  setOrder,
 }) {
   const options = [
     {
@@ -72,7 +82,7 @@ export default function ModalManageOrder({
     },
     {
       id: 10,
-      title: "En Reparacion",
+      title: "En reparacion",
       name: "in_repair",
       type: "A",
     },
@@ -89,6 +99,16 @@ export default function ModalManageOrder({
       type: "A",
     },
   ];
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const getItemLayout = (data, index) => {
+    return {
+      length: moderateScale(100),
+      offset: verticalScale(46) * index,
+      index,
+    };
+  };
 
   const getOptions = () => {
     if (is_guarantee) {
@@ -117,10 +137,15 @@ export default function ModalManageOrder({
     const index = list.findIndex((object) => {
       return object.title === stateOrder;
     });
+    if (index === -1) {
+      console.log("scrollIndexError", index);
+      return 1;
+    }
     return index;
   };
 
-  const changeState = (title) => {
+  const changeState = async (title) => {
+    setIsLoading(true);
     const list = getOptions();
     const indexOption = list.findIndex((object) => {
       return object.title === title;
@@ -130,40 +155,43 @@ export default function ModalManageOrder({
     });
     const optionSelected = list[indexOption];
     const actualState = list[indexActualState];
-    console.log(optionSelected.name);
-    console.log(actualState.name);
+
+    const response = await updateOrder(id, optionSelected.name);
+    setOrder(response);
+    setIsLoading(false);
+    toggleModal();
   };
 
   const Item = ({ title }) => (
     <Pressable
       onPress={() => changeState(title)}
+      disabled={title === stateOrder ? true : false}
       style={[styles.itemContainer, isSelectedState(title)]}>
       <Text style={styles.itemTitle}>{title}</Text>
     </Pressable>
   );
-  const getItemLayout = (data, index) => {
-    return {
-      length: moderateScale(100),
-      offset: verticalScale(46) * index,
-      index,
-    };
-  };
   return (
     <BlurView
       intensity={10}
       blurReductionFactor={1}
       style={styles.centeredView}>
       <View style={styles.modalView}>
-        <Pressable onPress={toggleModal} style={styles.closeContainer}>
-          <Icon name="close" color={colors[theme].card} size={30} />
-        </Pressable>
-        <FlatList
-          data={getOptions()}
-          renderItem={({ item }) => <Item title={item.title} />}
-          getItemLayout={getItemLayout}
-          initialScrollIndex={goToOption()}
-          style={styles.flatlistContainer}
-        />
+        {!isLoading ? (
+          <>
+            <Pressable onPress={toggleModal} style={styles.closeContainer}>
+              <Icon name="close" color={colors[theme].card} size={30} />
+            </Pressable>
+            <FlatList
+              data={getOptions()}
+              renderItem={({ item }) => <Item title={item.title} />}
+              getItemLayout={getItemLayout}
+              initialScrollIndex={goToOption()}
+              style={styles.flatlistContainer}
+            />
+          </>
+        ) : (
+          <ActivityIndicator size="large" color={colors[theme].card} />
+        )}
       </View>
     </BlurView>
   );

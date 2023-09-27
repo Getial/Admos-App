@@ -9,11 +9,13 @@ import {
   Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { shareAsync } from "expo-sharing";
 import Icon from "react-native-vector-icons/FontAwesome5";
 
 import InfoClient from "../components/InfoClient";
 import ModalManageOrder from "../components/ModalManageOrder";
 import { getOrderDetailsApi } from "../api/orders";
+import generatePDF from "../utils/generatePDF";
 import { colors, theme, fontFamily } from "../utils/desing";
 import {
   verticalScale,
@@ -45,6 +47,12 @@ export default function DetailOrderScreen({ route, navigation }) {
     setModalVisible(!modalVisible);
   };
 
+  const printOrder = () => {
+    generatePDF(order).then(async (result) => {
+      await shareAsync(result.uri);
+    });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <Pressable onPress={navigation.goBack} style={styles.buttonBack}>
@@ -54,7 +62,12 @@ export default function DetailOrderScreen({ route, navigation }) {
           size={moderateScale(30)}
         />
       </Pressable>
-      <Text style={styles.title}>Orden de servicio {order.service_number}</Text>
+      <Text style={styles.title}>
+        Orden de servicio{" "}
+        <Text style={styles.txtOrderNumber}>
+          {order.service_number ? order.service_number : "XXXXXX"}
+        </Text>
+      </Text>
       {order.client && <InfoClient clientId={order.client} />}
       <View style={styles.detailsOrderContainer}>
         <Text style={styles.subtitle}>Detalles del producto</Text>
@@ -74,9 +87,7 @@ export default function DetailOrderScreen({ route, navigation }) {
             <Text style={styles.info}>{order.reason_for_entry}</Text>
           </View>
           <View style={styles.btnsContainer}>
-            <Pressable
-              style={styles.btn}
-              onPress={() => console.log("imprimir")}>
+            <Pressable style={styles.btn} onPress={printOrder}>
               <Text style={styles.textBtn}>Imprimir orden</Text>
             </Pressable>
             <Pressable
@@ -97,6 +108,8 @@ export default function DetailOrderScreen({ route, navigation }) {
           toggleModal={toggleModal}
           is_guarantee={order.is_guarantee}
           stateOrder={order.state_description}
+          id={order.id}
+          setOrder={setOrder}
         />
       </Modal>
     </SafeAreaView>
@@ -119,9 +132,17 @@ const styles = StyleSheet.create({
   title: {
     color: colors[theme].title,
     fontFamily: fontFamily,
+    fontWeight: "bold",
     textAlign: "center",
     marginBottom: verticalScale(25),
     fontSize: moderateScale(25),
+  },
+  txtOrderNumber: {
+    color: colors[theme].card,
+    fontFamily: fontFamily,
+    fontWeight: "bold",
+    textAlign: "center",
+    fontSize: moderateScale(28),
   },
   detailsOrderContainer: {
     width: "75%",
@@ -130,13 +151,13 @@ const styles = StyleSheet.create({
     color: colors[theme].title,
     fontFamily: fontFamily,
     textAlign: "center",
-    marginBottom: 25,
-    fontSize: 25,
+    marginBottom: verticalScale(25),
+    fontSize: moderateScale(23),
   },
   stateContainer: {
     display: "flex",
     flexDirection: "row",
-    width: "65%",
+    width: "70%",
     maxWidth: moderateScale(190),
     borderColor: colors[theme].card,
     borderWidth: 1,
@@ -155,6 +176,8 @@ const styles = StyleSheet.create({
   },
   titleState: {
     color: colors[theme].title,
+    width: "74%",
+    // textAlign: "left",
   },
   titleInfo: {
     color: colors[theme].title,
@@ -169,7 +192,7 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily,
     textAlign: "right",
     marginBottom: verticalScale(25),
-    fontSize: moderateScale(13),
+    fontSize: moderateScale(14),
   },
   btnsContainer: {
     display: "flex",

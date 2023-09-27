@@ -85,19 +85,12 @@ const styles = StyleSheet.create({
   container: {
     width: "75%",
   },
-  title: {
-    color: colors[theme].title,
-    fontFamily: fontFamily,
-    textAlign: "center",
-    marginBottom: 25,
-    fontSize: 32,
-  },
   subtitle: {
     color: colors[theme].title,
     fontFamily: fontFamily,
     textAlign: "center",
-    marginBottom: 25,
-    fontSize: 25,
+    marginBottom: verticalScale(25),
+    fontSize: moderateScale(23),
   },
   infoContainer: {
     display: "flex",
@@ -110,16 +103,17 @@ const styles = StyleSheet.create({
   titleInfo: {
     color: colors[theme].title,
     fontFamily: fontFamily,
+    fontWeight: "bold",
     textAlign: "left",
-    marginBottom: 25,
-    fontSize: 18,
+    marginBottom: verticalScale(25),
+    fontSize: moderateScale(18),
   },
   info: {
     color: colors[theme].title,
     fontFamily: fontFamily,
     textAlign: "right",
-    marginBottom: 25,
-    fontSize: 15,
+    marginBottom: verticalScale(25),
+    fontSize: moderateScale(14),
   },
   btn: {
     width: "25%",
