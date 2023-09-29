@@ -54,7 +54,7 @@ export async function getOrderDetailsApi(id) {
   }
 }
 
-export async function updateOrder(id, newState) {
+export async function updateOrder(id, formData) {
   const url = `${API_HOST}/orders/${id}/`;
   const config = {
     method: "patch",
@@ -62,7 +62,7 @@ export async function updateOrder(id, newState) {
     headers: {
       Accept: "application/json",
     },
-    data: { state: newState },
+    data: formData,
   };
   try {
     const response = await axios(config);

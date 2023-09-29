@@ -14,6 +14,7 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 
 import InfoClient from "../components/InfoClient";
 import ModalManageOrder from "../components/ModalManageOrder";
+import ModalAddServiceNumber from "../components/ModalAddServiceNumber";
 import { getOrderDetailsApi } from "../api/orders";
 import generatePDF from "../utils/generatePDF";
 import { colors, theme, fontFamily } from "../utils/desing";
@@ -53,6 +54,14 @@ export default function DetailOrderScreen({ route, navigation }) {
     });
   };
 
+  const hasServiceOrder = () => {
+    if (order.service_number !== null) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <Pressable onPress={navigation.goBack} style={styles.buttonBack}>
@@ -62,12 +71,14 @@ export default function DetailOrderScreen({ route, navigation }) {
           size={moderateScale(30)}
         />
       </Pressable>
-      <Text style={styles.title}>
-        Orden de servicio{" "}
-        <Text style={styles.txtOrderNumber}>
-          {order.service_number ? order.service_number : "XXXXXX"}
-        </Text>
-      </Text>
+      <View style={styles.containerTitle}>
+        <Text style={styles.title}>Orden de servicio </Text>
+        <Pressable style={styles.containerOrderNumber}>
+          <Text style={styles.txtOrderNumber}>
+            {hasServiceOrder ? order.service_number : "XXXXXX"}
+          </Text>
+        </Pressable>
+      </View>
       {order.client && <InfoClient clientId={order.client} />}
       <View style={styles.detailsOrderContainer}>
         <Text style={styles.subtitle}>Detalles del producto</Text>
@@ -111,6 +122,11 @@ export default function DetailOrderScreen({ route, navigation }) {
           id={order.id}
           setOrder={setOrder}
         />
+        {/* <ModalAddServiceNumber
+          toggleModal={toggleModal}
+          id={order.id}
+          setOrder={setOrder}
+        /> */}
       </Modal>
     </SafeAreaView>
   );
@@ -129,20 +145,29 @@ const styles = StyleSheet.create({
     top: verticalScale(60),
     left: horizontalScale(30),
   },
+  containerTitle: {
+    display: "flex",
+    flexDirection: "row",
+  },
   title: {
     color: colors[theme].title,
     fontFamily: fontFamily,
     fontWeight: "bold",
-    textAlign: "center",
+    // textAlign: "center",
     marginBottom: verticalScale(25),
     fontSize: moderateScale(25),
+    // backgroundColor: "red",
+  },
+  containerOrderNumber: {
+    // backgroundColor: "aqua",
+    // marginTop: verticalScale(5),
+    // marginBottom: 0,
   },
   txtOrderNumber: {
     color: colors[theme].card,
     fontFamily: fontFamily,
     fontWeight: "bold",
-    textAlign: "center",
-    fontSize: moderateScale(28),
+    fontSize: moderateScale(26),
   },
   detailsOrderContainer: {
     width: "75%",
@@ -208,7 +233,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: moderateScale(10),
     paddingTop: verticalScale(7),
-    paddingBottom: verticalScale(10),
+    // paddingBottom: verticalScale(10),
     // marginBottom: verticalScale(30),
   },
   textBtn: {

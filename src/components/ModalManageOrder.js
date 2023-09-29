@@ -156,7 +156,9 @@ export default function ModalManageOrder({
     const optionSelected = list[indexOption];
     const actualState = list[indexActualState];
 
-    const response = await updateOrder(id, optionSelected.name);
+    const formData = { state: optionSelected.name };
+
+    const response = await updateOrder(id, formData);
     setOrder(response);
     setIsLoading(false);
     toggleModal();
