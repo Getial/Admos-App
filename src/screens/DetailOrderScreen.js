@@ -7,6 +7,7 @@ import {
   Pressable,
   Modal,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { shareAsync } from "expo-sharing";
@@ -28,7 +29,9 @@ export default function DetailOrderScreen({ route, navigation }) {
   const { id } = route.params;
   const [isLoading, setIsLoading] = useState(false);
   const [order, setOrder] = useState("");
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalManagerVisible, setModalManagerVisible] = useState(false);
+  const [modalServiceNumberVisible, setModalServiceOrderVisible] =
+    useState(false);
   //get details order
   useEffect(() => {
     (async () => {
@@ -44,8 +47,18 @@ export default function DetailOrderScreen({ route, navigation }) {
     })();
   }, []);
 
-  const toggleModal = () => {
-    setModalVisible(!modalVisible);
+  const toggleModalManager = () => {
+    if (modalServiceNumberVisible) {
+      setModalServiceOrderVisible(false);
+    }
+    setModalManagerVisible(!modalManagerVisible);
+  };
+
+  const toggleModalServiceNumber = () => {
+    if (modalManagerVisible) {
+      setModalManagerVisible(false);
+    }
+    setModalServiceOrderVisible(!modalServiceNumberVisible);
   };
 
   const printOrder = () => {
@@ -54,16 +67,17 @@ export default function DetailOrderScreen({ route, navigation }) {
     });
   };
 
-  const hasServiceOrder = () => {
-    if (order.service_number !== null) {
-      return true;
-    } else {
-      return false;
-    }
-  };
+  // const hasServiceOrder = () => {
+  //   if (order.service_number !== null) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // };
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* button back */}
       <Pressable onPress={navigation.goBack} style={styles.buttonBack}>
         <Icon
           name="arrow-left"
@@ -71,62 +85,88 @@ export default function DetailOrderScreen({ route, navigation }) {
           size={moderateScale(30)}
         />
       </Pressable>
+      {/* Title */}
       <View style={styles.containerTitle}>
         <Text style={styles.title}>Orden de servicio </Text>
-        <Pressable style={styles.containerOrderNumber}>
+        <Pressable
+          style={styles.containerOrderNumber}
+          disabled={order.service_number !== null ? true : false}
+          onPress={toggleModalServiceNumber}>
           <Text style={styles.txtOrderNumber}>
-            {hasServiceOrder ? order.service_number : "XXXXXX"}
+            {order.service_number !== null ? order.service_number : "xxxxx"}
           </Text>
         </Pressable>
       </View>
-      {order.client && <InfoClient clientId={order.client} />}
+      {/* informacion del cliente */}
+      <View>
+        <Text style={styles.subtitle}>Informacion del cliente</Text>
+        {order.client ? (
+          <InfoClient clientId={order.client} />
+        ) : (
+          <ActivityIndicator size="large" color={colors[theme].card} />
+        )}
+      </View>
+      {/* detalles de la orded */}
       <View style={styles.detailsOrderContainer}>
         <Text style={styles.subtitle}>Detalles del producto</Text>
-        <View>
-          <Pressable onPress={toggleModal} style={styles.stateContainer}>
-            <Text style={styles.titleState}> {order.state_description}</Text>
-            <Icon name="angle-down" color={colors[theme].card} size={30} />
-          </Pressable>
-          <View style={styles.infoContainer}>
-            <Text style={styles.titleInfo}>Producto: </Text>
-            <Text style={styles.info}>
-              {order.category_name} {order.brand_name} {order.reference_name}
-            </Text>
-          </View>
-          <View style={styles.infoContainer}>
-            <Text style={styles.titleInfo}>Motivo del ingreso: </Text>
-            <Text style={styles.info}>{order.reason_for_entry}</Text>
-          </View>
-          <View style={styles.btnsContainer}>
-            <Pressable style={styles.btn} onPress={printOrder}>
-              <Text style={styles.textBtn}>Imprimir orden</Text>
-            </Pressable>
+        {!isLoading ? (
+          <View>
             <Pressable
-              style={styles.btn}
-              onPress={() => console.log("Ver mas detalles")}>
-              <Text style={styles.textBtn}>Ver mas detalles</Text>
+              onPress={toggleModalManager}
+              style={styles.stateContainer}>
+              <Text style={styles.titleState}> {order.state_description}</Text>
+              <Icon name="angle-down" color={colors[theme].card} size={30} />
             </Pressable>
+            <View style={styles.infoContainer}>
+              <Text style={styles.titleInfo}>Producto: </Text>
+              <Text style={styles.info}>
+                {order.category_name} {order.brand_name} {order.reference_name}
+              </Text>
+            </View>
+            <View style={styles.infoContainer}>
+              <Text style={styles.titleInfo}>Motivo del ingreso: </Text>
+              <Text style={styles.info}>{order.reason_for_entry}</Text>
+            </View>
+            <View style={styles.btnsContainer}>
+              <Pressable style={styles.btn} onPress={printOrder}>
+                <Text style={styles.textBtn}>Imprimir orden</Text>
+              </Pressable>
+              <Pressable
+                style={styles.btn}
+                onPress={() => console.log("Ver mas detalles")}>
+                <Text style={styles.textBtn}>Ver mas detalles</Text>
+              </Pressable>
+            </View>
           </View>
-        </View>
+        ) : (
+          <ActivityIndicator size="large" color={colors[theme].card} />
+        )}
       </View>
       {/* modal */}
       <Modal
         animationType="fade"
         transparent={true}
-        visible={modalVisible}
-        onRequestClose={toggleModal}>
+        visible={modalManagerVisible}
+        onRequestClose={toggleModalManager}>
         <ModalManageOrder
-          toggleModal={toggleModal}
+          toggleModalManager={toggleModalManager}
+          toggleModalServiceNumber={toggleModalServiceNumber}
           is_guarantee={order.is_guarantee}
           stateOrder={order.state_description}
           id={order.id}
           setOrder={setOrder}
         />
-        {/* <ModalAddServiceNumber
-          toggleModal={toggleModal}
+      </Modal>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalServiceNumberVisible}
+        onRequestClose={toggleModalServiceNumber}>
+        <ModalAddServiceNumber
+          toggleModalServiceNumber={toggleModalServiceNumber}
           id={order.id}
           setOrder={setOrder}
-        /> */}
+        />
       </Modal>
     </SafeAreaView>
   );
@@ -192,6 +232,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     paddingTop: verticalScale(7),
     paddingBottom: verticalScale(5),
+    paddingRight: horizontalScale(2),
     marginBottom: verticalScale(30),
   },
   infoContainer: {
@@ -201,7 +242,9 @@ const styles = StyleSheet.create({
   },
   titleState: {
     color: colors[theme].title,
-    width: "74%",
+    width: "70%",
+    textAlign: "center",
+    // backgroundColor: "red",
     // textAlign: "left",
   },
   titleInfo: {
@@ -233,7 +276,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: moderateScale(10),
     paddingTop: verticalScale(7),
-    // paddingBottom: verticalScale(10),
+    paddingBottom: verticalScale(10),
     // marginBottom: verticalScale(30),
   },
   textBtn: {

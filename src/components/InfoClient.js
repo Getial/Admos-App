@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Pressable, Linking } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  Linking,
+  ActivityIndicator,
+} from "react-native";
 
 import { colors, theme, fontFamily } from "../utils/desing";
 import { getClientApi } from "../api/clients";
@@ -52,31 +59,36 @@ export default function InfoClient({ clientId }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.subtitle}>Informacion del cliente</Text>
-      <View style={styles.infoContainer}>
-        <Text style={styles.titleInfo}>Nombre: </Text>
-        <Text style={styles.info}>{client.fullname}</Text>
-      </View>
-      <View style={styles.infoContainer}>
-        <Text style={styles.titleInfo}>Celular: </Text>
-        <Text style={styles.info}>{client.phone_number}</Text>
-        <Pressable style={styles.btn} onPress={callClient}>
-          <Text style={styles.textBtn}>Llamar</Text>
-        </Pressable>
-        <Pressable style={styles.btn} onPress={sendWhatsAppMessage}>
-          <Text style={styles.textBtn}>whatsapp</Text>
-        </Pressable>
-      </View>
-      {client.email && (
-        <View style={styles.infoContainer}>
-          <Text style={styles.titleInfo}>Email: </Text>
-          <Text style={styles.info}>{client.email}</Text>
-        </View>
+      {!isLoading ? (
+        <>
+          <View style={styles.infoContainer}>
+            <Text style={styles.titleInfo}>Nombre: </Text>
+            <Text style={styles.info}>{client.fullname}</Text>
+          </View>
+          <View style={styles.infoContainer}>
+            <Text style={styles.titleInfo}>Celular: </Text>
+            <Text style={styles.info}>{client.phone_number}</Text>
+            <Pressable style={styles.btn} onPress={callClient}>
+              <Text style={styles.textBtn}>Llamar</Text>
+            </Pressable>
+            <Pressable style={styles.btn} onPress={sendWhatsAppMessage}>
+              <Text style={styles.textBtn}>whatsapp</Text>
+            </Pressable>
+          </View>
+          {client.email && (
+            <View style={styles.infoContainer}>
+              <Text style={styles.titleInfo}>Email: </Text>
+              <Text style={styles.info}>{client.email}</Text>
+            </View>
+          )}
+          <View style={styles.infoContainer}>
+            <Text style={styles.titleInfo}>Ciudad o Municipio: </Text>
+            <Text style={styles.info}>{client.municipality}</Text>
+          </View>
+        </>
+      ) : (
+        <ActivityIndicator size="large" color={colors[theme].card} />
       )}
-      <View style={styles.infoContainer}>
-        <Text style={styles.titleInfo}>Ciudad o Municipio: </Text>
-        <Text style={styles.info}>{client.municipality}</Text>
-      </View>
     </View>
   );
 }

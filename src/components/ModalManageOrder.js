@@ -5,6 +5,7 @@ import {
   Pressable,
   StyleSheet,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -19,7 +20,8 @@ import {
 import { updateOrder } from "../api/orders";
 
 export default function ModalManageOrder({
-  toggleModal,
+  toggleModalManager,
+  toggleModalServiceNumber,
   is_guarantee,
   stateOrder,
   id,
@@ -111,13 +113,19 @@ export default function ModalManageOrder({
   };
 
   const getOptions = () => {
+    let list = [];
     if (is_guarantee) {
-      let list = options.filter((item) => item.type !== "C");
-      return list;
+      list = options.filter((item) => item.type !== "C");
     } else {
-      let list = options.filter((item) => item.type !== "G");
-      return list;
+      list = options.filter((item) => item.type !== "G");
     }
+    // si la OS esta recibida la unica opcion elegible sera "ingresar"
+    if (stateOrder === "Recibido") {
+      list.splice(2);
+    } else {
+      list.shift();
+    }
+    return list;
   };
 
   const isSelectedState = (title) => {
@@ -156,12 +164,44 @@ export default function ModalManageOrder({
     const optionSelected = list[indexOption];
     const actualState = list[indexActualState];
 
-    const formData = { state: optionSelected.name };
+    if (optionSelected.id < actualState.id) {
+      Alert.alert(
+        "Advertencia",
+        "Estas retrocediendo en el proceso, se reseteara la informacion desde este punto hacia adelante",
+        [
+          {
+            text: "Entendido",
+            onPress: () => {
+              setOptionState(optionSelected);
+            },
+          },
+          {
+            text: "Cancelar",
+            onPress: () => {
+              toggleModalManager();
+            },
+          },
+        ]
+      );
+    } else {
+      setOptionState(optionSelected);
+    }
+  };
 
-    const response = await updateOrder(id, formData);
-    setOrder(response);
-    setIsLoading(false);
-    toggleModal();
+  const setOptionState = async (optionSelected) => {
+    const formData = { state: optionSelected.name };
+    switch (optionSelected.name) {
+      case "admitted":
+        toggleModalServiceNumber();
+        break;
+
+      default:
+        const response = await updateOrder(id, formData);
+        setOrder(response);
+        setIsLoading(false);
+        toggleModalManager();
+        break;
+    }
   };
 
   const Item = ({ title }) => (
@@ -180,7 +220,9 @@ export default function ModalManageOrder({
       <View style={styles.modalView}>
         {!isLoading ? (
           <>
-            <Pressable onPress={toggleModal} style={styles.closeContainer}>
+            <Pressable
+              onPress={toggleModalManager}
+              style={styles.closeContainer}>
               <Icon name="close" color={colors[theme].card} size={30} />
             </Pressable>
             <FlatList

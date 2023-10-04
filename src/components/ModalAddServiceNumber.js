@@ -18,18 +18,22 @@ import {
   moderateScale,
 } from "../utils/metrics";
 
-export default function ModalAddServiceNumber({ toggleModal, id, setOrder }) {
+export default function ModalAddServiceNumber({
+  toggleModalServiceNumber,
+  id,
+  setOrder,
+}) {
   const [service_number, setServiceNumber] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const saveNewServiceNumber = async () => {
     setIsLoading(true);
-    const formData = { service_number: service_number };
+    const formData = { service_number: service_number, state: "admitted" };
 
     const response = await updateOrder(id, formData);
     setOrder(response);
     setIsLoading(false);
-    toggleModal();
+    toggleModalServiceNumber();
   };
   return (
     <BlurView
@@ -39,7 +43,9 @@ export default function ModalAddServiceNumber({ toggleModal, id, setOrder }) {
       <View style={styles.modalView}>
         {!isLoading ? (
           <>
-            <Pressable onPress={toggleModal} style={styles.closeContainer}>
+            <Pressable
+              onPress={toggleModalServiceNumber}
+              style={styles.closeContainer}>
               <Icon name="close" color={colors[theme].card} size={30} />
             </Pressable>
             <Text style={styles.title}>Orden de servicio</Text>
