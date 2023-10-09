@@ -10,6 +10,7 @@ import {
 import React, { useState } from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { BlurView } from "expo-blur";
+import { useNavigation } from "@react-navigation/native";
 
 import { colors, theme } from "../utils/desing";
 import {
@@ -26,7 +27,9 @@ export default function ModalManageOrder({
   stateOrder,
   id,
   setOrder,
+  order,
 }) {
+  const navigation = useNavigation();
   const options = [
     {
       id: 1,
@@ -61,7 +64,7 @@ export default function ModalManageOrder({
     {
       id: 6,
       title: "Negacion de garantia",
-      name: "warranty denial",
+      name: "warranty_denial",
       type: "G",
     },
     {
@@ -172,7 +175,7 @@ export default function ModalManageOrder({
           {
             text: "Entendido",
             onPress: () => {
-              setOptionState(optionSelected);
+              checkSelectedOption(optionSelected);
             },
           },
           {
@@ -184,22 +187,35 @@ export default function ModalManageOrder({
         ]
       );
     } else {
-      setOptionState(optionSelected);
+      checkSelectedOption(optionSelected);
     }
   };
 
-  const setOptionState = async (optionSelected) => {
-    const formData = { state: optionSelected.name };
+  const setSelectedOption = async (optionSelectedName) => {
+    const formData = { state: optionSelectedName };
+    const response = await updateOrder(id, formData);
+    setOrder(response);
+    setIsLoading(false);
+    toggleModalManager();
+  };
+
+  const checkSelectedOption = async (optionSelected) => {
     switch (optionSelected.name) {
       case "admitted":
-        toggleModalServiceNumber();
+        if (order.service_number !== null) {
+          setSelectedOption(optionSelected.name);
+        } else {
+          toggleModalServiceNumber();
+        }
+        break;
+
+      case "revised":
+        toggleModalManager();
+        navigation.navigate("SetDiagnostic");
         break;
 
       default:
-        const response = await updateOrder(id, formData);
-        setOrder(response);
-        setIsLoading(false);
-        toggleModalManager();
+        setSelectedOption(optionSelected.name);
         break;
     }
   };

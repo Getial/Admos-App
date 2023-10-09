@@ -154,6 +154,7 @@ export default function DetailOrderScreen({ route, navigation }) {
           is_guarantee={order.is_guarantee}
           stateOrder={order.state_description}
           id={order.id}
+          order={order}
           setOrder={setOrder}
         />
       </Modal>

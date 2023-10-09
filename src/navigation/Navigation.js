@@ -47,7 +47,10 @@ const Navigation = () => {
             options={({ route }) => ({
               tabBarStyle: ((route) => {
                 const routeName = getFocusedRouteNameFromRoute(route) ?? "";
-                if (routeName === "DetailOrder") {
+                if (
+                  routeName === "DetailOrder" ||
+                  routeName === "SetDiagnostic"
+                ) {
                   return { display: "none" };
                 }
                 return {
