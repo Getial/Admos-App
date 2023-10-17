@@ -3,7 +3,7 @@ export const colors = {
     background: "#1A1C22",
     text: "#F7F7F7",
     title: "#F7F7F7",
-    placeholder: "#F7F7F7",
+    placeholder: "#FFF6",
     input: "#3D3A50",
     card: "#580EF6",
     error: "#f00",
