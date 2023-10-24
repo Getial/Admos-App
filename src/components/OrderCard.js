@@ -34,7 +34,7 @@ export default function OrderCard(props) {
 
 const styles = StyleSheet.create({
   cardContainer: {
-    width: "90%",
+    width: "95%",
     height: verticalScale(80),
     marginBottom: verticalScale(15),
     borderColor: colors[theme].card,
