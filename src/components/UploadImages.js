@@ -18,6 +18,7 @@ import {
   moderateScale,
   verticalScale,
 } from "../utils/metrics";
+import { addNewEvidenceApi } from "../api/evidences";
 
 export default function UploadImages() {
   const [images, setImages] = useState([]);
@@ -27,7 +28,7 @@ export default function UploadImages() {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       // allowsEditing: true,
       aspect: [4, 3],
-      quality: 1,
+      quality: 0.2,
       allowsMultipleSelection: true,
     });
 
@@ -40,31 +41,24 @@ export default function UploadImages() {
     }
   };
 
-  const handleUpload = async () => {
-    const formData = new FormData();
-    images.forEach((image, index) => {
+  const handleUpload = () => {
+    images.forEach(async (image, index) => {
+      const formData = new FormData();
+      formData.append("order", 42);
       formData.append("image", {
         uri: image.uri,
         type: "image/jpeg",
         name: `imagex_${index}.jpg`,
       });
+      try {
+        const response = await addNewEvidenceApi(formData);
+        console.log("imagen numero ==> ", index);
+        console.log(response);
+      } catch (error) {
+        console.error("Error al subir las imágenes", error);
+        Alert.alert("Error", "Error al subir las imágenes");
+      }
     });
-    formData.append("order", 44);
-    console.log(formData);
-
-    try {
-      const response = await axios.post(`${API_HOST}/evidences/`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      // Aquí puedes hacer algo con la respuesta del servidor
-      Alert.alert("Imágenes subidas con éxito", response.data.message);
-    } catch (error) {
-      console.error("Error al subir las imágenes", error);
-      Alert.alert("Error", "Error al subir las imágenes");
-    }
   };
 
   return (
@@ -73,18 +67,7 @@ export default function UploadImages() {
 
       <View style={styles.imagesContainer}>
         {images.map((image, index) => (
-          <View>
-            <Image
-              key={index}
-              source={{ uri: image.uri }}
-              style={styles.image}
-            />
-            {/* <ActivityIndicator
-              size="small"
-              color={colors[theme].card}
-              style={styles.checkItem}
-            /> */}
-          </View>
+          <Image key={index} source={{ uri: image.uri }} style={styles.image} />
         ))}
       </View>
 
