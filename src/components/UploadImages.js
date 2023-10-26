@@ -52,8 +52,6 @@ export default function UploadImages() {
       });
       try {
         const response = await addNewEvidenceApi(formData);
-        console.log("imagen numero ==> ", index);
-        console.log(response);
       } catch (error) {
         console.error("Error al subir las imágenes", error);
         Alert.alert("Error", "Error al subir las imágenes");

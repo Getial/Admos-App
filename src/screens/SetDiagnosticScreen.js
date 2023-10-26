@@ -8,10 +8,11 @@ import {
   View,
   Image,
   Pressable,
+  ScrollView,
   StyleSheet,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-// import * as ImagePicker from "expo-image-picker";
+import * as ImagePicker from "expo-image-picker";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -38,24 +39,44 @@ export default function SetDiagnosticScreen({ navigation }) {
   });
 
   const [selectedImage, setSelectedImage] = useState(null);
+  const [images, setImages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const onSubmitFormHandler = (formValues) => {
     console.log(formValues);
   };
 
-  // const pickImageAsync = async () => {
-  //   let result = await ImagePicker.launchImageLibraryAsync({
-  //     allowsEditing: true,
-  //     quality: 1,
-  //   });
+  const pickImageAsync = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      // allowsEditing: true,
+      aspect: [4, 3],
+      quality: 0.2,
+      allowsMultipleSelection: true,
+    });
 
-  //   if (!result.canceled) {
-  //     setSelectedImage(result.assets[0].uri);
-  //   } else {
-  //     alert("You did not select any image.");
-  //   }
-  // };
+    if (!result.canceled) {
+      let imgs = [];
+      for (let image of result.assets) {
+        imgs.push(image);
+      }
+      setImages(imgs);
+    } else {
+      alert("You did not select any image.");
+    }
+  };
+
+  const StyleContainerEvidences = () => {
+    if (formik.values.is_necesary_spare_parts) {
+      return {
+        top: verticalScale(480),
+      };
+    } else {
+      return {
+        top: verticalScale(350),
+      };
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -66,81 +87,81 @@ export default function SetDiagnosticScreen({ navigation }) {
           size={moderateScale(30)}
         />
       </Pressable>
-      {/* <>
-        <View>
-          <View style={styles.wrapper}>
-            <Text style={styles.title}>Detalles de la revision</Text>
-          </View>
-          <View style={styles.wrapper}>
-            <Text style={styles.labelText}>Diagnostico</Text>
-            <TextInput
-              multiline
-              placeholder="Mencione las fallas que presenta la maquina"
-              placeholderTextColor={colors[theme].placeholder}
-              style={styles.input}
-              value={formik.values.diagnostic}
-              onChangeText={(text) => formik.setFieldValue("diagnostic", text)}
-            />
+      <Text style={styles.title}>Detalles de la revision</Text>
 
-            <View style={styles.containerQuestion}>
-              <Text style={styles.labelText}>
-                //¿Se necesita solicitar repuestos?
-                solicitar repuestos
-              </Text>
-              <Switch
-                trackColor={{ false: "#767577", true: "#6c5b8f" }}
-                thumbColor={
-                  formik.values.is_necesary_spare_parts
-                    ? colors[theme].card
-                    : "#f4f3f4"
-                }
-                onValueChange={(text) =>
-                  formik.setFieldValue("is_necesary_spare_parts", text)
-                }
-                value={formik.values.is_necesary_spare_parts}
-              />
-            </View>
+      <View style={[styles.wrapper, styles.containerDiagnostic]}>
+        <Text style={styles.labelText}>Diagnostico</Text>
+        <TextInput
+          multiline
+          placeholder="Mencione las fallas que presenta la maquina"
+          placeholderTextColor={colors[theme].placeholder}
+          style={styles.input}
+          value={formik.values.diagnostic}
+          onChangeText={(text) => formik.setFieldValue("diagnostic", text)}
+        />
+      </View>
 
-            {formik.values.is_necesary_spare_parts && (
-              <>
-                <Text style={styles.labelText}>Lista de repuestos</Text>
-                <TextInput
-                  multiline
-                  placeholder="nombre o numero de la pieza, cantidad y medida."
-                  placeholderTextColor={colors[theme].placeholder}
-                  style={styles.input}
-                  value={formik.values.spare_parts_list}
-                  onChangeText={(text) =>
-                    formik.setFieldValue("spare_parts_list", text)
-                  }
-                />
-              </>
-            )}
-            <Pressable onPress={pickImageAsync} style={styles.btnEvidences}>
-              <Text style={styles.textBtn}>Subir evidencias</Text>
-              <Icon
-                name="camera"
-                color={colors[theme].card}
-                size={moderateScale(25)}
-              />
-            </Pressable>
-            <Image source={selectedImage} style={styles.image} />
-            <ImageViewer
-              placeholderImageSource={PlaceholderImage}
-              selectedImage={selectedImage}
-            />
-          </View>
-          <View>
-            <Pressable style={styles.btnSave} onPress={formik.handleSubmit}>
-              <Text style={styles.textBtn}>Guardar</Text>
-            </Pressable>
-          </View>
+      <View style={[styles.wrapper, styles.containerQuestion]}>
+        <Text style={styles.labelText}>Solicitar repuestos</Text>
+        <Switch
+          trackColor={{ false: "#767577", true: "#6c5b8f" }}
+          thumbColor={
+            formik.values.is_necesary_spare_parts
+              ? colors[theme].card
+              : "#f4f3f4"
+          }
+          onValueChange={(text) =>
+            formik.setFieldValue("is_necesary_spare_parts", text)
+          }
+          value={formik.values.is_necesary_spare_parts}
+        />
+      </View>
+
+      {formik.values.is_necesary_spare_parts && (
+        <View style={[styles.wrapper, styles.containerSpareParts]}>
+          <Text style={styles.labelText}>Lista de repuestos</Text>
+          <TextInput
+            multiline
+            placeholder="nombre o numero de la pieza, cantidad y medida."
+            placeholderTextColor={colors[theme].placeholder}
+            style={styles.input}
+            value={formik.values.spare_parts_list}
+            onChangeText={(text) =>
+              formik.setFieldValue("spare_parts_list", text)
+            }
+          />
         </View>
-        {formik.errors.diagnostic && (
-          <Text style={styles.error}>{formik.errors.diagnostic}</Text>
-        )}
-      </> */}
-      <UploadImages />
+      )}
+      <View style={[styles.wrapper, StyleContainerEvidences()]}>
+        <Pressable onPress={pickImageAsync} style={styles.btnEvidences}>
+          <Text style={styles.textBtn}>Subir evidencias</Text>
+          <Icon
+            name="camera"
+            color={colors[theme].card}
+            size={moderateScale(25)}
+          />
+        </Pressable>
+        <ScrollView style={styles.containerEvidences} horizontal={true}>
+          {images.map((image, index) => (
+            <Image
+              key={index}
+              source={{ uri: image.uri }}
+              style={styles.image}
+            />
+          ))}
+        </ScrollView>
+      </View>
+
+      <View style={[styles.wrapper, styles.containerBtnSave]}>
+        <Pressable style={styles.btnSave} onPress={formik.handleSubmit}>
+          <Text style={styles.textBtn}>Guardar</Text>
+        </Pressable>
+      </View>
+
+      {formik.errors.diagnostic && (
+        <Text style={styles.error}>{formik.errors.diagnostic}</Text>
+      )}
+      {/* <UploadImages /> */}
     </SafeAreaView>
   );
 }
@@ -169,7 +190,8 @@ function validationSchema() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    height: "100%",
+    width: "100%",
     backgroundColor: colors[theme].background,
     alignItems: "center",
     justifyContent: "space-evenly",
@@ -184,24 +206,44 @@ const styles = StyleSheet.create({
     color: colors[theme].title,
     fontFamily: fontFamily,
     fontWeight: "bold",
-    textAlign: "center",
     marginBottom: verticalScale(25),
     fontSize: moderateScale(28),
+    position: "absolute",
+    top: moderateScale(100),
   },
   wrapper: {
-    marginBottom: 10,
+    width: "90%",
+    position: "absolute",
   },
-  labelText: {
-    color: colors[theme].text,
-    // width: "50%",
-    fontSize: moderateScale(15),
-    marginHorizontal: horizontalScale(10),
-    marginBottom: verticalScale(10),
+  containerDiagnostic: {
+    top: moderateScale(180),
   },
   containerQuestion: {
+    top: moderateScale(300),
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
+    // backgroundColor: colors[theme].error,
+  },
+  containerSpareParts: {
+    top: verticalScale(350),
+  },
+  containerEvidences: {
+    // top: verticalScale(540),
+    marginTop: verticalScale(10),
+    display: "flex",
+    flexDirection: "row",
+  },
+  containerBtnSave: {
+    top: verticalScale(650),
+  },
+  labelText: {
+    color: colors[theme].subtitle,
+    // width: "50%",
+    fontSize: moderateScale(15),
+    fontWeight: "bold",
+    marginHorizontal: horizontalScale(10),
+    marginBottom: verticalScale(10),
   },
   input: {
     backgroundColor: colors[theme].input,
@@ -209,7 +251,7 @@ const styles = StyleSheet.create({
     width: "95%",
     maxWidth: "95%",
     // maxWidth: "70%",
-    height: verticalScale(70),
+    height: verticalScale(80),
     borderRadius: 5,
     paddingHorizontal: 5,
     marginBottom: 25,
@@ -226,11 +268,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors[theme].input,
     borderRadius: moderateScale(10),
+    marginHorizontal: horizontalScale(10),
   },
   image: {
-    width: 320,
-    height: 440,
-    borderRadius: 18,
+    width: 150,
+    height: 120,
+    borderRadius: 10,
+    marginRight: horizontalScale(5),
   },
   btnSave: {
     backgroundColor: colors[theme].card,
