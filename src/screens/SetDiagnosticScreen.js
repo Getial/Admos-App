@@ -16,17 +16,13 @@ import * as ImagePicker from "expo-image-picker";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import ImageViewer from "../components/ImageViewer";
 
-import { API_HOST } from "../utils/constants";
 import { colors, fontFamily, theme } from "../utils/desing";
 import {
   verticalScale,
   horizontalScale,
   moderateScale,
 } from "../utils/metrics";
-import UploadImages from "../components/UploadImages";
-const PlaceholderImage = require("../assets/background.jpeg");
 
 export default function SetDiagnosticScreen({ navigation }) {
   const formik = useFormik({
@@ -50,7 +46,7 @@ export default function SetDiagnosticScreen({ navigation }) {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       // allowsEditing: true,
-      aspect: [4, 3],
+      // aspect: [4, 3],
       quality: 0.2,
       allowsMultipleSelection: true,
     });
@@ -64,6 +60,11 @@ export default function SetDiagnosticScreen({ navigation }) {
     } else {
       alert("You did not select any image.");
     }
+  };
+
+  const deleteEvidence = (img) => {
+    const newListImages = images.filter((item) => item.uri !== img.uri);
+    setImages(newListImages);
   };
 
   const StyleContainerEvidences = () => {
@@ -132,6 +133,7 @@ export default function SetDiagnosticScreen({ navigation }) {
           />
         </View>
       )}
+
       <View style={[styles.wrapper, StyleContainerEvidences()]}>
         <Pressable onPress={pickImageAsync} style={styles.btnEvidences}>
           <Text style={styles.textBtn}>Subir evidencias</Text>
@@ -141,13 +143,24 @@ export default function SetDiagnosticScreen({ navigation }) {
             size={moderateScale(25)}
           />
         </Pressable>
-        <ScrollView style={styles.containerEvidences} horizontal={true}>
+        <ScrollView style={styles.containerImages} horizontal={true}>
           {images.map((image, index) => (
-            <Image
-              key={index}
-              source={{ uri: image.uri }}
-              style={styles.image}
-            />
+            <View key={index}>
+              <Pressable
+                onPress={() => deleteEvidence(image)}
+                style={styles.btnDeleteEvidence}>
+                <Icon
+                  name="trash-alt"
+                  color={colors[theme].card}
+                  size={moderateScale(20)}
+                />
+              </Pressable>
+              <Image
+                key={index}
+                source={{ uri: image.uri }}
+                style={styles.image}
+              />
+            </View>
           ))}
         </ScrollView>
       </View>
@@ -161,7 +174,6 @@ export default function SetDiagnosticScreen({ navigation }) {
       {formik.errors.diagnostic && (
         <Text style={styles.error}>{formik.errors.diagnostic}</Text>
       )}
-      {/* <UploadImages /> */}
     </SafeAreaView>
   );
 }
@@ -228,14 +240,13 @@ const styles = StyleSheet.create({
   containerSpareParts: {
     top: verticalScale(350),
   },
-  containerEvidences: {
-    // top: verticalScale(540),
+  containerImages: {
     marginTop: verticalScale(10),
     display: "flex",
     flexDirection: "row",
   },
   containerBtnSave: {
-    top: verticalScale(650),
+    top: verticalScale(680),
   },
   labelText: {
     color: colors[theme].subtitle,
@@ -270,9 +281,25 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(10),
     marginHorizontal: horizontalScale(10),
   },
+  btnDeleteEvidence: {
+    position: "relative",
+    top: verticalScale(5),
+    left: horizontalScale(115),
+    width: moderateScale(34),
+    height: moderateScale(34),
+    backgroundColor: colors[theme].placeholder,
+    borderColor: colors[theme].card,
+    borderWidth: 1,
+    borderRadius: moderateScale(17),
+    zIndex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   image: {
-    width: 150,
-    height: 120,
+    position: "relative",
+    top: verticalScale(-30),
+    width: horizontalScale(150),
+    height: verticalScale(150),
     borderRadius: 10,
     marginRight: horizontalScale(5),
   },
