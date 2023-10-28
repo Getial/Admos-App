@@ -49,7 +49,8 @@ const Navigation = () => {
                 const routeName = getFocusedRouteNameFromRoute(route) ?? "";
                 if (
                   routeName === "DetailOrder" ||
-                  routeName === "SetDiagnostic"
+                  routeName === "SetDiagnostic" ||
+                  routeName === "EditEvidence"
                 ) {
                   return { display: "none" };
                 }

@@ -155,11 +155,19 @@ export default function SetDiagnosticScreen({ navigation }) {
                   size={moderateScale(20)}
                 />
               </Pressable>
-              <Image
-                key={index}
-                source={{ uri: image.uri }}
-                style={styles.image}
-              />
+
+              <Pressable
+                onPress={() =>
+                  navigation.navigate("EditEvidence", {
+                    img: image,
+                  })
+                }>
+                <Image
+                  key={index}
+                  source={{ uri: image.uri }}
+                  style={styles.image}
+                />
+              </Pressable>
             </View>
           ))}
         </ScrollView>
