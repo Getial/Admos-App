@@ -13,6 +13,7 @@ import {
 import { colors, theme, fontFamily } from "../utils/desing";
 import EmojiPicker from "../components/EmojiPicker";
 import EmojiList from "../components/EmojiList";
+import EmojiSticker from "../components/EmojiSticker";
 
 export default function EditEvidenceScreen({ navigation, route }) {
   const { img } = route.params;
@@ -61,7 +62,12 @@ export default function EditEvidenceScreen({ navigation, route }) {
         />
       </Pressable>
       <Text style={styles.title}>Editar evidencia</Text>
-      <Image source={{ uri: img.uri }} style={styleImg()} />
+      <View style={styles.imageContainer}>
+        <Image source={{ uri: img.uri }} style={styleImg()} />
+        {pickedEmoji !== null ? (
+          <EmojiSticker imageSize={80} stickerSource={pickedEmoji} />
+        ) : null}
+      </View>
       <View style={styles.optionsContainer}>
         <View style={styles.optionsRow}>
           <IconButton icon="backspace" label="Borrar" onPress={onReset} />
