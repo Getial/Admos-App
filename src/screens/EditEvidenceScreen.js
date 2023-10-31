@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Pressable, Text, Image, View, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import { captureRef } from "react-native-view-shot";
 
 import IconButton from "../components/IconButton";
 import CircleButton from "../components/CircleButton";
@@ -18,6 +19,7 @@ import EmojiSticker from "../components/EmojiSticker";
 export default function EditEvidenceScreen({ navigation, route }) {
   const { img } = route.params;
 
+  const imageRef = useRef();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [pickedEmoji, setPickedEmoji] = useState(null);
 
@@ -34,7 +36,15 @@ export default function EditEvidenceScreen({ navigation, route }) {
   };
 
   const onSaveImageAsync = async () => {
-    setIsModalVisible(false);
+    try {
+      const localUri = await captureRef(imageRef, {
+        height: 440,
+        quality: 1,
+      });
+      //useEvidence hook
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const styleImg = () => {
@@ -63,10 +73,12 @@ export default function EditEvidenceScreen({ navigation, route }) {
       </Pressable>
       <Text style={styles.title}>Editar evidencia</Text>
       <View style={styles.imageContainer}>
-        <Image source={{ uri: img.uri }} style={styleImg()} />
-        {pickedEmoji !== null ? (
-          <EmojiSticker imageSize={80} stickerSource={pickedEmoji} />
-        ) : null}
+        <View ref={imageRef} collapsable={false}>
+          <Image source={{ uri: img.uri }} style={styleImg()} />
+          {pickedEmoji !== null ? (
+            <EmojiSticker imageSize={120} stickerSource={pickedEmoji} />
+          ) : null}
+        </View>
       </View>
       <View style={styles.optionsContainer}>
         <View style={styles.optionsRow}>

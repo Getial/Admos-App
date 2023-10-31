@@ -24,8 +24,8 @@ export default function EmojiSticker({ imageSize, stickerSource }) {
       preX.value = positionX.value;
       preY.value = positionY.value;
     });
-
   const pinchGesture = Gesture.Pinch()
+    .hitSlop(100)
     .onUpdate((e) => {
       scale.value = savedScale.value * e.scale;
     })
@@ -41,7 +41,7 @@ export default function EmojiSticker({ imageSize, stickerSource }) {
     ],
   }));
 
-  const composed = Gesture.Race(panGesture, pinchGesture);
+  const composed = Gesture.Race(pinchGesture, panGesture);
 
   return (
     <GestureDetector gesture={composed}>
@@ -50,7 +50,11 @@ export default function EmojiSticker({ imageSize, stickerSource }) {
         resizeMode="contain"
         style={[
           animatedStyle,
-          { width: imageSize, height: imageSize, top: -350 },
+          {
+            width: imageSize,
+            height: imageSize,
+            top: -350,
+          },
         ]}
       />
     </GestureDetector>

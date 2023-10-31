@@ -24,7 +24,11 @@ import {
   moderateScale,
 } from "../utils/metrics";
 
-export default function SetDiagnosticScreen({ navigation }) {
+export default function SetDiagnosticScreen({ navigation, route }) {
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [images, setImages] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
   const formik = useFormik({
     initialValues: initialValues(),
     validationSchema: Yup.object(validationSchema()),
@@ -33,10 +37,6 @@ export default function SetDiagnosticScreen({ navigation }) {
       onSubmitFormHandler(formValues);
     },
   });
-
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [images, setImages] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
 
   const onSubmitFormHandler = (formValues) => {
     console.log(formValues);
