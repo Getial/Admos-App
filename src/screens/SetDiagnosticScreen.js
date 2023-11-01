@@ -23,11 +23,14 @@ import {
   horizontalScale,
   moderateScale,
 } from "../utils/metrics";
+import useEvidences from "../hooks/useEvidences";
 
 export default function SetDiagnosticScreen({ navigation, route }) {
   const [selectedImage, setSelectedImage] = useState(null);
-  const [images, setImages] = useState([]);
+  // const [images, setImages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const { images, setEvidences, setEditedEvidence } = useEvidences();
+  images && console.table(images);
 
   const formik = useFormik({
     initialValues: initialValues(),
@@ -56,7 +59,7 @@ export default function SetDiagnosticScreen({ navigation, route }) {
       for (let image of result.assets) {
         imgs.push(image);
       }
-      setImages(imgs);
+      setEvidences(imgs);
     } else {
       alert("You did not select any image.");
     }
@@ -64,7 +67,7 @@ export default function SetDiagnosticScreen({ navigation, route }) {
 
   const deleteEvidence = (img) => {
     const newListImages = images.filter((item) => item.uri !== img.uri);
-    setImages(newListImages);
+    setEvidences(newListImages);
   };
 
   const StyleContainerEvidences = () => {
@@ -144,7 +147,7 @@ export default function SetDiagnosticScreen({ navigation, route }) {
           />
         </Pressable>
         <ScrollView style={styles.containerImages} horizontal={true}>
-          {images.map((image, index) => (
+          {images?.map((image, index) => (
             <View key={index}>
               <Pressable
                 onPress={() => deleteEvidence(image)}

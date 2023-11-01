@@ -15,9 +15,12 @@ import { colors, theme, fontFamily } from "../utils/desing";
 import EmojiPicker from "../components/EmojiPicker";
 import EmojiList from "../components/EmojiList";
 import EmojiSticker from "../components/EmojiSticker";
+import useEvidences from "../hooks/useEvidences";
 
 export default function EditEvidenceScreen({ navigation, route }) {
   const { img } = route.params;
+
+  const { setEditedEvidence } = useEvidences();
 
   const imageRef = useRef();
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -38,10 +41,12 @@ export default function EditEvidenceScreen({ navigation, route }) {
   const onSaveImageAsync = async () => {
     try {
       const localUri = await captureRef(imageRef, {
-        height: 440,
+        height: img.height,
+        width: img.width,
         quality: 1,
       });
-      //useEvidence hook
+      setEditedEvidence(img.uri, localUri);
+      navigation.navigate("SetDiagnostic");
     } catch (e) {
       console.log(e);
     }

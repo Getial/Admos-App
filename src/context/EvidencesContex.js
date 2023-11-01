@@ -14,14 +14,15 @@ export function EvidencesProvider(props) {
     setImages(evidences);
   };
 
-  const setEditedEvidence = async () => {
-    const newlist = images.map((img) => {
-      console.log("imagen==>", img);
-      if (img.uri === uri) {
-        img.uri = newUri;
+  const setEditedEvidence = async (url, newUrl) => {
+    const newList = [];
+    images.forEach((element) => {
+      if (element.uri === url) {
+        element.uri = newUrl;
       }
+      newList.push(element);
     });
-    setImages(newlist);
+    setImages(newList);
   };
 
   const valueContext = {

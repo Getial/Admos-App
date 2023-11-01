@@ -53,7 +53,8 @@ export default function EmojiSticker({ imageSize, stickerSource }) {
           {
             width: imageSize,
             height: imageSize,
-            top: -350,
+            top: 50,
+            position: "absolute",
           },
         ]}
       />
