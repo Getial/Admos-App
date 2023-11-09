@@ -10,6 +10,7 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
+  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
@@ -24,13 +25,13 @@ import {
   moderateScale,
 } from "../utils/metrics";
 import useEvidences from "../hooks/useEvidences";
+import { updateOrder } from "../api/orders";
+import { addNewEvidenceApi } from "../api/evidences";
 
 export default function SetDiagnosticScreen({ navigation, route }) {
-  const [selectedImage, setSelectedImage] = useState(null);
-  // const [images, setImages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const { images, setEvidences, setEditedEvidence } = useEvidences();
-  images && console.table(images);
+  const { id } = route.params;
 
   const formik = useFormik({
     initialValues: initialValues(),
@@ -41,8 +42,42 @@ export default function SetDiagnosticScreen({ navigation, route }) {
     },
   });
 
-  const onSubmitFormHandler = (formValues) => {
-    console.log(formValues);
+  const handleUploadEvidences = () => {
+    images.forEach(async (image, index) => {
+      const formData = new FormData();
+      formData.append("order", id);
+      formData.append("image", {
+        uri: image.uri,
+        type: "image/jpeg",
+        name: `imagex_${index}.jpg`,
+      });
+      try {
+        const response = await addNewEvidenceApi(formData);
+      } catch (error) {
+        console.error("Error al subir las imágenes", error);
+        Alert.alert("Error al subir las imágenes", error);
+      }
+    });
+  };
+
+  const onSubmitFormHandler = async (formValues) => {
+    try {
+      setIsLoading(true);
+      const response = await updateOrder(id, formValues);
+
+      handleUploadEvidences();
+
+      // const form = { state: "revised" };
+      // const responseUpdateState = await updateOrder(id, form);
+      setEvidences([]);
+      setIsLoading(false);
+      response && navigation.navigate("Home");
+    } catch (error) {
+      Alert(
+        "ha ocurrido un error al guardar el diagnostico o las evidencias",
+        error
+      );
+    }
   };
 
   const pickImageAsync = async () => {
@@ -177,9 +212,16 @@ export default function SetDiagnosticScreen({ navigation, route }) {
       </View>
 
       <View style={[styles.wrapper, styles.containerBtnSave]}>
-        <Pressable style={styles.btnSave} onPress={formik.handleSubmit}>
-          <Text style={styles.textBtn}>Guardar</Text>
-        </Pressable>
+        {!isLoading ? (
+          <Pressable style={styles.btnSave} onPress={formik.handleSubmit}>
+            <Text style={styles.textBtn}>Guardar</Text>
+          </Pressable>
+        ) : (
+          <View>
+            <Text style={styles.textBtn}>Guardando cambios</Text>
+            <ActivityIndicator size="large" color={colors[theme].card} />
+          </View>
+        )}
       </View>
 
       {formik.errors.diagnostic && (
@@ -194,6 +236,7 @@ function initialValues() {
     diagnostic: "",
     is_necesary_spare_parts: "",
     spare_parts_list: "",
+    state: "revised",
   };
 }
 
@@ -202,6 +245,7 @@ function validationSchema() {
     diagnostic: Yup.string().required("El diagnostico es obligatirio"),
     is_necesary_spare_parts: Yup.bool(),
     spare_parts_list: Yup.string(),
+    state: Yup.string(),
     // spare_parts_list: Yup.array().of(
     //   Yup.object().shape({
     //     name: Yup.string().required("El nombre o numero de pieza es necesario"),

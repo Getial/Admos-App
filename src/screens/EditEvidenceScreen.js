@@ -1,5 +1,12 @@
 import React, { useState, useRef } from "react";
-import { Pressable, Text, Image, View, StyleSheet } from "react-native";
+import {
+  Pressable,
+  Text,
+  Image,
+  View,
+  StyleSheet,
+  ActivityIndicator,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { captureRef } from "react-native-view-shot";
@@ -25,6 +32,7 @@ export default function EditEvidenceScreen({ navigation, route }) {
   const imageRef = useRef();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [pickedEmoji, setPickedEmoji] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const onReset = () => {
     // setShowAppOptions(false);
@@ -40,13 +48,15 @@ export default function EditEvidenceScreen({ navigation, route }) {
 
   const onSaveImageAsync = async () => {
     try {
+      setIsLoading(true);
       const localUri = await captureRef(imageRef, {
         height: img.height,
         width: img.width,
         quality: 1,
       });
       setEditedEvidence(img.uri, localUri);
-      navigation.navigate("SetDiagnostic");
+      setIsLoading(false);
+      navigation.goBack();
     } catch (e) {
       console.log(e);
     }
@@ -86,11 +96,22 @@ export default function EditEvidenceScreen({ navigation, route }) {
         </View>
       </View>
       <View style={styles.optionsContainer}>
-        <View style={styles.optionsRow}>
-          <IconButton icon="backspace" label="Borrar" onPress={onReset} />
-          <CircleButton onPress={onAddSticker} />
-          <IconButton icon="check" label="Guardar" onPress={onSaveImageAsync} />
-        </View>
+        {!isLoading ? (
+          <View style={styles.optionsRow}>
+            <IconButton icon="backspace" label="Borrar" onPress={onReset} />
+            <CircleButton onPress={onAddSticker} />
+            <IconButton
+              icon="check"
+              label="Guardar"
+              onPress={onSaveImageAsync}
+            />
+          </View>
+        ) : (
+          <View style={styles.loader}>
+            <Text style={styles.titleLoader}>Guardando cambios</Text>
+            <ActivityIndicator size={40} color={colors[theme].card} />
+          </View>
+        )}
       </View>
       <EmojiPicker isVisible={isModalVisible} onClose={onModalClose}>
         <EmojiList onSelect={setPickedEmoji} onCloseModal={onModalClose} />
@@ -128,5 +149,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "space-evenly",
+  },
+  loader: {
+    width: "100%",
+  },
+  titleLoader: {
+    color: colors[theme].title,
+    textAlign: "center",
+    fontSize: moderateScale(25),
+    marginTop: verticalScale(10),
   },
 });

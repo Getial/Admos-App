@@ -211,7 +211,7 @@ export default function ModalManageOrder({
 
       case "revised":
         toggleModalManager();
-        navigation.navigate("SetDiagnostic");
+        navigation.navigate("SetDiagnostic", { id: id });
         break;
 
       default:

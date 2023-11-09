@@ -54,7 +54,7 @@ export default function UploadImages() {
         const response = await addNewEvidenceApi(formData);
       } catch (error) {
         console.error("Error al subir las imágenes", error);
-        Alert.alert("Error", "Error al subir las imágenes");
+        Alert.alert("Error al subir las imágenes", error);
       }
     });
   };
