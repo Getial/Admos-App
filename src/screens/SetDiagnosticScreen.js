@@ -27,11 +27,13 @@ import {
 import useEvidences from "../hooks/useEvidences";
 import { updateOrder } from "../api/orders";
 import { addNewEvidenceApi } from "../api/evidences";
+import useAuth from "../hooks/useAuth";
 
 export default function SetDiagnosticScreen({ navigation, route }) {
   const [isLoading, setIsLoading] = useState(false);
   const { images, setEvidences, setEditedEvidence } = useEvidences();
   const { id } = route.params;
+  const { auth } = useAuth();
 
   const formik = useFormik({
     initialValues: initialValues(),
@@ -63,6 +65,7 @@ export default function SetDiagnosticScreen({ navigation, route }) {
   const onSubmitFormHandler = async (formValues) => {
     try {
       setIsLoading(true);
+      formik.setFieldValue("checked_by", auth.id);
       const response = await updateOrder(id, formValues);
 
       handleUploadEvidences();
@@ -71,7 +74,7 @@ export default function SetDiagnosticScreen({ navigation, route }) {
       // const responseUpdateState = await updateOrder(id, form);
       setEvidences([]);
       setIsLoading(false);
-      response && navigation.navigate("Home");
+      response && navigation.navigate("Orders");
     } catch (error) {
       Alert(
         "ha ocurrido un error al guardar el diagnostico o las evidencias",
@@ -126,6 +129,7 @@ export default function SetDiagnosticScreen({ navigation, route }) {
           size={moderateScale(30)}
         />
       </Pressable>
+
       <Text style={styles.title}>Detalles de la revision</Text>
 
       <View style={[styles.wrapper, styles.containerDiagnostic]}>
@@ -237,6 +241,7 @@ function initialValues() {
     is_necesary_spare_parts: "",
     spare_parts_list: "",
     state: "revised",
+    checked_by: "",
   };
 }
 
@@ -246,6 +251,7 @@ function validationSchema() {
     is_necesary_spare_parts: Yup.bool(),
     spare_parts_list: Yup.string(),
     state: Yup.string(),
+    checked_by: Yup.number(),
     // spare_parts_list: Yup.array().of(
     //   Yup.object().shape({
     //     name: Yup.string().required("El nombre o numero de pieza es necesario"),
