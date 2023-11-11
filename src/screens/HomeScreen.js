@@ -5,8 +5,9 @@ import { useFocusEffect } from "@react-navigation/native";
 
 import OrderCard from "../components/OrderCard";
 import { colors, fontFamily, theme } from "../utils/desing";
-import { getSimpleOrdersApi } from "../api/orders";
+import { getSimpleOrdersApi, getSearchOrdersApi } from "../api/orders";
 import { verticalScale } from "../utils/metrics";
+import BarSearch from "../components/BarSearch";
 
 const HomeScreen = () => {
   const [orders, setOrders] = useState([]);
@@ -36,6 +37,18 @@ const HomeScreen = () => {
     }, [])
   );
 
+  const searchOrder = async (searchValue) => {
+    setIsLoading(true);
+    try {
+      const response = await getSearchOrdersApi(searchValue);
+      setIsLoading(false);
+      setOrders(response);
+    } catch (error) {
+      setIsLoading(false);
+      throw error;
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       {!isLoading ? (
@@ -48,6 +61,7 @@ const HomeScreen = () => {
       ) : (
         <ActivityIndicator size="large" color={colors[theme].card} />
       )}
+      <BarSearch searchOrder={searchOrder} />
     </SafeAreaView>
   );
 };
@@ -59,7 +73,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   flatlistContainer: {
-    marginTop: verticalScale(20),
+    position: "absolute",
+    top: verticalScale(70),
+    left: 0,
+    width: "100%",
   },
 });
 

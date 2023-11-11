@@ -42,6 +42,16 @@ export async function getSimpleOrdersApi() {
     throw error;
   }
 }
+export async function getSearchOrdersApi(value) {
+  const url = `${API_HOST}/orders/searchorder/?os=${value}`;
+  try {
+    const response = await axios.get(url);
+    const result = await response.data;
+    return result;
+  } catch (error) {
+    throw error;
+  }
+}
 
 export async function getOrderDetailsApi(id) {
   const url = `${API_HOST}/orders/${id}/`;
