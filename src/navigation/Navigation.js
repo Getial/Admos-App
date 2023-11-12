@@ -11,6 +11,11 @@ import useAuth from "../hooks/useAuth";
 import SettingsScreen from "../screens/SettingsScreen";
 import AuthNavigation from "./AuthNavigation";
 import { getSesionApi } from "../api/sesionStorage";
+import {
+  horizontalScale,
+  moderateScale,
+  verticalScale,
+} from "../utils/metrics";
 
 const Tab = createBottomTabNavigator();
 
@@ -59,10 +64,14 @@ const Navigation = () => {
                   // paddingVertical: 10,
                   borderColor: colors[theme].card,
                   borderTopWidth: 2,
+                  height: verticalScale(55),
+                  paddingBottom: verticalScale(5),
                 };
               })(route),
               tabBarLabel: "Ordenes",
-              tabBarIcon: ({ color }) => <Icon name="list" color={color} />,
+              tabBarIcon: ({ color }) => (
+                <Icon size={moderateScale(20)} name="list" color={color} />
+              ),
             })}
           />
           <Tab.Screen
@@ -75,7 +84,7 @@ const Navigation = () => {
                 <Icon
                   name="plus"
                   color={colors[theme].card}
-                  size={30}
+                  size={moderateScale(30)}
                   style={styles.iconPlus}
                 />
               ),
@@ -87,7 +96,9 @@ const Navigation = () => {
             component={SettingsScreen}
             options={{
               tabBarLabel: "Configuraciones",
-              tabBarIcon: ({ color }) => <Icon name="cog" color={color} />,
+              tabBarIcon: ({ color }) => (
+                <Icon size={moderateScale(20)} name="cog" color={color} />
+              ),
             }}
           />
         </>
@@ -108,20 +119,21 @@ const Navigation = () => {
 const styles = StyleSheet.create({
   iconPlus: {
     position: "absolute",
-    top: -35,
-    width: 75,
-    height: 75,
+    top: verticalScale(-35),
+    width: verticalScale(75),
+    height: verticalScale(70),
     backgroundColor: colors[theme].background,
     borderWidth: 2,
     borderColor: colors[theme].card,
     borderRadius: 20,
     alignItems: "center",
     textAlign: "center",
-    paddingTop: 10,
+    paddingTop: verticalScale(10),
   },
   labelPlus: {
-    paddingBottom: 10,
+    paddingBottom: verticalScale(20),
     color: colors[theme].card,
+    fontSize: moderateScale(11),
   },
 });
 

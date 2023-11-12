@@ -28,8 +28,8 @@ export default function BarSearch({ searchOrder }) {
   };
 
   return (
-    <Pressable onPress={handlePress} style={{ position: "absolute", top: 50 }}>
-      <View style={styles.container}>
+    <View style={styles.container}>
+      <Pressable onPress={handlePress} style={styles.barSearch}>
         <Icon name="search" size={15} color={colors[theme].placeholder} />
         <TextInput
           placeholder="Numero de orden o nombre del cliente"
@@ -45,13 +45,20 @@ export default function BarSearch({ searchOrder }) {
           onPress={() => searchOrder(searchValue)}>
           <Text style={styles.textBtn}>Buscar</Text>
         </Pressable>
-      </View>
-    </Pressable>
+      </Pressable>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    position: "absolute",
+    top: 20,
+    left: 0,
+    backgroundColor: colors[theme].background,
+    height: verticalScale(80),
+  },
+  barSearch: {
     width: "93%",
     height: verticalScale(50),
     backgroundColor: colors[theme].input,
@@ -59,10 +66,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-evenly",
     alignItems: "center",
-    // paddingTop: verticalScale(2),
+    paddingTop: verticalScale(2),
     // position: "absolute",
     // top: verticalScale(0),
     marginLeft: "5%",
+    marginTop: verticalScale(20),
+    // marginBottom: verticalScale(5),
     borderRadius: moderateScale(10),
   },
   title: {
