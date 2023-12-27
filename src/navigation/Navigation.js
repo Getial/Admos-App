@@ -39,7 +39,8 @@ const Navigation = () => {
         },
         tabBarActiveTintColor: colors[theme].text,
         tabBarInactiveTintColor: colors[theme].card,
-      }}>
+      }}
+    >
       {auth ? (
         <>
           <Tab.Screen
@@ -55,7 +56,8 @@ const Navigation = () => {
                 if (
                   routeName === "DetailOrder" ||
                   routeName === "SetDiagnostic" ||
-                  routeName === "EditEvidence"
+                  routeName === "EditEvidence" ||
+                  routeName === "SetRepairPrice"
                 ) {
                   return { display: "none" };
                 }

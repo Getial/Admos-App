@@ -107,6 +107,7 @@ export default function ModalManageOrder({
 
   const [isLoading, setIsLoading] = useState(false);
 
+  //autoscroll
   const getItemLayout = (data, index) => {
     return {
       length: moderateScale(100),
@@ -214,6 +215,11 @@ export default function ModalManageOrder({
         navigation.navigate("SetDiagnostic", { id: id });
         break;
 
+      case "quoted":
+        toggleModalManager();
+        navigation.navigate("SetRepairPrice", { id: id });
+        break;
+
       default:
         setSelectedOption(optionSelected.name);
         break;
@@ -224,21 +230,25 @@ export default function ModalManageOrder({
     <Pressable
       onPress={() => changeState(title)}
       disabled={title === stateOrder ? true : false}
-      style={[styles.itemContainer, isSelectedState(title)]}>
+      style={[styles.itemContainer, isSelectedState(title)]}
+    >
       <Text style={styles.itemTitle}>{title}</Text>
     </Pressable>
   );
+
   return (
     <BlurView
       intensity={10}
       blurReductionFactor={1}
-      style={styles.centeredView}>
+      style={styles.centeredView}
+    >
       <View style={styles.modalView}>
         {!isLoading ? (
           <>
             <Pressable
               onPress={toggleModalManager}
-              style={styles.closeContainer}>
+              style={styles.closeContainer}
+            >
               <Icon name="close" color={colors[theme].card} size={30} />
             </Pressable>
             <FlatList
