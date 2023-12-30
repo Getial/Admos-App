@@ -7,18 +7,38 @@ import {
   Button,
   TextInput,
   ActivityIndicator,
+  Switch,
   Pressable,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import DropDownPicker from "react-native-dropdown-picker";
 
 import { colors, fontFamily, theme } from "../utils/desing";
 import { addNewClientApi } from "../api/clients";
+import {
+  moderateScale,
+  verticalScale,
+  horizontalScale,
+} from "../utils/metrics";
 
 export default function NewClientRegister({ navigation }) {
   const [isLoading, setIsLoading] = useState(false);
+
+  const [genreOpen, setGenreOpen] = useState(false);
+  const [genreValue, setGenreValue] = useState(null);
+  const [genre, setGenre] = useState([
+    { label: "Femenino", value: "female" },
+    { label: "Masculino", value: "male" },
+  ]);
+
+  // const onGenreOpen = useCallback(() => {
+  //   setBrandOpen(false);
+  //   setReferenceOpen(false);
+  //   setTypeServiceOpen(false);
+  // }, []);
 
   const formik = useFormik({
     initialValues: initialValues(),
@@ -59,30 +79,85 @@ export default function NewClientRegister({ navigation }) {
               <Text style={styles.title}>Nuevo cliente</Text>
             </View>
             <View style={styles.wrapper}>
-              <TextInput
-                placeholder="Nombre completo"
-                placeholderTextColor={colors[theme].placeholder}
-                style={styles.input}
-                value={formik.values.fullName}
-                onChangeText={(text) => formik.setFieldValue("fullname", text)}
-              />
-              <TextInput
-                placeholder="Numero de documento"
-                placeholderTextColor={colors[theme].placeholder}
-                style={styles.input}
-                value={formik.values.document}
-                onChangeText={(text) => formik.setFieldValue("document", text)}
-              />
-              <TextInput
-                placeholder="Celular"
-                placeholderTextColor={colors[theme].placeholder}
-                style={styles.input}
-                value={formik.values.phone_number}
-                inputMode="tel"
-                onChangeText={(text) =>
-                  formik.setFieldValue("phone_number", text)
-                }
-              />
+              <View>
+                <Text style={styles.labelText}>Nombre Completo</Text>
+                <TextInput
+                  placeholder="Nombre del usuario o la empresa"
+                  placeholderTextColor={colors[theme].placeholder}
+                  style={styles.input}
+                  value={formik.values.fullName}
+                  onChangeText={(text) =>
+                    formik.setFieldValue("fullname", text)
+                  }
+                />
+              </View>
+
+              <View style={styles.switchContainer}>
+                <Text style={styles.labelText}>Empresa</Text>
+                <Switch
+                  trackColor={{ false: "#767577", true: "#6c5b8f" }}
+                  thumbColor={
+                    formik.values.is_company ? colors[theme].card : "#f4f3f4"
+                  }
+                  onValueChange={(text) =>
+                    formik.setFieldValue("is_company", text)
+                  }
+                  value={formik.values.is_company}
+                />
+              </View>
+
+              <View style={styles.dropdownGender}>
+                <Text style={styles.labelText}>Genero</Text>
+                <DropDownPicker
+                  listMode="SCROLLVIEW"
+                  style={styles.dropdown}
+                  textStyle={styles.textStyle}
+                  dropDownContainerStyle={styles.dropDownContainerStyle}
+                  placeholderStyle={styles.placeholderStyles}
+                  activityIndicatorColor={colors[theme].card}
+                  searchContainerStyle={styles.searchContainerStyle}
+                  searchTextInputStyle={styles.searchTextInputStyle}
+                  open={genreOpen}
+                  value={genreValue} //categoryValue
+                  items={genre}
+                  setOpen={setGenreOpen}
+                  setValue={setGenreValue}
+                  setItems={setGenre}
+                  // onOpen={onTypeServiceOpen}
+                  onChangeValue={(val) => console.log(val)}
+                  loading={isLoading}
+                  placeholder="Seleccionar genero"
+                  zIndex={2000}
+                  zIndexInverse={1000}
+                />
+              </View>
+
+              <View>
+                <Text style={styles.labelText}>CC o NIT</Text>
+                <TextInput
+                  placeholder="Numero de documento o Nit"
+                  placeholderTextColor={colors[theme].placeholder}
+                  style={styles.input}
+                  value={formik.values.document}
+                  onChangeText={(text) =>
+                    formik.setFieldValue("document", text)
+                  }
+                />
+              </View>
+
+              <View>
+                <Text style={styles.labelText}>Celular</Text>
+                <TextInput
+                  placeholder="Celular"
+                  placeholderTextColor={colors[theme].placeholder}
+                  style={styles.input}
+                  value={formik.values.phone_number}
+                  inputMode="tel"
+                  onChangeText={(text) =>
+                    formik.setFieldValue("phone_number", text)
+                  }
+                />
+              </View>
               <TextInput
                 placeholder="Email"
                 placeholderTextColor={colors[theme].placeholder}
@@ -145,6 +220,7 @@ export default function NewClientRegister({ navigation }) {
 function initialValues() {
   return {
     fullname: "",
+    is_company: "",
     document: "",
     phone_number: "",
     email: "",
@@ -156,6 +232,7 @@ function initialValues() {
 function validationSchema() {
   return {
     fullname: Yup.string().required("El nombre es obligatirio"),
+    is_company: Yup.boolean(),
     document: Yup.string().required("El documento es obligatirio"),
     phone_number: Yup.string().required("El numero de celular es obligatirio"),
     email: Yup.string(),
@@ -173,8 +250,16 @@ const styles = StyleSheet.create({
   },
   buttonBack: {
     position: "absolute",
-    top: 100,
-    left: 100,
+    top: verticalScale(60),
+    left: horizontalScale(30),
+    // height: 50,
+    // width: 50,
+    // borderRadius: 25,
+    // backgroundColor: colors[theme].background,
+    // zIndex: 1,
+    // display: "flex",
+    // alignItems: "center",
+    // justifyContent: "center",
   },
   title: {
     color: colors[theme].title,
@@ -185,6 +270,21 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     marginBottom: 10,
+    width: "100%",
+  },
+  switchContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    // backgroundColor: colors[theme].error,
+  },
+  labelText: {
+    color: colors[theme].subtitle,
+    // width: "50%",
+    fontSize: moderateScale(15),
+    fontWeight: "bold",
+    marginHorizontal: horizontalScale(10),
+    marginBottom: verticalScale(10),
   },
   input: {
     backgroundColor: colors[theme].input,
@@ -195,6 +295,26 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
     marginBottom: 25,
     fontFamily: fontFamily,
+  },
+  dropDownContainerStyle: {
+    borderColor: colors[theme].card,
+    padding: 10,
+    backgroundColor: colors[theme].input,
+  },
+  dropdown: {
+    backgroundColor: colors[theme].input,
+    // borderColor: colors[theme].card,
+    color: colors[theme].text,
+    height: verticalScale(50),
+  },
+  dropdownGender: {
+    // marginHorizontal: horizontalScale(10),
+    width: "70%",
+    marginBottom: verticalScale(15),
+  },
+  textStyle: {
+    backgroundColor: colors[theme].input,
+    color: colors[theme].text,
   },
   error: {
     color: colors[theme].error,
