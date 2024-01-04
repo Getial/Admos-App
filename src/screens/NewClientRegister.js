@@ -1,9 +1,10 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
   StyleSheet,
   Text,
   View,
+  ScrollView,
   Button,
   TextInput,
   ActivityIndicator,
@@ -27,18 +28,27 @@ import {
 export default function NewClientRegister({ navigation }) {
   const [isLoading, setIsLoading] = useState(false);
 
-  const [genreOpen, setGenreOpen] = useState(false);
-  const [genreValue, setGenreValue] = useState(null);
-  const [genre, setGenre] = useState([
+  const [genredOpen, setGenredOpen] = useState(false);
+  const [genredValue, setGenredValue] = useState(null);
+  const [genred, setGenred] = useState([
     { label: "Femenino", value: "female" },
     { label: "Masculino", value: "male" },
   ]);
 
-  // const onGenreOpen = useCallback(() => {
-  //   setBrandOpen(false);
-  //   setReferenceOpen(false);
-  //   setTypeServiceOpen(false);
-  // }, []);
+  const [entityOpen, setEntityOpen] = useState(false);
+  const [entityValue, setEntityValue] = useState(null);
+  const [entity, setEntity] = useState([
+    { label: "Persona Natural", value: false },
+    { label: "Empresa", value: true },
+  ]);
+
+  const onGenredOpen = useCallback(() => {
+    setEntityOpen(false);
+  }, []);
+
+  const onEntityOpen = useCallback(() => {
+    setGenredOpen(false);
+  }, []);
 
   const formik = useFormik({
     initialValues: initialValues(),
@@ -74,107 +84,132 @@ export default function NewClientRegister({ navigation }) {
       </Pressable>
       {!isLoading ? (
         <>
-          <View>
-            <View style={styles.wrapper}>
-              <Text style={styles.title}>Nuevo cliente</Text>
-            </View>
-            <View style={styles.wrapper}>
-              <View>
-                <Text style={styles.labelText}>Nombre Completo</Text>
-                <TextInput
-                  placeholder="Nombre del usuario o la empresa"
-                  placeholderTextColor={colors[theme].placeholder}
-                  style={styles.input}
-                  value={formik.values.fullName}
-                  onChangeText={(text) =>
-                    formik.setFieldValue("fullname", text)
-                  }
-                />
-              </View>
+          <Text style={styles.title}>Nuevo cliente</Text>
 
-              <View style={styles.switchContainer}>
-                <Text style={styles.labelText}>Empresa</Text>
-                <Switch
-                  trackColor={{ false: "#767577", true: "#6c5b8f" }}
-                  thumbColor={
-                    formik.values.is_company ? colors[theme].card : "#f4f3f4"
-                  }
-                  onValueChange={(text) =>
-                    formik.setFieldValue("is_company", text)
-                  }
-                  value={formik.values.is_company}
-                />
-              </View>
-
-              <View style={styles.dropdownGender}>
-                <Text style={styles.labelText}>Genero</Text>
-                <DropDownPicker
-                  listMode="SCROLLVIEW"
-                  style={styles.dropdown}
-                  textStyle={styles.textStyle}
-                  dropDownContainerStyle={styles.dropDownContainerStyle}
-                  placeholderStyle={styles.placeholderStyles}
-                  activityIndicatorColor={colors[theme].card}
-                  searchContainerStyle={styles.searchContainerStyle}
-                  searchTextInputStyle={styles.searchTextInputStyle}
-                  open={genreOpen}
-                  value={genreValue} //categoryValue
-                  items={genre}
-                  setOpen={setGenreOpen}
-                  setValue={setGenreValue}
-                  setItems={setGenre}
-                  // onOpen={onTypeServiceOpen}
-                  onChangeValue={(val) => console.log(val)}
-                  loading={isLoading}
-                  placeholder="Seleccionar genero"
-                  zIndex={2000}
-                  zIndexInverse={1000}
-                />
-              </View>
-
-              <View>
-                <Text style={styles.labelText}>CC o NIT</Text>
-                <TextInput
-                  placeholder="Numero de documento o Nit"
-                  placeholderTextColor={colors[theme].placeholder}
-                  style={styles.input}
-                  value={formik.values.document}
-                  onChangeText={(text) =>
-                    formik.setFieldValue("document", text)
-                  }
-                />
-              </View>
-
-              <View>
-                <Text style={styles.labelText}>Celular</Text>
-                <TextInput
-                  placeholder="Celular"
-                  placeholderTextColor={colors[theme].placeholder}
-                  style={styles.input}
-                  value={formik.values.phone_number}
-                  inputMode="tel"
-                  onChangeText={(text) =>
-                    formik.setFieldValue("phone_number", text)
-                  }
-                />
-              </View>
+          <ScrollView style={styles.scrollView}>
+            {/* Nombre completo */}
+            <View>
+              <Text style={styles.labelText}>Nombre Completo</Text>
               <TextInput
-                placeholder="Email"
+                placeholder="Nombre del usuario o la empresa"
+                placeholderTextColor={colors[theme].placeholder}
+                style={styles.input}
+                value={formik.values.fullName}
+                onChangeText={(text) => formik.setFieldValue("fullname", text)}
+              />
+            </View>
+
+            {/* Empresa*/}
+            <View style={styles.dropdownCompany}>
+              <Text style={styles.labelText}>Entidad</Text>
+              <DropDownPicker
+                listMode="SCROLLVIEW"
+                style={styles.dropdown}
+                textStyle={styles.textStyle}
+                dropDownContainerStyle={styles.dropDownContainerStyle}
+                placeholderStyle={styles.placeholderStyles}
+                activityIndicatorColor={colors[theme].card}
+                searchContainerStyle={styles.searchContainerStyle}
+                searchTextInputStyle={styles.searchTextInputStyle}
+                open={entityOpen}
+                value={entityValue} //entityValue
+                items={entity}
+                setOpen={setEntityOpen}
+                setValue={setEntityValue}
+                setItems={setEntity}
+                onOpen={onEntityOpen}
+                onChangeValue={(val) => formik.setFieldValue("is_company", val)}
+                loading={isLoading}
+                placeholder="Seleccionar entidad publica"
+                zIndex={2000}
+                zIndexInverse={1000}
+              />
+            </View>
+
+            {/* Genero */}
+            <View style={styles.dropdownGender}>
+              <Text style={styles.labelText}>Genero</Text>
+              <DropDownPicker
+                listMode="SCROLLVIEW"
+                style={styles.dropdown}
+                textStyle={styles.textStyle}
+                dropDownContainerStyle={styles.dropDownContainerStyle}
+                placeholderStyle={styles.placeholderStyles}
+                activityIndicatorColor={colors[theme].card}
+                searchContainerStyle={styles.searchContainerStyle}
+                searchTextInputStyle={styles.searchTextInputStyle}
+                open={genredOpen}
+                value={genredValue} //genredValue
+                items={genred}
+                setOpen={setGenredOpen}
+                setValue={setGenredValue}
+                setItems={setGenred}
+                onOpen={onGenredOpen}
+                onChangeValue={(val) => formik.setFieldValue("genred", val)}
+                loading={isLoading}
+                placeholder="Seleccionar genero"
+                zIndex={1000}
+                zIndexInverse={2000}
+              />
+            </View>
+
+            {/* cc o nit */}
+            <View>
+              <Text style={styles.labelText}>CC o NIT</Text>
+              <TextInput
+                placeholder="Numero de documento o Nit"
+                placeholderTextColor={colors[theme].placeholder}
+                style={styles.input}
+                value={formik.values.document}
+                onChangeText={(text) => formik.setFieldValue("document", text)}
+              />
+            </View>
+
+            {/* contacto */}
+            <View>
+              <Text style={styles.labelText}>Contacto</Text>
+              <TextInput
+                placeholder="Numero de celular o telefono"
+                placeholderTextColor={colors[theme].placeholder}
+                style={styles.input}
+                value={formik.values.phone_number}
+                inputMode="tel"
+                onChangeText={(text) =>
+                  formik.setFieldValue("phone_number", text)
+                }
+              />
+            </View>
+
+            {/* Correo Electronico */}
+            <View>
+              <Text style={styles.labelText}>Correo Electronico</Text>
+              <TextInput
+                placeholder="Ej: pepitoperez@mail.com"
                 placeholderTextColor={colors[theme].placeholder}
                 style={styles.input}
                 value={formik.values.email}
                 inputMode="email"
                 onChangeText={(text) => formik.setFieldValue("email", text)}
               />
+            </View>
+
+            {/* Direccion */}
+            <View>
+              <Text style={styles.labelText}>Direccion</Text>
               <TextInput
-                placeholder="Direccion"
+                placeholder="Ej: calle 20 #12-12"
                 placeholderTextColor={colors[theme].placeholder}
                 style={styles.input}
                 value={formik.values.address}
                 onChangeText={(text) => formik.setFieldValue("address", text)}
               />
+            </View>
+
+            {/* Ciudad o municipio */}
+            <View>
+              <Text style={styles.labelText}>Ciudad o Municipio</Text>
               <TextInput
-                placeholder="Ciudad o Municipio"
+                placeholder="Ej: Ipiales"
                 placeholderTextColor={colors[theme].placeholder}
                 style={styles.input}
                 value={formik.values.municipality}
@@ -183,29 +218,26 @@ export default function NewClientRegister({ navigation }) {
                 }
               />
             </View>
-            <View>
-              <Button
-                title="Guardar"
-                color={colors[theme].card}
-                onPress={formik.handleSubmit}
-                disabled={isLoading}
-              />
-            </View>
-          </View>
-          {formik.errors.fullname && (
-            <Text style={styles.error}>{formik.errors.fullname}</Text>
-          )}
-          {formik.errors.document && (
-            <Text style={styles.error}>{formik.errors.document}</Text>
-          )}
-          {formik.errors.phone_number && (
-            <Text style={styles.error}>{formik.errors.phone_number}</Text>
-          )}
-          {formik.errors.municipality && (
-            <Text style={styles.error}>{formik.errors.municipality}</Text>
-          )}
+          </ScrollView>
 
-          {/* <Text style={styles.error}>Error</Text> */}
+          <ScrollView style={styles.errorsScrollView}>
+            {formik.errors.fullname && (
+              <Text style={styles.error}>{formik.errors.fullname}</Text>
+            )}
+            {formik.errors.document && (
+              <Text style={styles.error}>{formik.errors.document}</Text>
+            )}
+            {formik.errors.phone_number && (
+              <Text style={styles.error}>{formik.errors.phone_number}</Text>
+            )}
+            {formik.errors.municipality && (
+              <Text style={styles.error}>{formik.errors.municipality}</Text>
+            )}
+          </ScrollView>
+
+          <Pressable style={styles.btnSave} onPress={formik.handleSubmit}>
+            <Text style={styles.textBtn}>Guardar</Text>
+          </Pressable>
         </>
       ) : (
         <View>
@@ -220,7 +252,8 @@ export default function NewClientRegister({ navigation }) {
 function initialValues() {
   return {
     fullname: "",
-    is_company: "",
+    is_company: false,
+    genred: "",
     document: "",
     phone_number: "",
     email: "",
@@ -232,9 +265,10 @@ function initialValues() {
 function validationSchema() {
   return {
     fullname: Yup.string().required("El nombre es obligatirio"),
-    is_company: Yup.boolean(),
+    is_company: Yup.bool(),
+    genred: Yup.string(),
     document: Yup.string().required("El documento es obligatirio"),
-    phone_number: Yup.string().required("El numero de celular es obligatirio"),
+    phone_number: Yup.string().required("El numero de contacto es obligatirio"),
     email: Yup.string(),
     municipality: Yup.string().required("La ciudad o municipio es obligatirio"),
     address: Yup.string(),
@@ -272,6 +306,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     width: "100%",
   },
+  scrollView: {
+    maxHeight: verticalScale(550),
+    width: "80%",
+  },
   switchContainer: {
     display: "flex",
     flexDirection: "row",
@@ -307,6 +345,11 @@ const styles = StyleSheet.create({
     color: colors[theme].text,
     height: verticalScale(50),
   },
+  dropdownCompany: {
+    // marginHorizontal: horizontalScale(10),
+    width: "80%",
+    marginBottom: verticalScale(15),
+  },
   dropdownGender: {
     // marginHorizontal: horizontalScale(10),
     width: "70%",
@@ -315,6 +358,23 @@ const styles = StyleSheet.create({
   textStyle: {
     backgroundColor: colors[theme].input,
     color: colors[theme].text,
+  },
+  btnSave: {
+    backgroundColor: colors[theme].card,
+    alignSelf: "center",
+    width: horizontalScale(100),
+    paddingVertical: verticalScale(10),
+    borderRadius: moderateScale(10),
+    marginTop: verticalScale(20),
+  },
+  textBtn: {
+    color: colors[theme].text,
+    textAlign: "center",
+  },
+  errorsScrollView: {
+    // backgroundColor: colors[theme].card,
+    width: "70%",
+    maxHeight: verticalScale(80),
   },
   error: {
     color: colors[theme].error,

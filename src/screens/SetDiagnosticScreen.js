@@ -69,9 +69,6 @@ export default function SetDiagnosticScreen({ navigation, route }) {
       const response = await updateOrder(id, formValues);
 
       handleUploadEvidences();
-
-      // const form = { state: "revised" };
-      // const responseUpdateState = await updateOrder(id, form);
       setEvidences([]);
       setIsLoading(false);
       response && navigation.navigate("Orders");
@@ -190,7 +187,8 @@ export default function SetDiagnosticScreen({ navigation, route }) {
             <View key={index}>
               <Pressable
                 onPress={() => deleteEvidence(image)}
-                style={styles.btnDeleteEvidence}>
+                style={styles.btnDeleteEvidence}
+              >
                 <Icon
                   name="trash-alt"
                   color={colors[theme].card}
@@ -203,7 +201,8 @@ export default function SetDiagnosticScreen({ navigation, route }) {
                   navigation.navigate("EditEvidence", {
                     img: image,
                   })
-                }>
+                }
+              >
                 <Image
                   key={index}
                   source={{ uri: image.uri }}
