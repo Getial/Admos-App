@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Text,
@@ -32,12 +32,12 @@ import useAuth from "../hooks/useAuth";
 export default function SetDiagnosticScreen({ navigation, route }) {
   const [isLoading, setIsLoading] = useState(false);
   const { images, setEvidences, setEditedEvidence } = useEvidences();
-  const { id } = route.params;
+  const { id, step } = route.params;
   const { auth } = useAuth();
 
   const formik = useFormik({
     initialValues: initialValues(),
-    validationSchema: Yup.object(validationSchema()),
+    validationSchema: Yup.object(validationSchema(step)),
     validateOnChange: false,
     onSubmit: (formValues) => {
       onSubmitFormHandler(formValues);
@@ -56,7 +56,6 @@ export default function SetDiagnosticScreen({ navigation, route }) {
       try {
         const response = await addNewEvidenceApi(formData);
       } catch (error) {
-        console.error("Error al subir las imágenes", error);
         Alert.alert("Error al subir las imágenes", error);
       }
     });
@@ -65,17 +64,16 @@ export default function SetDiagnosticScreen({ navigation, route }) {
   const onSubmitFormHandler = async (formValues) => {
     try {
       setIsLoading(true);
-      formik.setFieldValue("checked_by", auth.id);
-      const response = await updateOrder(id, formValues);
 
-      handleUploadEvidences();
+      const response = await updateOrder(id, formValues);
+      images && handleUploadEvidences();
       setEvidences([]);
       setIsLoading(false);
       response && navigation.navigate("Orders");
     } catch (error) {
-      Alert(
-        "ha ocurrido un error al guardar el diagnostico o las evidencias",
-        error
+      setIsLoading(false);
+      Alert.alert(
+        "ha ocurrido un error al guardar el diagnostico o las evidencias"
       );
     }
   };
@@ -108,14 +106,19 @@ export default function SetDiagnosticScreen({ navigation, route }) {
   const StyleContainerEvidences = () => {
     if (formik.values.is_necesary_spare_parts) {
       return {
-        top: verticalScale(480),
+        top: verticalScale(400),
       };
     } else {
       return {
-        top: verticalScale(350),
+        top: verticalScale(320),
       };
     }
   };
+
+  useEffect(() => {
+    formik.setFieldValue("checked_by", auth.id);
+    formik.setFieldValue("state", step);
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -129,6 +132,22 @@ export default function SetDiagnosticScreen({ navigation, route }) {
 
       <Text style={styles.title}>Detalles de la revision</Text>
 
+      {step !== "revised" && (
+        <View style={[styles.wrapper, styles.containerPrice]}>
+          <Text style={styles.labelText}>Valor de la reparacion</Text>
+          <TextInput
+            multiline
+            placeholder="Precio total"
+            placeholderTextColor={colors[theme].placeholder}
+            style={styles.input}
+            value={formik.values.price_estimate_for_repair}
+            onChangeText={(text) =>
+              formik.setFieldValue("price_estimate_for_repair", text)
+            }
+          />
+        </View>
+      )}
+
       <View style={[styles.wrapper, styles.containerDiagnostic]}>
         <Text style={styles.labelText}>Diagnostico</Text>
         <TextInput
@@ -141,37 +160,38 @@ export default function SetDiagnosticScreen({ navigation, route }) {
         />
       </View>
 
-      <View style={[styles.wrapper, styles.containerQuestion]}>
-        <Text style={styles.labelText}>Solicitar repuestos</Text>
-        <Switch
-          trackColor={{ false: "#767577", true: "#6c5b8f" }}
-          thumbColor={
-            formik.values.is_necesary_spare_parts
-              ? colors[theme].card
-              : "#f4f3f4"
-          }
-          onValueChange={(text) =>
-            formik.setFieldValue("is_necesary_spare_parts", text)
-          }
-          value={formik.values.is_necesary_spare_parts}
-        />
-      </View>
-
-      {formik.values.is_necesary_spare_parts && (
-        <View style={[styles.wrapper, styles.containerSpareParts]}>
-          <Text style={styles.labelText}>Lista de repuestos</Text>
-          <TextInput
-            multiline
-            placeholder="nombre o numero de la pieza, cantidad y medida."
-            placeholderTextColor={colors[theme].placeholder}
-            style={styles.input}
-            value={formik.values.spare_parts_list}
-            onChangeText={(text) =>
-              formik.setFieldValue("spare_parts_list", text)
+      <View style={[styles.wrapper, styles.containerSpareParts]}>
+        <View style={styles.containerQuestion}>
+          <Text style={styles.labelText}>Solicitar repuestos</Text>
+          <Switch
+            trackColor={{ false: "#767577", true: "#6c5b8f" }}
+            thumbColor={
+              formik.values.is_necesary_spare_parts
+                ? colors[theme].card
+                : "#f4f3f4"
             }
+            onValueChange={(text) =>
+              formik.setFieldValue("is_necesary_spare_parts", text)
+            }
+            value={formik.values.is_necesary_spare_parts}
           />
         </View>
-      )}
+        {formik.values.is_necesary_spare_parts && (
+          <View>
+            <Text style={styles.labelText}>Lista de repuestos</Text>
+            <TextInput
+              multiline
+              placeholder="nombre o numero de la pieza, cantidad y medida."
+              placeholderTextColor={colors[theme].placeholder}
+              style={styles.input}
+              value={formik.values.spare_parts_list}
+              onChangeText={(text) =>
+                formik.setFieldValue("spare_parts_list", text)
+              }
+            />
+          </View>
+        )}
+      </View>
 
       <View style={[styles.wrapper, StyleContainerEvidences()]}>
         <Pressable onPress={pickImageAsync} style={styles.btnEvidences}>
@@ -184,7 +204,7 @@ export default function SetDiagnosticScreen({ navigation, route }) {
         </Pressable>
         <ScrollView style={styles.containerImages} horizontal={true}>
           {images?.map((image, index) => (
-            <View key={index}>
+            <View key={index} style={styles.imageContainer}>
               <Pressable
                 onPress={() => deleteEvidence(image)}
                 style={styles.btnDeleteEvidence}
@@ -227,9 +247,16 @@ export default function SetDiagnosticScreen({ navigation, route }) {
         )}
       </View>
 
-      {formik.errors.diagnostic && (
-        <Text style={styles.error}>{formik.errors.diagnostic}</Text>
-      )}
+      <View style={[styles.wrapper, styles.containerErrors]}>
+        {formik.errors.diagnostic && (
+          <Text style={styles.error}>{formik.errors.diagnostic}</Text>
+        )}
+        {formik.errors.price_estimate_for_repair && (
+          <Text style={styles.error}>
+            {formik.errors.price_estimate_for_repair}
+          </Text>
+        )}
+      </View>
     </SafeAreaView>
   );
 }
@@ -237,26 +264,25 @@ export default function SetDiagnosticScreen({ navigation, route }) {
 function initialValues() {
   return {
     diagnostic: "",
-    is_necesary_spare_parts: "",
+    is_necesary_spare_parts: false,
     spare_parts_list: "",
-    state: "revised",
+    state: "",
     checked_by: "",
+    price_estimate_for_repair: null,
   };
 }
 
-function validationSchema() {
+function validationSchema(step) {
   return {
+    price_estimate_for_repair:
+      step !== "revised"
+        ? Yup.string().required("El valor de la reparacion es necesario")
+        : "",
     diagnostic: Yup.string().required("El diagnostico es obligatirio"),
     is_necesary_spare_parts: Yup.bool(),
     spare_parts_list: Yup.string(),
     state: Yup.string(),
     checked_by: Yup.number(),
-    // spare_parts_list: Yup.array().of(
-    //   Yup.object().shape({
-    //     name: Yup.string().required("El nombre o numero de pieza es necesario"),
-    //     amount: Yup.string().required("Especifica la cantidad de repuestos"),
-    //   })
-    // ),
   };
 }
 
@@ -271,14 +297,14 @@ const styles = StyleSheet.create({
   },
   buttonBack: {
     position: "absolute",
-    top: verticalScale(60),
+    top: verticalScale(50),
     left: horizontalScale(30),
   },
   title: {
     color: colors[theme].title,
     fontFamily: fontFamily,
     fontWeight: "bold",
-    marginBottom: verticalScale(25),
+    marginBottom: verticalScale(15),
     fontSize: moderateScale(28),
     position: "absolute",
     top: moderateScale(100),
@@ -287,30 +313,37 @@ const styles = StyleSheet.create({
     width: "90%",
     position: "absolute",
   },
+  containerPrice: {
+    top: moderateScale(150),
+  },
   containerDiagnostic: {
-    top: moderateScale(180),
+    top: moderateScale(250),
+  },
+  containerSpareParts: {
+    top: verticalScale(280),
   },
   containerQuestion: {
-    top: moderateScale(300),
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    // backgroundColor: colors[theme].error,
   },
-  containerSpareParts: {
-    top: verticalScale(350),
-  },
+
   containerImages: {
     marginTop: verticalScale(10),
     display: "flex",
     flexDirection: "row",
   },
+  imageContainer: {
+    padding: moderateScale(5),
+  },
+  containerErrors: {
+    top: verticalScale(480),
+  },
   containerBtnSave: {
-    top: verticalScale(680),
+    top: verticalScale(530),
   },
   labelText: {
     color: colors[theme].subtitle,
-    // width: "50%",
     fontSize: moderateScale(15),
     fontWeight: "bold",
     marginHorizontal: horizontalScale(10),
@@ -321,8 +354,7 @@ const styles = StyleSheet.create({
     color: colors[theme].text,
     width: "95%",
     maxWidth: "95%",
-    // maxWidth: "70%",
-    height: verticalScale(80),
+    height: verticalScale(35),
     borderRadius: 5,
     paddingHorizontal: 5,
     marginBottom: 25,
@@ -343,8 +375,8 @@ const styles = StyleSheet.create({
   },
   btnDeleteEvidence: {
     position: "relative",
-    top: verticalScale(5),
-    left: horizontalScale(115),
+    top: verticalScale(3),
+    left: horizontalScale(120),
     width: moderateScale(34),
     height: moderateScale(34),
     backgroundColor: colors[theme].placeholder,
@@ -358,8 +390,8 @@ const styles = StyleSheet.create({
   image: {
     position: "relative",
     top: verticalScale(-30),
-    width: horizontalScale(150),
-    height: verticalScale(150),
+    width: verticalScale(120),
+    height: verticalScale(130),
     borderRadius: 10,
     marginRight: horizontalScale(5),
   },

@@ -35,12 +35,12 @@ export default function OrderCard(props) {
 const styles = StyleSheet.create({
   cardContainer: {
     width: "95%",
-    height: verticalScale(80),
-    marginBottom: verticalScale(15),
+    height: verticalScale(60),
+    marginBottom: verticalScale(10),
     borderColor: colors[theme].card,
     borderBottomWidth: 1,
     borderRadius: moderateScale(10),
-    paddingTop: verticalScale(18),
+    paddingTop: verticalScale(10),
     paddingHorizontal: horizontalScale(10),
     alignSelf: "center",
     flexDirection: "row",
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
   },
   stateContainer: {
     width: "25%",
-    maxHeight: verticalScale(35),
+    maxHeight: verticalScale(25),
     borderWidth: 2,
     borderColor: colors[theme].input,
     borderRadius: moderateScale(20),

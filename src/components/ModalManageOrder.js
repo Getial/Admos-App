@@ -212,12 +212,31 @@ export default function ModalManageOrder({
 
       case "revised":
         toggleModalManager();
-        navigation.navigate("SetDiagnostic", { id: id });
+        navigation.navigate("SetDiagnostic", { id: id, step: "revised" });
         break;
 
       case "quoted":
+        if (stateOrder === "Ingresado" || stateOrder === "En revision") {
+          navigation.navigate("SetDiagnostic", { id: id, step: "quoted" });
+        } else {
+          navigation.navigate("SetRepairPrice", { id: id });
+        }
         toggleModalManager();
-        navigation.navigate("SetRepairPrice", { id: id });
+        break;
+
+      case "waiting_for_spare_parts":
+        if (stateOrder === "Ingresado" || stateOrder === "En revision") {
+          navigation.navigate("SetDiagnostic", {
+            id: id,
+            step: "waiting_for_spare_parts",
+          });
+          toggleModalManager();
+        } else if (stateOrder === "Revisado") {
+          navigation.navigate("SetRepairPrice", { id: id });
+          toggleModalManager();
+        } else {
+          setSelectedOption(optionSelected.name);
+        }
         break;
 
       default:

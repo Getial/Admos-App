@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
   },
   flatlistContainer: {
     position: "absolute",
-    top: verticalScale(70),
+    top: verticalScale(50),
     left: 0,
     width: "100%",
   },

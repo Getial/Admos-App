@@ -66,7 +66,7 @@ const Navigation = () => {
                   // paddingVertical: 10,
                   borderColor: colors[theme].card,
                   borderTopWidth: 2,
-                  height: verticalScale(55),
+                  height: verticalScale(48),
                   paddingBottom: verticalScale(5),
                 };
               })(route),
@@ -121,21 +121,22 @@ const Navigation = () => {
 const styles = StyleSheet.create({
   iconPlus: {
     position: "absolute",
-    top: verticalScale(-35),
-    width: verticalScale(75),
-    height: verticalScale(70),
+    top: verticalScale(-23),
+    width: verticalScale(60),
+    height: verticalScale(55),
     backgroundColor: colors[theme].background,
     borderWidth: 2,
     borderColor: colors[theme].card,
     borderRadius: 20,
     alignItems: "center",
     textAlign: "center",
-    paddingTop: verticalScale(10),
+    paddingTop: verticalScale(5),
   },
   labelPlus: {
     paddingBottom: verticalScale(20),
     color: colors[theme].card,
     fontSize: moderateScale(11),
+    fontWeight: "bold",
   },
 });
 

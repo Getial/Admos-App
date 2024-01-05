@@ -284,7 +284,7 @@ const styles = StyleSheet.create({
   },
   buttonBack: {
     position: "absolute",
-    top: verticalScale(60),
+    top: verticalScale(50),
     left: horizontalScale(30),
     // height: 50,
     // width: 50,
@@ -307,7 +307,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   scrollView: {
-    maxHeight: verticalScale(550),
+    maxHeight: verticalScale(400),
     width: "80%",
   },
   switchContainer: {

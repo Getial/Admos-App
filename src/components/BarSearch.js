@@ -42,7 +42,8 @@ export default function BarSearch({ searchOrder }) {
         />
         <Pressable
           style={styles.btnSearch}
-          onPress={() => searchOrder(searchValue)}>
+          onPress={() => searchOrder(searchValue)}
+        >
           <Text style={styles.textBtn}>Buscar</Text>
         </Pressable>
       </Pressable>
@@ -56,39 +57,27 @@ const styles = StyleSheet.create({
     top: 20,
     left: 0,
     backgroundColor: colors[theme].background,
-    height: verticalScale(80),
+    height: verticalScale(55),
   },
   barSearch: {
     width: "93%",
-    height: verticalScale(50),
+    height: verticalScale(40),
     backgroundColor: colors[theme].input,
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-evenly",
     alignItems: "center",
     paddingTop: verticalScale(2),
-    // position: "absolute",
-    // top: verticalScale(0),
     marginLeft: "5%",
-    marginTop: verticalScale(20),
-    // marginBottom: verticalScale(5),
+    marginTop: verticalScale(13),
     borderRadius: moderateScale(10),
   },
-  title: {
-    color: colors[theme].title,
-    fontFamily: fontFamily,
-    fontSize: 32,
-    textAlign: "center",
-    marginBottom: 25,
-  },
   input: {
-    // backgroundColor: colors[theme].error,
     color: colors[theme].text,
     maxWidth: "70%",
-    height: verticalScale(35),
+    height: verticalScale(25),
     borderRadius: 5,
     paddingLeft: 5,
-    // marginBottom: 25,
     borderBottomWidth: 1,
     borderColor: colors[theme].background,
     fontFamily: fontFamily,
@@ -98,11 +87,9 @@ const styles = StyleSheet.create({
     color: colors[theme].text,
     textAlign: "center",
     width: horizontalScale(60),
-    height: verticalScale(30),
-    // marginHorizontal: horizontalScale(60),
+    height: verticalScale(25),
     paddingTop: verticalScale(5),
     borderRadius: moderateScale(15),
-    // marginTop: verticalScale(20),
   },
   textBtn: {
     color: colors[theme].text,

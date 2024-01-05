@@ -66,13 +66,13 @@ export default function EditEvidenceScreen({ navigation, route }) {
     const ratio = img.width / img.height;
     if (ratio > 1) {
       return {
-        width: horizontalScale(250 * ratio),
-        height: verticalScale(250),
+        width: horizontalScale(200 * ratio),
+        height: verticalScale(200),
       };
     } else {
       return {
-        width: horizontalScale(450 * ratio),
-        height: verticalScale(450),
+        width: horizontalScale(550 * ratio),
+        height: verticalScale(350),
       };
     }
   };
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
   },
   buttonBack: {
     position: "absolute",
-    top: verticalScale(60),
+    top: verticalScale(50),
     left: horizontalScale(30),
   },
   title: {
