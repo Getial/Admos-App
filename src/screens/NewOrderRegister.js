@@ -37,8 +37,9 @@ export default function NewOrderRegister({ navigation, route }) {
   const [typeServiceOpen, setTypeServiceOpen] = useState(false);
   const [typeServiceValue, setTypeServiceValue] = useState(null);
   const [typeService, setTypeService] = useState([
-    { label: "Cobro", value: false },
-    { label: "Garantia", value: true },
+    { label: "Cobro", value: "collect" },
+    { label: "Garantia", value: "warranty" },
+    { label: "Garantia de taller", value: "workshop_warranty" },
   ]);
 
   const [categoryOpen, setCategoryOpen] = useState(false);
@@ -164,16 +165,23 @@ export default function NewOrderRegister({ navigation, route }) {
       let lastOS = parseInt(response.data[0].service_number);
       lastOS += 1;
       const newOS = lastOS.toString().padStart(5, "0");
-      console.log(newOS);
       return newOS;
     }
   };
 
   const setStateOrder = () => {
-    if (watch("is_guarantee")) {
+    if (watch("type_service") === "warranty") {
       return watch("os_garanty") ? "admitted" : "received";
     } else {
       return "admitted";
+    }
+  };
+
+  const setIsGuarantee = () => {
+    if (watch("type_service") === "warranty") {
+      return true;
+    } else {
+      return false;
     }
   };
 
@@ -185,6 +193,8 @@ export default function NewOrderRegister({ navigation, route }) {
       service_number: await getServiceNumber(),
       received_by: auth.id,
       state: setStateOrder(),
+      admitted_date: state === "admited" ? getDateTime() : "",
+      is_guarantee: setIsGuarantee(),
     };
     try {
       setIsLoading(true);
@@ -213,14 +223,13 @@ export default function NewOrderRegister({ navigation, route }) {
       </Pressable>
       {!isLoading ? (
         <>
+          <Text style={styles.title}>Nueva Orden de Servicio</Text>
           <ScrollView style={styles.scrollView}>
-            {/* is_guarantee */}
+            {/* type service */}
             <View>
               <Text style={styles.labelText}>Tipo de servicio</Text>
-              {/* por cuestiones del formulario backend este campo se guarda como is_guarantee pero 
-          sus opciones en la app se manejan como typeService */}
               <Controller
-                name="is_guarantee"
+                name="type_service"
                 defaultValue=""
                 control={control}
                 render={({ field: { onChange, value } }) => (
@@ -235,7 +244,7 @@ export default function NewOrderRegister({ navigation, route }) {
                       searchContainerStyle={styles.searchContainerStyle}
                       searchTextInputStyle={styles.searchTextInputStyle}
                       open={typeServiceOpen}
-                      value={typeServiceValue} //categoryValue
+                      value={typeServiceValue}
                       items={typeService}
                       setOpen={setTypeServiceOpen}
                       setValue={setTypeServiceValue}
@@ -250,6 +259,28 @@ export default function NewOrderRegister({ navigation, route }) {
                   </View>
                 )}
               />
+            </View>
+
+            {/* os_garanty */}
+            <View>
+              {watch("type_service") === "warranty" && (
+                <View>
+                  <Text style={styles.labelText}>Orden de servicio</Text>
+                  <Controller
+                    name="os_garanty"
+                    defaultValue=""
+                    control={control}
+                    render={({ field: { onChange, value } }) => (
+                      <TextInput
+                        style={styles.input}
+                        selectionColor={"#5188E3"}
+                        onChangeText={onChange}
+                        value={value}
+                      />
+                    )}
+                  />
+                </View>
+              )}
             </View>
 
             {/* category */}
@@ -366,28 +397,6 @@ export default function NewOrderRegister({ navigation, route }) {
               />
             </View>
 
-            {/* os_garanty */}
-            <View>
-              {watch("is_guarantee") === true && (
-                <View>
-                  <Text style={styles.labelText}>Orden de servicio</Text>
-                  <Controller
-                    name="os_garanty"
-                    defaultValue=""
-                    control={control}
-                    render={({ field: { onChange, value } }) => (
-                      <TextInput
-                        style={styles.input}
-                        selectionColor={"#5188E3"}
-                        onChangeText={onChange}
-                        value={value}
-                      />
-                    )}
-                  />
-                </View>
-              )}
-            </View>
-
             {/* serial */}
             <View>
               <Text style={styles.labelText}>Serial</Text>
@@ -444,13 +453,13 @@ export default function NewOrderRegister({ navigation, route }) {
               />
             </View>
 
-            {/* payment_for_revision */}
+            {/* price_for_revision */}
             <View>
               {watch("is_guarantee") === false && (
                 <>
                   <Text style={styles.labelText}>Valor de la revision</Text>
                   <Controller
-                    name="payment_for_revision"
+                    name="price_for_revision"
                     defaultValue=""
                     control={control}
                     render={({ field: { onChange, value } }) => (
@@ -491,12 +500,21 @@ const styles = StyleSheet.create({
   },
   buttonBack: {
     position: "absolute",
-    top: verticalScale(60),
+    top: verticalScale(50),
     left: horizontalScale(30),
   },
+  title: {
+    color: colors[theme].title,
+    fontFamily: fontFamily,
+    fontWeight: "bold",
+    marginBottom: verticalScale(15),
+    fontSize: moderateScale(28),
+    // position: "absolute",
+    // top: moderateScale(90),
+  },
   scrollView: {
-    maxHeight: verticalScale(550),
-    width: "70%",
+    maxHeight: verticalScale(400),
+    width: "85%",
   },
   form: {
     width: "100%",
@@ -509,7 +527,7 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(7),
     borderWidth: 1,
     fontSize: moderateScale(15),
-    height: verticalScale(45),
+    height: verticalScale(35),
     marginHorizontal: horizontalScale(10),
     paddingStart: horizontalScale(10),
     marginBottom: verticalScale(15),
@@ -525,7 +543,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors[theme].input,
     borderColor: colors[theme].card,
     color: colors[theme].text,
-    height: verticalScale(50),
+    height: verticalScale(35),
   },
   textStyle: {
     backgroundColor: colors[theme].input,
@@ -560,8 +578,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
     width: horizontalScale(100),
     marginHorizontal: horizontalScale(60),
-    paddingVertical: verticalScale(15),
+    paddingVertical: verticalScale(8),
     borderRadius: moderateScale(50),
-    marginTop: verticalScale(20),
+    marginTop: verticalScale(10),
   },
 });

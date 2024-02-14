@@ -42,7 +42,10 @@ const LoginScreen = ({ navigation }) => {
       const options = {
         method: "POST",
         url: `${API_HOST}/users/login/`,
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          Accept: "application/json",
+          "content-type": "application/json",
+        },
         data: form,
       };
 
@@ -71,7 +74,7 @@ const LoginScreen = ({ navigation }) => {
           "Usuario no encontrado, revise que el email y la contraseña sean correctos"
         );
       } else {
-        setError("Error con el servidor");
+        setError(`Error con el servidor: ${error.message}, error ${error}`);
       }
       setIsLoading(false);
     }
@@ -101,6 +104,7 @@ const LoginScreen = ({ navigation }) => {
         color={colors[theme].card}
         onPress={formik.handleSubmit}
       />
+      {/* <Text style={styles.error}>{`${API_HOST}/users/login/`}</Text> */}
       <Text style={styles.error}>{error}</Text>
       {formik.errors.email && (
         <Text style={styles.error}>{formik.errors.email}</Text>

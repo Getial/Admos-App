@@ -219,7 +219,7 @@ export default function ModalManageOrder({
         if (stateOrder === "Ingresado" || stateOrder === "En revision") {
           navigation.navigate("SetDiagnostic", { id: id, step: "quoted" });
         } else {
-          navigation.navigate("SetRepairPrice", { id: id });
+          navigation.navigate("SetRepairPrice", { id: id, step: "quoted" });
         }
         toggleModalManager();
         break;
@@ -232,7 +232,28 @@ export default function ModalManageOrder({
           });
           toggleModalManager();
         } else if (stateOrder === "Revisado") {
-          navigation.navigate("SetRepairPrice", { id: id });
+          navigation.navigate("SetRepairPrice", {
+            id: id,
+            step: "waiting_for_spare_parts",
+          });
+          toggleModalManager();
+        } else {
+          setSelectedOption(optionSelected.name);
+        }
+        break;
+
+      case "spare_parts_ready":
+        if (stateOrder === "Ingresado" || stateOrder === "En revision") {
+          navigation.navigate("SetDiagnostic", {
+            id: id,
+            step: "spare_parts_ready",
+          });
+          toggleModalManager();
+        } else if (stateOrder === "Revisado") {
+          navigation.navigate("SetRepairPrice", {
+            id: id,
+            step: "spare_parts_ready",
+          });
           toggleModalManager();
         } else {
           setSelectedOption(optionSelected.name);

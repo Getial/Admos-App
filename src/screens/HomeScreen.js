@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { ActivityIndicator, StyleSheet, FlatList } from "react-native";
+import { ActivityIndicator, StyleSheet, FlatList, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
 
@@ -25,7 +25,9 @@ const HomeScreen = () => {
           setOrders(response);
         } catch (error) {
           setIsLoading(false);
-          throw error;
+          Alert.alert(
+            `Error al traer las ordenes de servicio: error ${error.message}`
+          );
         }
       };
 

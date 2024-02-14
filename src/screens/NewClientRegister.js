@@ -27,6 +27,7 @@ import {
 
 export default function NewClientRegister({ navigation }) {
   const [isLoading, setIsLoading] = useState(false);
+  const [showGenderDropdown, setShowGenderDropdown] = useState(false);
 
   const [genredOpen, setGenredOpen] = useState(false);
   const [genredValue, setGenredValue] = useState(null);
@@ -118,7 +119,11 @@ export default function NewClientRegister({ navigation }) {
                 setValue={setEntityValue}
                 setItems={setEntity}
                 onOpen={onEntityOpen}
-                onChangeValue={(val) => formik.setFieldValue("is_company", val)}
+                // onClose={onEntityClose}
+                onChangeValue={(val) => {
+                  formik.setFieldValue("is_company", val);
+                  setShowGenderDropdown(!val);
+                }}
                 loading={isLoading}
                 placeholder="Seleccionar entidad publica"
                 zIndex={2000}
@@ -127,31 +132,33 @@ export default function NewClientRegister({ navigation }) {
             </View>
 
             {/* Genero */}
-            <View style={styles.dropdownGender}>
-              <Text style={styles.labelText}>Genero</Text>
-              <DropDownPicker
-                listMode="SCROLLVIEW"
-                style={styles.dropdown}
-                textStyle={styles.textStyle}
-                dropDownContainerStyle={styles.dropDownContainerStyle}
-                placeholderStyle={styles.placeholderStyles}
-                activityIndicatorColor={colors[theme].card}
-                searchContainerStyle={styles.searchContainerStyle}
-                searchTextInputStyle={styles.searchTextInputStyle}
-                open={genredOpen}
-                value={genredValue} //genredValue
-                items={genred}
-                setOpen={setGenredOpen}
-                setValue={setGenredValue}
-                setItems={setGenred}
-                onOpen={onGenredOpen}
-                onChangeValue={(val) => formik.setFieldValue("genred", val)}
-                loading={isLoading}
-                placeholder="Seleccionar genero"
-                zIndex={1000}
-                zIndexInverse={2000}
-              />
-            </View>
+            {showGenderDropdown && (
+              <View style={styles.dropdownGender}>
+                <Text style={styles.labelText}>Genero</Text>
+                <DropDownPicker
+                  listMode="SCROLLVIEW"
+                  style={styles.dropdown}
+                  textStyle={styles.textStyle}
+                  dropDownContainerStyle={styles.dropDownContainerStyle}
+                  placeholderStyle={styles.placeholderStyles}
+                  activityIndicatorColor={colors[theme].card}
+                  searchContainerStyle={styles.searchContainerStyle}
+                  searchTextInputStyle={styles.searchTextInputStyle}
+                  open={genredOpen}
+                  value={genredValue} //genredValue
+                  items={genred}
+                  setOpen={setGenredOpen}
+                  setValue={setGenredValue}
+                  setItems={setGenred}
+                  onOpen={onGenredOpen}
+                  onChangeValue={(val) => formik.setFieldValue("genred", val)}
+                  loading={isLoading}
+                  placeholder="Seleccionar genero"
+                  zIndex={1000}
+                  zIndexInverse={2000}
+                />
+              </View>
+            )}
 
             {/* cc o nit */}
             <View>
@@ -280,20 +287,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors[theme].background,
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-around",
   },
   buttonBack: {
     position: "absolute",
     top: verticalScale(50),
     left: horizontalScale(30),
-    // height: 50,
-    // width: 50,
-    // borderRadius: 25,
-    // backgroundColor: colors[theme].background,
-    // zIndex: 1,
-    // display: "flex",
-    // alignItems: "center",
-    // justifyContent: "center",
   },
   title: {
     color: colors[theme].title,
@@ -343,7 +342,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors[theme].input,
     // borderColor: colors[theme].card,
     color: colors[theme].text,
-    height: verticalScale(50),
+    height: verticalScale(30),
   },
   dropdownCompany: {
     // marginHorizontal: horizontalScale(10),
@@ -365,7 +364,7 @@ const styles = StyleSheet.create({
     width: horizontalScale(100),
     paddingVertical: verticalScale(10),
     borderRadius: moderateScale(10),
-    marginTop: verticalScale(20),
+    marginTop: verticalScale(10),
   },
   textBtn: {
     color: colors[theme].text,
@@ -374,10 +373,10 @@ const styles = StyleSheet.create({
   errorsScrollView: {
     // backgroundColor: colors[theme].card,
     width: "70%",
-    maxHeight: verticalScale(80),
+    maxHeight: verticalScale(50),
   },
   error: {
     color: colors[theme].error,
-    marginTop: 20,
+    marginTop: 10,
   },
 });

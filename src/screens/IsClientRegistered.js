@@ -2,7 +2,11 @@ import { StyleSheet, Text, View, Button, Pressable } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/FontAwesome5";
-
+import {
+  verticalScale,
+  horizontalScale,
+  moderateScale,
+} from "../utils/metrics";
 import { colors, fontFamily, theme } from "../utils/desing";
 
 const IsClientRegistered = ({ navigation }) => {
@@ -44,8 +48,8 @@ const styles = StyleSheet.create({
   },
   buttonBack: {
     position: "absolute",
-    top: 100,
-    left: 100,
+    top: verticalScale(50),
+    left: horizontalScale(30),
   },
   title: {
     color: colors[theme].title,
