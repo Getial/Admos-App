@@ -3,11 +3,11 @@ import { ActivityIndicator, StyleSheet, FlatList, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
 
-import OrderCard from "../components/OrderCard";
-import { colors, fontFamily, theme } from "../utils/desing";
-import { getSimpleOrdersApi, getSearchOrdersApi } from "../api/orders";
-import { verticalScale } from "../utils/metrics";
-import BarSearch from "../components/BarSearch";
+import OrderCard from "../../components/OrderCard";
+import { colors, fontFamily, theme } from "../../utils/desing";
+import { getSimpleOrdersApi, getSearchOrdersApi } from "../../api/orders";
+import { verticalScale } from "../../utils/metrics";
+import BarSearch from "../../components/BarSearch";
 
 const HomeScreen = () => {
   const [orders, setOrders] = useState([]);

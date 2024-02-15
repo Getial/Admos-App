@@ -6,8 +6,8 @@ import {
   verticalScale,
   horizontalScale,
   moderateScale,
-} from "../utils/metrics";
-import { colors, fontFamily, theme } from "../utils/desing";
+} from "../../utils/metrics";
+import { colors, fontFamily, theme } from "../../utils/desing";
 
 const IsClientRegistered = ({ navigation }) => {
   return (

@@ -15,17 +15,17 @@ import DropDownPicker from "react-native-dropdown-picker";
 import { useForm, Controller } from "react-hook-form";
 import { shareAsync } from "expo-sharing";
 import axios from "axios";
-import useAuth from "../hooks/useAuth";
+import useAuth from "../../hooks/useAuth";
 
-import { API_HOST } from "../utils/constants";
-import { colors, fontFamily, theme } from "../utils/desing";
+import { API_HOST } from "../../utils/constants";
+import { colors, fontFamily, theme } from "../../utils/desing";
 import {
   verticalScale,
   horizontalScale,
   moderateScale,
-} from "../utils/metrics";
-import generatePDF from "../utils/generatePDF";
-import { addNewOrderApi } from "../api/orders";
+} from "../../utils/metrics";
+import generatePDF from "../../utils/generatePDF";
+import { addNewOrderApi } from "../../api/orders";
 
 export default function NewOrderRegister({ navigation, route }) {
   const { client } = route.params;

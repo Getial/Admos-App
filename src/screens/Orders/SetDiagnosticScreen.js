@@ -18,16 +18,16 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-import { colors, fontFamily, theme } from "../utils/desing";
+import { colors, fontFamily, theme } from "../../utils/desing";
 import {
   verticalScale,
   horizontalScale,
   moderateScale,
-} from "../utils/metrics";
-import useEvidences from "../hooks/useEvidences";
-import { updateOrder } from "../api/orders";
-import { addNewEvidenceApi } from "../api/evidences";
-import useAuth from "../hooks/useAuth";
+} from "../../utils/metrics";
+import useEvidences from "../../hooks/useEvidences";
+import { updateOrder } from "../../api/orders";
+import { addNewEvidenceApi } from "../../api/evidences";
+import useAuth from "../../hooks/useAuth";
 
 export default function SetDiagnosticScreen({ navigation, route }) {
   const [isLoading, setIsLoading] = useState(false);

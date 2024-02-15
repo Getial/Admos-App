@@ -11,18 +11,18 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { captureRef } from "react-native-view-shot";
 
-import IconButton from "../components/IconButton";
-import CircleButton from "../components/CircleButton";
+import IconButton from "../../components/IconButton";
+import CircleButton from "../../components/CircleButton";
 import {
   horizontalScale,
   verticalScale,
   moderateScale,
-} from "../utils/metrics";
-import { colors, theme, fontFamily } from "../utils/desing";
-import EmojiPicker from "../components/EmojiPicker";
-import EmojiList from "../components/EmojiList";
-import EmojiSticker from "../components/EmojiSticker";
-import useEvidences from "../hooks/useEvidences";
+} from "../../utils/metrics";
+import { colors, theme, fontFamily } from "../../utils/desing";
+import EmojiPicker from "../../components/EmojiPicker";
+import EmojiList from "../../components/EmojiList";
+import EmojiSticker from "../../components/EmojiSticker";
+import useEvidences from "../../hooks/useEvidences";
 
 export default function EditEvidenceScreen({ navigation, route }) {
   const { img } = route.params;

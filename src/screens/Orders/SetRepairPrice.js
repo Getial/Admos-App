@@ -10,15 +10,15 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { colors, theme, fontFamily } from "../utils/desing";
+import { colors, theme, fontFamily } from "../../utils/desing";
 import {
   verticalScale,
   horizontalScale,
   moderateScale,
-} from "../utils/metrics";
+} from "../../utils/metrics";
 import { TextInput } from "react-native-gesture-handler";
 
-import { updateOrder } from "../api/orders";
+import { updateOrder } from "../../api/orders";
 
 export default function SetRepairPrice({ navigation, route }) {
   const { id } = route.params;

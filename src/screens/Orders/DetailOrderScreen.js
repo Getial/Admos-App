@@ -13,17 +13,17 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { shareAsync } from "expo-sharing";
 import Icon from "react-native-vector-icons/FontAwesome5";
 
-import InfoClient from "../components/InfoClient";
-import ModalManageOrder from "../components/ModalManageOrder";
-import ModalAddServiceNumber from "../components/ModalAddServiceNumber";
-import { getOrderDetailsApi } from "../api/orders";
-import generatePDF from "../utils/generatePDF";
-import { colors, theme, fontFamily } from "../utils/desing";
+import InfoClient from "../../components/InfoClient";
+import ModalManageOrder from "../../components/ModalManageOrder";
+import ModalAddServiceNumber from "../../components/ModalAddServiceNumber";
+import { getOrderDetailsApi } from "../../api/orders";
+import generatePDF from "../../utils/generatePDF";
+import { colors, theme, fontFamily } from "../../utils/desing";
 import {
   verticalScale,
   horizontalScale,
   moderateScale,
-} from "../utils/metrics";
+} from "../../utils/metrics";
 
 export default function DetailOrderScreen({ route, navigation }) {
   const { id } = route.params;
@@ -32,6 +32,7 @@ export default function DetailOrderScreen({ route, navigation }) {
   const [modalManagerVisible, setModalManagerVisible] = useState(false);
   const [modalServiceNumberVisible, setModalServiceOrderVisible] =
     useState(false);
+
   //get details order
   useEffect(() => {
     (async () => {
@@ -85,18 +86,21 @@ export default function DetailOrderScreen({ route, navigation }) {
           size={moderateScale(30)}
         />
       </Pressable>
+
       {/* Title */}
       <View style={styles.containerTitle}>
         <Text style={styles.title}>Orden de servicio </Text>
         <Pressable
           style={styles.containerOrderNumber}
           disabled={order.service_number !== null ? true : false}
-          onPress={toggleModalServiceNumber}>
+          onPress={toggleModalServiceNumber}
+        >
           <Text style={styles.txtOrderNumber}>
             {order.service_number !== null ? order.service_number : "xxxxx"}
           </Text>
         </Pressable>
       </View>
+
       {/* informacion del cliente */}
       <View>
         <Text style={styles.subtitle}>Informacion del cliente</Text>
@@ -106,6 +110,7 @@ export default function DetailOrderScreen({ route, navigation }) {
           <ActivityIndicator size="large" color={colors[theme].card} />
         )}
       </View>
+
       {/* detalles de la orded */}
       <View style={styles.detailsOrderContainer}>
         <Text style={styles.subtitle}>Detalles del producto</Text>
@@ -113,7 +118,8 @@ export default function DetailOrderScreen({ route, navigation }) {
           <View>
             <Pressable
               onPress={toggleModalManager}
-              style={styles.stateContainer}>
+              style={styles.stateContainer}
+            >
               <Text style={styles.titleState}> {order.state_description}</Text>
               <Icon name="angle-down" color={colors[theme].card} size={30} />
             </Pressable>
@@ -133,7 +139,12 @@ export default function DetailOrderScreen({ route, navigation }) {
               </Pressable>
               <Pressable
                 style={styles.btn}
-                onPress={() => console.log("Ver mas detalles")}>
+                onPress={() =>
+                  navigation.navigate("AllDetailOrder", {
+                    id: id,
+                  })
+                }
+              >
                 <Text style={styles.textBtn}>Ver mas detalles</Text>
               </Pressable>
             </View>
@@ -142,12 +153,14 @@ export default function DetailOrderScreen({ route, navigation }) {
           <ActivityIndicator size="large" color={colors[theme].card} />
         )}
       </View>
+
       {/* modal */}
       <Modal
         animationType="fade"
         transparent={true}
         visible={modalManagerVisible}
-        onRequestClose={toggleModalManager}>
+        onRequestClose={toggleModalManager}
+      >
         <ModalManageOrder
           toggleModalManager={toggleModalManager}
           toggleModalServiceNumber={toggleModalServiceNumber}
@@ -162,7 +175,8 @@ export default function DetailOrderScreen({ route, navigation }) {
         animationType="fade"
         transparent={true}
         visible={modalServiceNumberVisible}
-        onRequestClose={toggleModalServiceNumber}>
+        onRequestClose={toggleModalServiceNumber}
+      >
         <ModalAddServiceNumber
           toggleModalServiceNumber={toggleModalServiceNumber}
           id={order.id}

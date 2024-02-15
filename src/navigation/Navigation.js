@@ -57,7 +57,8 @@ const Navigation = () => {
                   routeName === "DetailOrder" ||
                   routeName === "SetDiagnostic" ||
                   routeName === "EditEvidence" ||
-                  routeName === "SetRepairPrice"
+                  routeName === "SetRepairPrice" ||
+                  routeName === "AllDetailOrder"
                 ) {
                   return { display: "none" };
                 }

@@ -1,9 +1,9 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import IsClientRegistered from "../screens/IsClientRegistered";
-import NewClientRegister from "../screens/NewClientRegister";
-import SearchClient from "../screens/SearchClient";
-import NewOrderRegister from "../screens/NewOrderRegister";
+import IsClientRegistered from "../screens/AddNewOrder/IsClientRegistered";
+import NewClientRegister from "../screens/AddNewOrder/NewClientRegister";
+import SearchClient from "../screens/AddNewOrder/SearchClient";
+import NewOrderRegister from "../screens/AddNewOrder/NewOrderRegister";
 
 const Stack = createNativeStackNavigator();
 
@@ -16,7 +16,8 @@ const NewOrderNavigation = ({ navigation }) => {
       initialRouteName="IsClientRegistered"
       screenOptions={{
         headerShown: false,
-      }}>
+      }}
+    >
       <Stack.Screen name="IsClientRegistered" component={IsClientRegistered} />
       <Stack.Screen name="NewClientRegister" component={NewClientRegister} />
       <Stack.Screen name="SearchClient" component={SearchClient} />

@@ -17,13 +17,13 @@ import * as Yup from "yup";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import DropDownPicker from "react-native-dropdown-picker";
 
-import { colors, fontFamily, theme } from "../utils/desing";
-import { addNewClientApi } from "../api/clients";
+import { colors, fontFamily, theme } from "../../utils/desing";
+import { addNewClientApi } from "../../api/clients";
 import {
   moderateScale,
   verticalScale,
   horizontalScale,
-} from "../utils/metrics";
+} from "../../utils/metrics";
 
 export default function NewClientRegister({ navigation }) {
   const [isLoading, setIsLoading] = useState(false);

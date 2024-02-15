@@ -14,8 +14,8 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/FontAwesome5";
 
-import { API_HOST } from "../utils/constants";
-import { colors, fontFamily, theme } from "../utils/desing";
+import { API_HOST } from "../../utils/constants";
+import { colors, fontFamily, theme } from "../../utils/desing";
 
 export default function SearchClient({ navigation }) {
   const [name, setName] = useState(null);
@@ -41,7 +41,8 @@ export default function SearchClient({ navigation }) {
       style={styles.item}
       onPress={() =>
         navigation.navigate("NewOrderRegister", { client: client.id })
-      }>
+      }
+    >
       <Text style={styles.name}>{client.fullname}</Text>
     </TouchableOpacity>
   );
