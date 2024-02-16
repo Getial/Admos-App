@@ -29,6 +29,7 @@ export default function DetailOrderScreen({ route, navigation }) {
   const { id } = route.params;
   const [isLoading, setIsLoading] = useState(false);
   const [order, setOrder] = useState("");
+  const [isMenuVisible, setIsMenuVisible] = useState(false);
   const [modalManagerVisible, setModalManagerVisible] = useState(false);
   const [modalServiceNumberVisible, setModalServiceOrderVisible] =
     useState(false);
@@ -68,13 +69,31 @@ export default function DetailOrderScreen({ route, navigation }) {
     });
   };
 
-  // const hasServiceOrder = () => {
-  //   if (order.service_number !== null) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // };
+  const Menu = () => {
+    return (
+      <View style={styles.menuContainer}>
+        <Pressable onPress={printOrder} style={styles.menuButton}>
+          <Text style={styles.menuButtonText}>Imprimir Orden</Text>
+        </Pressable>
+        <Pressable
+          onPress={() => console.log("Editar orden")}
+          style={styles.menuButton}
+        >
+          <Text style={styles.menuButtonText}>Editar Orden</Text>
+        </Pressable>
+        <Pressable
+          style={styles.menuButton}
+          onPress={() =>
+            navigation.navigate("AllDetailOrder", {
+              id: id,
+            })
+          }
+        >
+          <Text style={styles.menuButtonText}>Ver mas detalles</Text>
+        </Pressable>
+      </View>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -82,6 +101,17 @@ export default function DetailOrderScreen({ route, navigation }) {
       <Pressable onPress={navigation.goBack} style={styles.buttonBack}>
         <Icon
           name="arrow-left"
+          color={colors[theme].card}
+          size={moderateScale(30)}
+        />
+      </Pressable>
+
+      <Pressable
+        onPress={() => setIsMenuVisible(!isMenuVisible)}
+        style={styles.buttonOptions}
+      >
+        <Icon
+          name="ellipsis-v"
           color={colors[theme].card}
           size={moderateScale(30)}
         />
@@ -101,8 +131,11 @@ export default function DetailOrderScreen({ route, navigation }) {
         </Pressable>
       </View>
 
+      {/* menu */}
+      {isMenuVisible && <Menu />}
+
       {/* informacion del cliente */}
-      <View>
+      <View style={styles.infoClientContainer}>
         <Text style={styles.subtitle}>Informacion del cliente</Text>
         {order.client ? (
           <InfoClient clientId={order.client} />
@@ -133,7 +166,7 @@ export default function DetailOrderScreen({ route, navigation }) {
               <Text style={styles.titleInfo}>Motivo del ingreso: </Text>
               <Text style={styles.info}>{order.reason_for_entry}</Text>
             </View>
-            <View style={styles.btnsContainer}>
+            {/* <View style={styles.btnsContainer}>
               <Pressable style={styles.btn} onPress={printOrder}>
                 <Text style={styles.textBtn}>Imprimir orden</Text>
               </Pressable>
@@ -147,7 +180,7 @@ export default function DetailOrderScreen({ route, navigation }) {
               >
                 <Text style={styles.textBtn}>Ver mas detalles</Text>
               </Pressable>
-            </View>
+            </View> */}
           </View>
         ) : (
           <ActivityIndicator size="large" color={colors[theme].card} />
@@ -197,26 +230,49 @@ const styles = StyleSheet.create({
   },
   buttonBack: {
     position: "absolute",
-    top: verticalScale(60),
+    top: verticalScale(30),
     left: horizontalScale(30),
   },
+  buttonOptions: {
+    position: "absolute",
+    top: verticalScale(30),
+    right: horizontalScale(20),
+  },
+  menuContainer: {
+    position: "absolute",
+    top: verticalScale(65),
+    right: horizontalScale(20),
+    backgroundColor: "white",
+    borderRadius: moderateScale(5),
+    padding: moderateScale(10),
+    zIndex: 1,
+    // elevation: 1,
+  },
+  menuButton: {
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    marginBottom: 5,
+  },
+  menuButtonText: {
+    fontSize: 16,
+  },
   containerTitle: {
+    position: "absolute",
+    top: verticalScale(30),
     display: "flex",
-    flexDirection: "row",
+    flexDirection: "column",
+    alignItems: "center",
   },
   title: {
     color: colors[theme].title,
     fontFamily: fontFamily,
     fontWeight: "bold",
     // textAlign: "center",
-    marginBottom: verticalScale(25),
     fontSize: moderateScale(25),
     // backgroundColor: "red",
   },
   containerOrderNumber: {
-    // backgroundColor: "aqua",
-    // marginTop: verticalScale(5),
-    // marginBottom: 0,
+    marginBottom: verticalScale(25),
   },
   txtOrderNumber: {
     color: colors[theme].card,
@@ -224,8 +280,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: moderateScale(26),
   },
+  infoClientContainer: {
+    marginTop: verticalScale(30),
+  },
   detailsOrderContainer: {
+    // marginTop: verticalScale(80),
     width: "75%",
+    // backgroundColor: "red",
   },
   subtitle: {
     color: colors[theme].title,
@@ -267,14 +328,14 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily,
     fontWeight: "bold",
     textAlign: "left",
-    marginBottom: verticalScale(25),
+    marginBottom: verticalScale(15),
     fontSize: moderateScale(16),
   },
   info: {
     color: colors[theme].title,
     fontFamily: fontFamily,
     textAlign: "right",
-    marginBottom: verticalScale(25),
+    marginBottom: verticalScale(15),
     fontSize: moderateScale(14),
   },
   btnsContainer: {

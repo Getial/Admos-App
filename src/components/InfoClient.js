@@ -117,14 +117,14 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily,
     fontWeight: "bold",
     textAlign: "left",
-    marginBottom: verticalScale(25),
+    marginBottom: verticalScale(15),
     fontSize: moderateScale(18),
   },
   info: {
     color: colors[theme].title,
     fontFamily: fontFamily,
     textAlign: "right",
-    marginBottom: verticalScale(25),
+    marginBottom: verticalScale(15),
     fontSize: moderateScale(14),
   },
   btn: {
