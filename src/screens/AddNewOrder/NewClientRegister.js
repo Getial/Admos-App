@@ -28,12 +28,14 @@ import {
 export default function NewClientRegister({ navigation }) {
   const [isLoading, setIsLoading] = useState(false);
   const [showGenderDropdown, setShowGenderDropdown] = useState(false);
+  const [showSecondPhNumber, setShowSecondPhNumber] = useState(false);
 
   const [genredOpen, setGenredOpen] = useState(false);
   const [genredValue, setGenredValue] = useState(null);
   const [genred, setGenred] = useState([
     { label: "Femenino", value: "female" },
     { label: "Masculino", value: "male" },
+    { label: "Otro", value: "other" },
   ]);
 
   const [entityOpen, setEntityOpen] = useState(false);
@@ -86,7 +88,7 @@ export default function NewClientRegister({ navigation }) {
       {!isLoading ? (
         <>
           <Text style={styles.title}>Nuevo cliente</Text>
-
+          {/* formulario */}
           <ScrollView style={styles.scrollView}>
             {/* Nombre completo */}
             <View>
@@ -174,7 +176,7 @@ export default function NewClientRegister({ navigation }) {
 
             {/* contacto */}
             <View>
-              <Text style={styles.labelText}>Contacto</Text>
+              <Text style={styles.labelText}>Contactos</Text>
               <TextInput
                 placeholder="Numero de celular o telefono"
                 placeholderTextColor={colors[theme].placeholder}
@@ -185,6 +187,30 @@ export default function NewClientRegister({ navigation }) {
                   formik.setFieldValue("phone_number", text)
                 }
               />
+              {/* button add second phone_number */}
+              <Pressable
+                onPress={() => setShowSecondPhNumber(!showSecondPhNumber)}
+                style={styles.buttonPlusPhoneNumber}
+              >
+                <Icon
+                  name={showSecondPhNumber ? "minus" : "plus"}
+                  color={colors[theme].placeholder}
+                  size={moderateScale(20)}
+                />
+              </Pressable>
+
+              {showSecondPhNumber && (
+                <TextInput
+                  placeholder="Numero de celular o telefono"
+                  placeholderTextColor={colors[theme].placeholder}
+                  style={styles.input}
+                  value={formik.values.second_phone_number}
+                  inputMode="tel"
+                  onChangeText={(text) =>
+                    formik.setFieldValue("second_phone_number", text)
+                  }
+                />
+              )}
             </View>
 
             {/* Correo Electronico */}
@@ -227,6 +253,10 @@ export default function NewClientRegister({ navigation }) {
             </View>
           </ScrollView>
 
+          <Pressable style={styles.btnSave} onPress={formik.handleSubmit}>
+            <Text style={styles.textBtn}>Guardar</Text>
+          </Pressable>
+
           <ScrollView style={styles.errorsScrollView}>
             {formik.errors.fullname && (
               <Text style={styles.error}>{formik.errors.fullname}</Text>
@@ -241,10 +271,6 @@ export default function NewClientRegister({ navigation }) {
               <Text style={styles.error}>{formik.errors.municipality}</Text>
             )}
           </ScrollView>
-
-          <Pressable style={styles.btnSave} onPress={formik.handleSubmit}>
-            <Text style={styles.textBtn}>Guardar</Text>
-          </Pressable>
         </>
       ) : (
         <View>
@@ -263,6 +289,7 @@ function initialValues() {
     genred: "",
     document: "",
     phone_number: "",
+    second_phone_number: "",
     email: "",
     municipality: "",
     address: "",
@@ -276,6 +303,7 @@ function validationSchema() {
     genred: Yup.string(),
     document: Yup.string().required("El documento es obligatirio"),
     phone_number: Yup.string().required("El numero de contacto es obligatirio"),
+    second_phone_number: Yup.string(),
     email: Yup.string(),
     municipality: Yup.string().required("La ciudad o municipio es obligatirio"),
     address: Yup.string(),
@@ -308,6 +336,7 @@ const styles = StyleSheet.create({
   scrollView: {
     maxHeight: verticalScale(400),
     width: "80%",
+    // backgroundColor: "red",
   },
   switchContainer: {
     display: "flex",
@@ -326,12 +355,24 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: colors[theme].input,
     color: colors[theme].text,
-    minWidth: "70%",
+    width: "90%",
     height: 40,
     borderRadius: 5,
     paddingLeft: 5,
     marginBottom: 25,
     fontFamily: fontFamily,
+  },
+  buttonPlusPhoneNumber: {
+    width: moderateScale(45),
+    height: moderateScale(35),
+    alignItems: "center",
+    justifyContent: "center",
+    position: "absolute",
+    top: verticalScale(26),
+    right: horizontalScale(32),
+    borderLeftWidth: moderateScale(2),
+    // borderRadius: moderateScale(15),
+    borderColor: colors[theme].background,
   },
   dropDownContainerStyle: {
     borderColor: colors[theme].card,

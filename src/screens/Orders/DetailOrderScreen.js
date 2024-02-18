@@ -75,12 +75,21 @@ export default function DetailOrderScreen({ route, navigation }) {
         <Pressable onPress={printOrder} style={styles.menuButton}>
           <Text style={styles.menuButtonText}>Imprimir Orden</Text>
         </Pressable>
+
         <Pressable
           onPress={() => console.log("Editar orden")}
           style={styles.menuButton}
         >
           <Text style={styles.menuButtonText}>Editar Orden</Text>
         </Pressable>
+
+        <Pressable
+          onPress={() => console.log("ver anteriores")}
+          style={styles.menuButton}
+        >
+          <Text style={styles.menuButtonText}>Ver anteriores</Text>
+        </Pressable>
+
         <Pressable
           style={styles.menuButton}
           onPress={() =>
@@ -111,11 +120,14 @@ export default function DetailOrderScreen({ route, navigation }) {
         style={styles.buttonOptions}
       >
         <Icon
-          name="ellipsis-v"
+          name={isMenuVisible ? "times" : "ellipsis-v"} //times for close icon and ellipsis-v for options icon
           color={colors[theme].card}
           size={moderateScale(30)}
         />
       </Pressable>
+
+      {/* menu */}
+      {isMenuVisible && <Menu />}
 
       {/* Title */}
       <View style={styles.containerTitle}>
@@ -130,9 +142,6 @@ export default function DetailOrderScreen({ route, navigation }) {
           </Text>
         </Pressable>
       </View>
-
-      {/* menu */}
-      {isMenuVisible && <Menu />}
 
       {/* informacion del cliente */}
       <View style={styles.infoClientContainer}>
@@ -234,6 +243,8 @@ const styles = StyleSheet.create({
     left: horizontalScale(30),
   },
   buttonOptions: {
+    width: horizontalScale(30),
+    alignItems: "center",
     position: "absolute",
     top: verticalScale(30),
     right: horizontalScale(20),
@@ -242,11 +253,18 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: verticalScale(65),
     right: horizontalScale(20),
-    backgroundColor: "white",
-    borderRadius: moderateScale(5),
     padding: moderateScale(10),
+    backgroundColor: colors[theme].background,
+    borderRadius: moderateScale(5),
+    shadowColor: colors[theme].card,
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 0,
+    // },
+    // shadowOpacity: 0.1,
+    // shadowRadius: 1,
+    elevation: 5,
     zIndex: 1,
-    // elevation: 1,
   },
   menuButton: {
     paddingVertical: 5,
@@ -254,7 +272,8 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   menuButtonText: {
-    fontSize: 16,
+    fontSize: moderateScale(18),
+    color: colors[theme].text,
   },
   containerTitle: {
     position: "absolute",
@@ -281,12 +300,10 @@ const styles = StyleSheet.create({
     fontSize: moderateScale(26),
   },
   infoClientContainer: {
-    marginTop: verticalScale(30),
+    marginTop: verticalScale(20),
   },
   detailsOrderContainer: {
-    // marginTop: verticalScale(80),
     width: "75%",
-    // backgroundColor: "red",
   },
   subtitle: {
     color: colors[theme].title,
