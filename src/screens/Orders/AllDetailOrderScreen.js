@@ -1,8 +1,9 @@
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import { View, Text, StyleSheet, Pressable, ScrollView } from "react-native";
 import React from "react";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { colors, theme } from "../../utils/desing";
+import moment from "moment";
+import { colors, theme, fontFamily } from "../../utils/desing";
 import {
   verticalScale,
   horizontalScale,
@@ -10,6 +11,12 @@ import {
 } from "../../utils/metrics";
 
 export default function AllDetailOrderScreen({ route, navigation }) {
+  const { order } = route.params;
+
+  // Función para formatear la fecha
+  const formatFecha = (fechaISO) => {
+    return moment(fechaISO).format("DD/MM/YYYY hh:mm:ss A");
+  };
   return (
     <SafeAreaView style={styles.container}>
       {/* button back */}
@@ -20,7 +27,43 @@ export default function AllDetailOrderScreen({ route, navigation }) {
           size={moderateScale(30)}
         />
       </Pressable>
-      <Text>AllDetailOrderScreen</Text>
+
+      <View style={styles.containerTitle}>
+        <Text style={styles.title}>Orden de servicio</Text>
+        <Text style={styles.txtOrderNumber}>{order?.service_number}</Text>
+        <Text
+          style={styles.subtitle}
+        >{`${order.category_name} ${order.brand_name} ${order.reference_name}`}</Text>
+      </View>
+
+      <ScrollView style={styles.scrollView}>
+        {/* fecha de entrada */}
+        <View style={styles.wrapper}>
+          <Text style={styles.label}>Fecha de entrada:</Text>
+          <Text style={styles.info}>{formatFecha(order.entry_date)}</Text>
+        </View>
+        {/* fecha de revision */}
+        <View style={styles.wrapper}>
+          <Text style={styles.label}>Fecha de revision:</Text>
+          <Text style={styles.info}>
+            {order.revised_date
+              ? formatFecha(order.revised_date)
+              : "Aun no se ha revisado"}
+          </Text>
+        </View>
+        {/* Serial*/}
+        <View style={styles.wrapper}>
+          <Text style={styles.label}>Serial:</Text>
+          <Text style={styles.info}>
+            {order.serial ? order.serial : "No tiene serial"}
+          </Text>
+        </View>
+        {/* motivo de ingreso*/}
+        <View style={styles.wrapper}>
+          <Text style={styles.label}>Motivo de ingreso:</Text>
+          <Text style={styles.info}>{order.reason_for_entry}</Text>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -35,7 +78,48 @@ const styles = StyleSheet.create({
   },
   buttonBack: {
     position: "absolute",
-    top: verticalScale(60),
+    top: verticalScale(30),
     left: horizontalScale(30),
+  },
+  containerTitle: {
+    position: "absolute",
+    top: verticalScale(30),
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  title: {
+    color: colors[theme].title,
+    fontFamily: fontFamily,
+    fontWeight: "bold",
+    fontSize: moderateScale(25),
+  },
+  txtOrderNumber: {
+    color: colors[theme].card,
+    fontFamily: fontFamily,
+    fontWeight: "bold",
+    fontSize: moderateScale(26),
+  },
+  subtitle: {
+    color: colors[theme].placeholder,
+  },
+  scrollView: {
+    // backgroundColor: "blue",
+    width: "100%",
+    marginTop: verticalScale(30),
+  },
+  wrapper: {
+    display: "flex",
+    flexDirection: "row",
+    // backgroundColor: "red",
+    // justifyContent: "space-around",
+  },
+  label: {
+    color: colors[theme].text,
+    width: "40%",
+  },
+  info: {
+    color: colors[theme].text,
+    width: "60%",
   },
 });

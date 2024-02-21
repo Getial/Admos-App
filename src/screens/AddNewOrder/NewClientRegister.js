@@ -174,7 +174,7 @@ export default function NewClientRegister({ navigation }) {
               />
             </View>
 
-            {/* contacto */}
+            {/* contactos */}
             <View>
               <Text style={styles.labelText}>Contactos</Text>
               <TextInput

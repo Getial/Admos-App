@@ -94,7 +94,7 @@ export default function DetailOrderScreen({ route, navigation }) {
           style={styles.menuButton}
           onPress={() =>
             navigation.navigate("AllDetailOrder", {
-              id: id,
+              order: order,
             })
           }
         >
@@ -115,6 +115,7 @@ export default function DetailOrderScreen({ route, navigation }) {
         />
       </Pressable>
 
+      {/* button options */}
       <Pressable
         onPress={() => setIsMenuVisible(!isMenuVisible)}
         style={styles.buttonOptions}
@@ -174,6 +175,12 @@ export default function DetailOrderScreen({ route, navigation }) {
             <View style={styles.infoContainer}>
               <Text style={styles.titleInfo}>Motivo del ingreso: </Text>
               <Text style={styles.info}>{order.reason_for_entry}</Text>
+            </View>
+            <View style={styles.infoObservations}>
+              <Text style={styles.titleInfo}>Observaciones: </Text>
+              <Text style={styles.infoTxtObservations}>
+                {order.observations}
+              </Text>
             </View>
             {/* <View style={styles.btnsContainer}>
               <Pressable style={styles.btn} onPress={printOrder}>
@@ -333,10 +340,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "flex-end",
   },
+  infoObservations: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
+  },
   titleState: {
     color: colors[theme].title,
     width: "70%",
-    textAlign: "center",
+    textAlign: "left",
     // backgroundColor: "red",
     // textAlign: "left",
   },
@@ -345,14 +357,18 @@ const styles = StyleSheet.create({
     fontFamily: fontFamily,
     fontWeight: "bold",
     textAlign: "left",
-    marginBottom: verticalScale(15),
+    marginBottom: verticalScale(10),
     fontSize: moderateScale(16),
   },
   info: {
     color: colors[theme].title,
     fontFamily: fontFamily,
     textAlign: "right",
-    marginBottom: verticalScale(15),
+    marginBottom: verticalScale(10),
+    fontSize: moderateScale(14),
+  },
+  infoTxtObservations: {
+    color: colors[theme].text,
     fontSize: moderateScale(14),
   },
   btnsContainer: {
