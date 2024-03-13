@@ -42,15 +42,6 @@ export default function AllDetailOrderScreen({ route, navigation }) {
           <Text style={styles.label}>Fecha de entrada:</Text>
           <Text style={styles.info}>{formatFecha(order.entry_date)}</Text>
         </View>
-        {/* fecha de revision */}
-        <View style={styles.wrapper}>
-          <Text style={styles.label}>Fecha de revision:</Text>
-          <Text style={styles.info}>
-            {order.revised_date
-              ? formatFecha(order.revised_date)
-              : "Aun no se ha revisado"}
-          </Text>
-        </View>
         {/* Serial*/}
         <View style={styles.wrapper}>
           <Text style={styles.label}>Serial:</Text>
@@ -62,6 +53,37 @@ export default function AllDetailOrderScreen({ route, navigation }) {
         <View style={styles.wrapper}>
           <Text style={styles.label}>Motivo de ingreso:</Text>
           <Text style={styles.info}>{order.reason_for_entry}</Text>
+        </View>
+        {/* fecha de revision y revisado por */}
+        {order.revised_date && (
+          <>
+            <View style={styles.wrapper}>
+              <Text style={styles.label}>Fecha de revision:</Text>
+              <Text style={styles.info}>{formatFecha(order.revised_date)}</Text>
+            </View>
+            {/* revisado por */}
+            <View style={styles.wrapper}>
+              <Text style={styles.label}>Fecha de revision:</Text>
+              <Text style={styles.info}>{order.checked_by}</Text>
+            </View>
+          </>
+        )}
+        {/* diagnostico*/}
+        <View style={styles.wrapper}>
+          <Text style={styles.label}>Diagnostico:</Text>
+          <Text style={styles.info}>{order.diagnostic}</Text>
+        </View>
+        {/* listado de repuestos */}
+        {order.is_necesary_spare_parts && (
+          <View style={styles.wrapper}>
+            <Text style={styles.label}>Repuestos:</Text>
+            <Text style={styles.info}>{order.spare_parts_list}</Text>
+          </View>
+        )}
+        {/* valor de la reparacion*/}
+        <View style={styles.wrapper}>
+          <Text style={styles.label}>Valor de la reparacion:</Text>
+          <Text style={styles.info}>{order.price_estimate_for_repair}</Text>
         </View>
       </ScrollView>
     </SafeAreaView>

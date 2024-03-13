@@ -98,6 +98,14 @@ const Navigation = () => {
             name="Settings"
             component={SettingsScreen}
             options={{
+              tabBarStyle: {
+                backgroundColor: colors[theme].background,
+                // paddingVertical: 10,
+                borderColor: colors[theme].card,
+                borderTopWidth: 2,
+                height: verticalScale(48),
+                paddingBottom: verticalScale(5),
+              },
               tabBarLabel: "Configuraciones",
               tabBarIcon: ({ color }) => (
                 <Icon size={moderateScale(20)} name="cog" color={color} />

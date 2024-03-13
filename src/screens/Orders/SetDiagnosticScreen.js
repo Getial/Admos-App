@@ -61,11 +61,21 @@ export default function SetDiagnosticScreen({ navigation, route }) {
     });
   };
 
+  const getDateTime = () => {
+    return new Date();
+  };
+
   const onSubmitFormHandler = async (formValues) => {
+    const formData = {
+      ...formValues,
+      checked_by: auth.id,
+      state: step,
+      revised_date: getDateTime(),
+    };
     try {
       setIsLoading(true);
 
-      const response = await updateOrder(id, formValues);
+      const response = await updateOrder(id, formData);
       images && handleUploadEvidences();
       setEvidences([]);
       setIsLoading(false);
@@ -115,10 +125,10 @@ export default function SetDiagnosticScreen({ navigation, route }) {
     }
   };
 
-  useEffect(() => {
-    formik.setFieldValue("checked_by", auth.id);
-    formik.setFieldValue("state", step);
-  }, []);
+  // useEffect(() => {
+  //   formik.setFieldValue("checked_by", auth.id);
+  //   formik.setFieldValue("state", step);
+  // }, []);
 
   return (
     <SafeAreaView style={styles.container}>
