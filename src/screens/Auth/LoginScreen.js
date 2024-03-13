@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   StyleSheet,
   ActivityIndicator,
+  Pressable,
 } from "react-native";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -13,6 +14,11 @@ import axios from "axios";
 import useAuth from "../../hooks/useAuth";
 
 import { colors, fontFamily, theme } from "../../utils/desing";
+import {
+  verticalScale,
+  horizontalScale,
+  moderateScale,
+} from "../../utils/metrics";
 import { API_HOST } from "../../utils/constants";
 
 const LoginScreen = ({ navigation }) => {
@@ -48,15 +54,6 @@ const LoginScreen = ({ navigation }) => {
         },
         data: form,
       };
-
-      // axios
-      //   .request(options)
-      //   .then(function (response) {
-      //     console.log(response.data);
-      //   })
-      //   .catch(function (error) {
-      //     console.error(error.message);
-      //   });
 
       const response = await axios(options);
 
@@ -104,7 +101,12 @@ const LoginScreen = ({ navigation }) => {
         color={colors[theme].card}
         onPress={formik.handleSubmit}
       />
-      {/* <Text style={styles.error}>{`${API_HOST}/users/login/`}</Text> */}
+      <Pressable
+        style={styles.btnRegister}
+        onPress={() => navigation.navigate("Register")}
+      >
+        <Text style={styles.textBtn}>Registrarse</Text>
+      </Pressable>
       <Text style={styles.error}>{error}</Text>
       {formik.errors.email && (
         <Text style={styles.error}>{formik.errors.email}</Text>
@@ -162,6 +164,21 @@ const styles = StyleSheet.create({
   },
   button: {
     fontFamily: fontFamily,
+  },
+  btnRegister: {
+    // backgroundColor: colors[theme].card,
+    alignSelf: "center",
+    width: horizontalScale(80),
+    paddingVertical: verticalScale(5),
+    borderRadius: moderateScale(10),
+    marginTop: verticalScale(20),
+    borderWidth: moderateScale(1),
+    borderColor: colors[theme].card,
+  },
+  textBtn: {
+    color: colors[theme].text,
+    textAlign: "center",
+    fontSize: moderateScale(12),
   },
   error: {
     color: colors[theme].error,
