@@ -94,7 +94,7 @@ export default function NewClientRegister({ navigation }) {
             <View>
               <Text style={styles.labelText}>Nombre Completo</Text>
               <TextInput
-                placeholder="Nombre del usuario o la empresa"
+                placeholder="Nombre del cliente o la empresa"
                 placeholderTextColor={colors[theme].placeholder}
                 style={styles.input}
                 value={formik.values.fullName}

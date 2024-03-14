@@ -36,14 +36,49 @@ export default function RegisterScreen({ navigation }) {
       </Pressable>
       <Text style={styles.title}>Registrarse</Text>
       <View>
+        {/* fullname */}
         <View>
           <Text style={styles.labelText}>Nombre Completo</Text>
           <TextInput
-            placeholder="Nombre del usuario o la empresa"
+            placeholder="Nombre y apellido"
             placeholderTextColor={colors[theme].placeholder}
             style={styles.input}
-            value={formik.values.fullName}
+            value={formik.values.fullname}
             onChangeText={(text) => formik.setFieldValue("fullname", text)}
+          />
+        </View>
+        {/* occupation */}
+        <View>
+          <Text style={styles.labelText}>Cargo</Text>
+          <TextInput
+            placeholder="Cargo"
+            placeholderTextColor={colors[theme].placeholder}
+            style={styles.input}
+            value={formik.values.occupation}
+            onChangeText={(text) => formik.setFieldValue("occupation", text)}
+          />
+        </View>
+        {/* email */}
+        <View>
+          <Text style={styles.labelText}>Correo Electronico</Text>
+          <TextInput
+            placeholder="Correo Electronico"
+            placeholderTextColor={colors[theme].placeholder}
+            style={styles.input}
+            value={formik.values.email}
+            onChangeText={(text) => formik.setFieldValue("email", text)}
+          />
+        </View>
+        {/* password */}
+        <View>
+          <Text style={styles.labelText}>Contraseña</Text>
+          <TextInput
+            placeholder="Contraseña"
+            placeholderTextColor={colors[theme].placeholder}
+            secureTextEntry
+            style={styles.input}
+            value={formik.values.password}
+            onChangeText={(text) => formik.setFieldValue("password", text)}
           />
         </View>
       </View>
@@ -59,6 +94,8 @@ export default function RegisterScreen({ navigation }) {
 
 function initialValues() {
   return {
+    fullname: "",
+    occupation: "",
     email: "",
     password: "",
   };
@@ -92,19 +129,19 @@ const styles = StyleSheet.create({
   labelText: {
     color: colors[theme].subtitle,
     // width: "50%",
-    fontSize: moderateScale(15),
+    fontSize: moderateScale(13),
     fontWeight: "bold",
-    marginHorizontal: horizontalScale(10),
-    marginBottom: verticalScale(10),
+    // marginHorizontal: horizontalScale(10),
+    marginBottom: verticalScale(5),
   },
   input: {
     backgroundColor: colors[theme].input,
     color: colors[theme].text,
     width: "90%",
-    height: 40,
+    height: verticalScale(25),
     borderRadius: 5,
     paddingLeft: 5,
-    marginBottom: 25,
+    marginBottom: verticalScale(15),
     fontFamily: fontFamily,
   },
   button: {
