@@ -1,5 +1,12 @@
 import React from "react";
-import { View, Text, TextInput, Pressable, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Pressable,
+  StyleSheet,
+  Keyboard,
+} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFormik } from "formik";
@@ -22,7 +29,9 @@ export default function RegisterScreen({ navigation }) {
     },
   });
 
-  const onSubmitFormHandler = () => {};
+  const onSubmitFormHandler = (data) => {
+    console.log(data);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -35,12 +44,12 @@ export default function RegisterScreen({ navigation }) {
         />
       </Pressable>
       <Text style={styles.title}>Registrarse</Text>
-      <View>
+      <View style={styles.form}>
         {/* fullname */}
         <View>
           <Text style={styles.labelText}>Nombre Completo</Text>
           <TextInput
-            placeholder="Nombre y apellido"
+            placeholder="Pepito Perez"
             placeholderTextColor={colors[theme].placeholder}
             style={styles.input}
             value={formik.values.fullname}
@@ -51,7 +60,7 @@ export default function RegisterScreen({ navigation }) {
         <View>
           <Text style={styles.labelText}>Cargo</Text>
           <TextInput
-            placeholder="Cargo"
+            placeholder="Tecnico electricista"
             placeholderTextColor={colors[theme].placeholder}
             style={styles.input}
             value={formik.values.occupation}
@@ -62,8 +71,9 @@ export default function RegisterScreen({ navigation }) {
         <View>
           <Text style={styles.labelText}>Correo Electronico</Text>
           <TextInput
-            placeholder="Correo Electronico"
+            placeholder="pepito99@example.com"
             placeholderTextColor={colors[theme].placeholder}
+            inputMode="email"
             style={styles.input}
             value={formik.values.email}
             onChangeText={(text) => formik.setFieldValue("email", text)}
@@ -73,7 +83,7 @@ export default function RegisterScreen({ navigation }) {
         <View>
           <Text style={styles.labelText}>Contraseña</Text>
           <TextInput
-            placeholder="Contraseña"
+            placeholder="********"
             placeholderTextColor={colors[theme].placeholder}
             secureTextEntry
             style={styles.input}
@@ -81,11 +91,22 @@ export default function RegisterScreen({ navigation }) {
             onChangeText={(text) => formik.setFieldValue("password", text)}
           />
         </View>
+        {/* password confirmation */}
+        <View>
+          <Text style={styles.labelText}>Confirmar contraseña</Text>
+          <TextInput
+            placeholder="********"
+            placeholderTextColor={colors[theme].placeholder}
+            secureTextEntry
+            style={styles.input}
+            value={formik.values.password_confirmation}
+            onChangeText={(text) =>
+              formik.setFieldValue("password_confirmation", text)
+            }
+          />
+        </View>
       </View>
-      <Pressable
-        style={styles.btnRegister}
-        onPress={() => console.log("Register")}
-      >
+      <Pressable style={styles.btnRegister} onPress={formik.handleSubmit}>
         <Text style={styles.textBtn}>Guardar</Text>
       </Pressable>
     </SafeAreaView>
@@ -98,12 +119,18 @@ function initialValues() {
     occupation: "",
     email: "",
     password: "",
+    password_confirmation: "",
   };
 }
 function validationSchema() {
   return {
+    fullname: Yup.string().required("El nombre es obligatorio"),
+    occupation: Yup.string().required("El cargo es obligatorio"),
     email: Yup.string().required("El correo es obligatorio"),
     password: Yup.string().required("La contraseña es obligatiria"),
+    password_confirmation: Yup.string().required(
+      "Debes confirmar la contraseña"
+    ),
   };
 }
 
@@ -126,21 +153,28 @@ const styles = StyleSheet.create({
     color: colors[theme].title,
     marginBottom: 50,
   },
+  form: {
+    width: "60%",
+    // backgroundColor: colors[theme].error,
+  },
   labelText: {
     color: colors[theme].subtitle,
     // width: "50%",
     fontSize: moderateScale(13),
     fontWeight: "bold",
+    // paddingLeft: 5,
     // marginHorizontal: horizontalScale(10),
     marginBottom: verticalScale(5),
   },
   input: {
-    backgroundColor: colors[theme].input,
+    // backgroundColor: colors[theme].input,
+    borderBottomWidth: moderateScale(1),
+    borderBottomColor: colors[theme].input,
     color: colors[theme].text,
-    width: "90%",
+    width: "100%",
     height: verticalScale(25),
-    borderRadius: 5,
-    paddingLeft: 5,
+    // borderRadius: 5,
+    // paddingLeft: 5,
     marginBottom: verticalScale(15),
     fontFamily: fontFamily,
   },

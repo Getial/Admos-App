@@ -154,6 +154,8 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: colors[theme].input,
+    // borderBottomWidth: moderateScale(1),
+    // borderBottomColor: colors[theme].text,
     color: colors[theme].text,
     minWidth: "50%",
     height: 40,
