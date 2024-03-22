@@ -7,7 +7,9 @@ import {
   StyleSheet,
   ActivityIndicator,
   Pressable,
+  View,
 } from "react-native";
+import Icon from "react-native-vector-icons/FontAwesome5";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
@@ -28,6 +30,7 @@ const LoginScreen = ({ navigation }) => {
   }, [navigation]);
 
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const { login } = useAuth();
 
@@ -80,22 +83,36 @@ const LoginScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Iniciar Sesion</Text>
-      <TextInput
-        placeholder="Email"
-        placeholderTextColor={colors[theme].placeholder}
-        style={styles.input}
-        value={formik.values.email}
-        inputMode="email"
-        onChangeText={(text) => formik.setFieldValue("email", text)}
-      />
-      <TextInput
-        placeholder="Contraseña"
-        placeholderTextColor={colors[theme].placeholder}
-        style={styles.input}
-        value={formik.values.password}
-        secureTextEntry={true}
-        onChangeText={(text) => formik.setFieldValue("password", text)}
-      />
+      <View>
+        <TextInput
+          placeholder="Email"
+          placeholderTextColor={colors[theme].placeholder}
+          style={styles.input}
+          value={formik.values.email}
+          inputMode="email"
+          onChangeText={(text) => formik.setFieldValue("email", text)}
+        />
+      </View>
+      <View>
+        <TextInput
+          placeholder="Contraseña"
+          placeholderTextColor={colors[theme].placeholder}
+          style={styles.input}
+          value={formik.values.password}
+          secureTextEntry={!showPassword}
+          onChangeText={(text) => formik.setFieldValue("password", text)}
+        />
+        <Pressable
+          style={styles.showPassword}
+          onPress={() => setShowPassword(!showPassword)}
+        >
+          <Icon
+            name={showPassword ? "eye-slash" : "eye"}
+            size={moderateScale(15)}
+            color={colors[theme].placeholder}
+          />
+        </Pressable>
+      </View>
       <Button
         title="Entrar"
         color={colors[theme].card}
@@ -154,8 +171,6 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: colors[theme].input,
-    // borderBottomWidth: moderateScale(1),
-    // borderBottomColor: colors[theme].text,
     color: colors[theme].text,
     minWidth: "50%",
     height: 40,
@@ -163,6 +178,11 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
     marginBottom: 15,
     fontFamily: fontFamily,
+  },
+  showPassword: {
+    position: "absolute",
+    right: horizontalScale(10),
+    top: verticalScale(9),
   },
   button: {
     fontFamily: fontFamily,

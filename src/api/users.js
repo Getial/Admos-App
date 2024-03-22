@@ -14,9 +14,11 @@ export async function addNewUserApi(formValues) {
     };
 
     const response = await axios(config);
-    const result = await response.data;
-    return result;
+    // const result = await response.data;
+    return response;
   } catch (error) {
-    throw error;
+    // console.log("error catch api  ", { ...error });
+    console.log(error.response.request._response);
+    return error.response;
   }
 }

@@ -7,7 +7,7 @@ export const colors = {
     placeholder: "#FFF6",
     input: "#3D3A50",
     card: "#580EF6",
-    error: "#f00",
+    error: "#f008",
   },
   light: {
     background: "#F7F7F7",
@@ -17,7 +17,7 @@ export const colors = {
     placeholder: "#3A3A3A",
     input: "#C493FF",
     card: "#580EF6",
-    error: "#f00",
+    error: "#f008",
   },
 };
 

@@ -5,7 +5,6 @@ import {
   TextInput,
   Pressable,
   StyleSheet,
-  Keyboard,
   ScrollView,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
@@ -24,12 +23,14 @@ import useAuth from "../../hooks/useAuth";
 
 export default function RegisterScreen({ navigation }) {
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
   const { login } = useAuth();
 
   const formik = useFormik({
     initialValues: initialValues(),
     validationSchema: Yup.object(validationSchema()),
-    validateOnChange: false,
+    validateOnChange: true,
     onSubmit: (formValues) => {
       onSubmitFormHandler(formValues);
     },
@@ -39,9 +40,21 @@ export default function RegisterScreen({ navigation }) {
     setIsLoading(true);
     try {
       const response = await addNewUserApi(data);
-      login(response);
+
+      if (response.status === 201) {
+        setIsLoading(false);
+        setError("");
+        login(response.data);
+      } else {
+        console.log("status--->", response.status);
+        if (response.data && response.request) {
+          throw new Error(response.request._response);
+        } else {
+          throw new Error("Ha ocurrido un error con el servidor");
+        }
+      }
     } catch (error) {
-      alert("Ha ocurrido un error", error);
+      alert(error);
       setIsLoading(false);
     }
   };
@@ -59,7 +72,7 @@ export default function RegisterScreen({ navigation }) {
       <Text style={styles.title}>Registrarse</Text>
       <View style={styles.form}>
         {/* firstname */}
-        <View>
+        <View style={styles.wrapper}>
           <Text style={styles.labelText}>Nombre</Text>
           <TextInput
             placeholder="Pepito"
@@ -71,9 +84,12 @@ export default function RegisterScreen({ navigation }) {
               formik.setFieldValue("username", formik.values.first_name)
             }
           />
+          {formik.errors.first_name && formik.values.first_name && (
+            <Text style={styles.error}>{formik.errors.first_name}</Text>
+          )}
         </View>
         {/* lastname */}
-        <View>
+        <View style={styles.wrapper}>
           <Text style={styles.labelText}>Apellido</Text>
           <TextInput
             placeholder="Perez"
@@ -88,9 +104,12 @@ export default function RegisterScreen({ navigation }) {
               )
             }
           />
+          {formik.errors.last_name && formik.values.last_name && (
+            <Text style={styles.error}>{formik.errors.last_name}</Text>
+          )}
         </View>
         {/* occupation */}
-        <View>
+        <View style={styles.wrapper}>
           <Text style={styles.labelText}>Cargo</Text>
           <TextInput
             placeholder="Tecnico electricista"
@@ -99,9 +118,12 @@ export default function RegisterScreen({ navigation }) {
             value={formik.values.occupation}
             onChangeText={(text) => formik.setFieldValue("occupation", text)}
           />
+          {formik.errors.occupation && formik.values.occupation && (
+            <Text style={styles.error}>{formik.errors.occupation}</Text>
+          )}
         </View>
         {/* email */}
-        <View>
+        <View style={styles.wrapper}>
           <Text style={styles.labelText}>Correo Electronico</Text>
           <TextInput
             placeholder="pepito99@example.com"
@@ -111,65 +133,68 @@ export default function RegisterScreen({ navigation }) {
             value={formik.values.email}
             onChangeText={(text) => formik.setFieldValue("email", text)}
           />
+          {formik.errors.email && formik.values.email && (
+            <Text style={styles.error}>{formik.errors.email}</Text>
+          )}
         </View>
         {/* password */}
-        <View>
+        <View style={styles.wrapper}>
           <Text style={styles.labelText}>Contraseña</Text>
           <TextInput
             placeholder="********"
             placeholderTextColor={colors[theme].placeholder}
-            secureTextEntry
+            secureTextEntry={!showPassword}
             style={styles.input}
             value={formik.values.password}
             onChangeText={(text) => formik.setFieldValue("password", text)}
           />
+          <Pressable
+            style={styles.showPassword}
+            onPress={() => setShowPassword(!showPassword)}
+          >
+            <Icon
+              name={showPassword ? "eye-slash" : "eye"}
+              size={moderateScale(18)}
+              color={colors[theme].placeholder}
+            />
+          </Pressable>
+          {formik.errors.password && formik.values.password && (
+            <Text style={styles.error}>{formik.errors.password}</Text>
+          )}
         </View>
         {/* password confirmation */}
-        <View>
+        <View style={styles.wrapper}>
           <Text style={styles.labelText}>Confirmar contraseña</Text>
           <TextInput
             placeholder="********"
             placeholderTextColor={colors[theme].placeholder}
-            secureTextEntry
+            secureTextEntry={!showPassword}
             style={styles.input}
             value={formik.values.password_confirmation}
             onChangeText={(text) =>
               formik.setFieldValue("password_confirmation", text)
             }
           />
+          <Pressable
+            style={styles.showPassword}
+            onPress={() => setShowPassword(!showPassword)}
+          >
+            <Icon
+              name={showPassword ? "eye-slash" : "eye"}
+              size={moderateScale(18)}
+              color={colors[theme].placeholder}
+            />
+          </Pressable>
+          {formik.errors.password_confirmation && (
+            <Text style={styles.error}>
+              {formik.errors.password_confirmation}
+            </Text>
+          )}
         </View>
       </View>
       <Pressable style={styles.btnRegister} onPress={formik.handleSubmit}>
         <Text style={styles.textBtn}>Guardar</Text>
       </Pressable>
-      <ScrollView style={styles.errorsScrollView}>
-        {formik.errors.first_name && (
-          <Text style={styles.error}>{formik.errors.first_name}</Text>
-        )}
-        {formik.errors.last_name && (
-          <Text style={styles.error}>{formik.errors.last_name}</Text>
-        )}
-        {formik.errors.fullname && (
-          <Text style={styles.error}>{formik.errors.fullname}</Text>
-        )}
-        {formik.errors.username && (
-          <Text style={styles.error}>{formik.errors.username}</Text>
-        )}
-        {formik.errors.occupation && (
-          <Text style={styles.error}>{formik.errors.occupation}</Text>
-        )}
-        {formik.errors.email && (
-          <Text style={styles.error}>{formik.errors.email}</Text>
-        )}
-        {formik.errors.password && (
-          <Text style={styles.error}>{formik.errors.password}</Text>
-        )}
-        {formik.errors.password_confirmation && (
-          <Text style={styles.error}>
-            {formik.errors.password_confirmation}
-          </Text>
-        )}
-      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -188,15 +213,24 @@ function initialValues() {
 }
 function validationSchema() {
   return {
-    first_name: Yup.string().required("El nombre es obligatorio"),
-    last_name: Yup.string().required("El apellido es obligatorio"),
+    first_name: Yup.string()
+      .min(3, "El nombre debe tener al menos 3 caracteres")
+      .required("El nombre es obligatorio"),
+    last_name: Yup.string()
+      .min(3, "El apellido debe tener al menos 3 caracteres")
+      .required("El apellido es obligatorio"),
     fullname: Yup.string().required("El nombre completo es obligatorio"),
     username: Yup.string().required("El nombre de usuario es obligatorio"),
     occupation: Yup.string().required("El cargo es obligatorio"),
-    email: Yup.string().required("El correo es obligatorio"),
-    password: Yup.string().required("La contraseña es obligatiria"),
-    password_confirmation: Yup.string().required(
-      "Debes confirmar la contraseña"
+    email: Yup.string()
+      .email("Correo electronico invalido")
+      .required("El correo es obligatorio"),
+    password: Yup.string()
+      .required("La contraseña es necesaria")
+      .min(8, "Contraseña muy corta, debe tener minimo 8 caracteres"),
+    password_confirmation: Yup.string().oneOf(
+      [Yup.ref("password"), null],
+      "La contraseña no coincide"
     ),
   };
 }
@@ -222,32 +256,28 @@ const styles = StyleSheet.create({
   },
   form: {
     width: "60%",
-    // backgroundColor: colors[theme].error,
+  },
+  wrapper: {
+    marginBottom: verticalScale(12),
   },
   labelText: {
     color: colors[theme].subtitle,
-    // width: "50%",
     fontSize: moderateScale(15),
     fontWeight: "bold",
-    // paddingLeft: 5,
-    // marginHorizontal: horizontalScale(10),
-    marginBottom: verticalScale(5),
   },
   input: {
-    // backgroundColor: colors[theme].input,
     borderBottomWidth: moderateScale(1),
     borderBottomColor: colors[theme].input,
     color: colors[theme].text,
     width: "100%",
     height: verticalScale(25),
-    // borderRadius: 5,
-    // paddingLeft: 5,
-    marginBottom: verticalScale(15),
     fontFamily: fontFamily,
     fontSize: moderateScale(14),
   },
-  button: {
-    fontFamily: fontFamily,
+  showPassword: {
+    position: "absolute",
+    right: horizontalScale(10),
+    top: verticalScale(20),
   },
   btnRegister: {
     backgroundColor: colors[theme].card,
@@ -265,12 +295,10 @@ const styles = StyleSheet.create({
     fontSize: moderateScale(12),
   },
   errorsScrollView: {
-    // backgroundColor: colors[theme].card,
     width: "70%",
     maxHeight: verticalScale(50),
   },
   error: {
     color: colors[theme].error,
-    marginTop: 10,
   },
 });
