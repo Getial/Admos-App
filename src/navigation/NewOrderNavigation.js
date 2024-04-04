@@ -4,6 +4,7 @@ import IsClientRegistered from "../screens/AddNewOrder/IsClientRegistered";
 import NewClientRegister from "../screens/AddNewOrder/NewClientRegister";
 import SearchClient from "../screens/AddNewOrder/SearchClient";
 import NewOrderRegister from "../screens/AddNewOrder/NewOrderRegister";
+import PrevOrder from "../screens/AddNewOrder/PrevOrder";
 
 const Stack = createNativeStackNavigator();
 
@@ -22,6 +23,7 @@ const NewOrderNavigation = ({ navigation }) => {
       <Stack.Screen name="NewClientRegister" component={NewClientRegister} />
       <Stack.Screen name="SearchClient" component={SearchClient} />
       <Stack.Screen name="NewOrderRegister" component={NewOrderRegister} />
+      <Stack.Screen name="PrevOrder" component={PrevOrder} />
     </Stack.Navigator>
   );
 };

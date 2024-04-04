@@ -16,6 +16,11 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 
 import { API_HOST } from "../../utils/constants";
 import { colors, fontFamily, theme } from "../../utils/desing";
+import {
+  verticalScale,
+  horizontalScale,
+  moderateScale,
+} from "../../utils/metrics";
 
 export default function SearchClient({ navigation }) {
   const [name, setName] = useState(null);
@@ -44,6 +49,7 @@ export default function SearchClient({ navigation }) {
       }
     >
       <Text style={styles.name}>{client.fullname}</Text>
+      <Text style={styles.municipality}>{client.municipality}</Text>
     </TouchableOpacity>
   );
 
@@ -96,8 +102,8 @@ const styles = StyleSheet.create({
   },
   buttonBack: {
     position: "absolute",
-    top: 100,
-    left: 100,
+    top: verticalScale(50),
+    left: horizontalScale(30),
   },
   title: {
     color: colors[theme].title,
@@ -127,10 +133,13 @@ const styles = StyleSheet.create({
     padding: 5,
     marginVertical: 8,
     width: "100%",
-    height: 40,
+    height: verticalScale(40),
   },
   name: {
     fontFamily: fontFamily,
     color: colors[theme].text,
+  },
+  municipality: {
+    color: colors[theme].placeholder,
   },
 });

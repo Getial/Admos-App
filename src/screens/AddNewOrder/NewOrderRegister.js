@@ -6,7 +6,7 @@ import {
   ScrollView,
   TextInput,
   ActivityIndicator,
-  TouchableOpacity,
+  Modal,
   Pressable,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -26,13 +26,15 @@ import {
 } from "../../utils/metrics";
 import generatePDF from "../../utils/generatePDF";
 import { addNewOrderApi } from "../../api/orders";
+import ModalPrevOrder from "../../components/ModalPrevOrder";
 
 export default function NewOrderRegister({ navigation, route }) {
   const { client } = route.params;
   const [isLoading, setIsLoading] = useState(false);
-  // const navigation = useNavigation();
+  const [modalPrevOrderVisible, setModalPrevOrderVisible] = useState(false);
   const { handleSubmit, watch, control } = useForm();
   const { auth } = useAuth();
+  const [formData, setFormData] = useState({});
 
   const [typeServiceOpen, setTypeServiceOpen] = useState(false);
   const [typeServiceValue, setTypeServiceValue] = useState(null);
@@ -185,8 +187,16 @@ export default function NewOrderRegister({ navigation, route }) {
     }
   };
 
+  const toggleModalPrevOrder = () => {
+    setModalPrevOrderVisible(!modalPrevOrderVisible);
+  };
+
+  const GoPreviewPDF = () => {
+    navigation.navigate("PrevOrder");
+  };
+
   const onSubmit = async (data) => {
-    const formData = {
+    const newFormData = {
       ...data,
       entry_date: getDateTime(),
       client,
@@ -196,19 +206,21 @@ export default function NewOrderRegister({ navigation, route }) {
       admitted_date: state === "admited" ? getDateTime() : "",
       is_guarantee: setIsGuarantee(),
     };
-    try {
-      setIsLoading(true);
+    setFormData(newFormData);
+    toggleModalPrevOrder;
+    // try {
+    //   setIsLoading(true);
 
-      const response = await addNewOrderApi(formData);
-      setIsLoading(false);
-      generatePDF(response).then(async (result) => {
-        await shareAsync(result.uri);
-        navigation.popToTop();
-        navigation.navigate("Home", { reload: 1 });
-      });
-    } catch (error) {
-      throw new Error(error);
-    }
+    //   const response = await addNewOrderApi(formData);
+    //   setIsLoading(false);
+    //   generatePDF(response).then(async (result) => {
+    //     await shareAsync(result.uri);
+    //     navigation.popToTop();
+    //     navigation.navigate("Home");
+    //   });
+    // } catch (error) {
+    //   throw new Error(error);
+    // }
   };
 
   return (
@@ -477,9 +489,12 @@ export default function NewOrderRegister({ navigation, route }) {
               )}
             </View>
           </ScrollView>
-          <TouchableOpacity onPress={handleSubmit(onSubmit)}>
+          <Pressable onPress={GoPreviewPDF} style={styles.BtnPrevOrder}>
+            <Text style={styles.txtBtn}>Previsualizar orden</Text>
+          </Pressable>
+          <Pressable onPress={handleSubmit(onSubmit)}>
             <Text style={styles.btnSave}>Guardar</Text>
-          </TouchableOpacity>
+          </Pressable>
         </>
       ) : (
         <View>
@@ -509,8 +524,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: verticalScale(15),
     fontSize: moderateScale(28),
-    // position: "absolute",
-    // top: moderateScale(90),
   },
   scrollView: {
     maxHeight: verticalScale(400),
@@ -534,7 +547,6 @@ const styles = StyleSheet.create({
   },
   labelText: {
     color: colors[theme].text,
-    // width: "50%",
     fontSize: moderateScale(15),
     marginHorizontal: horizontalScale(10),
     marginBottom: verticalScale(10),
@@ -551,7 +563,6 @@ const styles = StyleSheet.create({
   },
   dropDownContainerStyle: {
     borderColor: colors[theme].card,
-    // borderTopWidth: 0,
     backgroundColor: colors[theme].input,
   },
   searchContainerStyle: {
@@ -571,6 +582,16 @@ const styles = StyleSheet.create({
   dropdownCompany: {
     marginHorizontal: horizontalScale(10),
     marginBottom: verticalScale(15),
+  },
+  BtnPrevOrder: {
+    borderWidth: 1,
+    borderColor: colors[theme].card,
+    borderRadius: moderateScale(10),
+    paddingVertical: verticalScale(2),
+    paddingHorizontal: horizontalScale(5),
+  },
+  txtBtn: {
+    color: colors[theme].text,
   },
   btnSave: {
     backgroundColor: colors[theme].card,
