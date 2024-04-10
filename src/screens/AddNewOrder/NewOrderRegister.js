@@ -13,9 +13,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import DropDownPicker from "react-native-dropdown-picker";
 import { useForm, Controller } from "react-hook-form";
-import { shareAsync } from "expo-sharing";
 import axios from "axios";
 import useAuth from "../../hooks/useAuth";
+import * as yup from "yup";
 
 import { API_HOST } from "../../utils/constants";
 import { colors, fontFamily, theme } from "../../utils/desing";
@@ -24,17 +24,28 @@ import {
   horizontalScale,
   moderateScale,
 } from "../../utils/metrics";
-import generatePDF from "../../utils/generatePDF";
-import { addNewOrderApi } from "../../api/orders";
-import ModalPrevOrder from "../../components/ModalPrevOrder";
+
+const schema = yup.object().shape({
+  type_service: yup.string().required("Indique el tipo de servicio"),
+  os_garanty: yup.string(),
+  serial: yup.string(),
+  category: yup.number().required("La categora es necesaria"),
+  brand: yup.number().required("La marca es necesaria"),
+  reference: yup.number().required("Especifique la referencia"),
+  reason_for_entry: yup.string().required("El motivo de ingreso es necesario"),
+  observations: yup
+    .string()
+    .required("Especifique las condiciones en las que ingresa el producto"),
+  price_for_revision: yup.string(),
+});
 
 export default function NewOrderRegister({ navigation, route }) {
   const { client } = route.params;
   const [isLoading, setIsLoading] = useState(false);
-  const [modalPrevOrderVisible, setModalPrevOrderVisible] = useState(false);
   const { handleSubmit, watch, control } = useForm();
   const { auth } = useAuth();
   const [formData, setFormData] = useState({});
+  const [error, setError] = useState(null);
 
   const [typeServiceOpen, setTypeServiceOpen] = useState(false);
   const [typeServiceValue, setTypeServiceValue] = useState(null);
@@ -187,40 +198,42 @@ export default function NewOrderRegister({ navigation, route }) {
     }
   };
 
-  const toggleModalPrevOrder = () => {
-    setModalPrevOrderVisible(!modalPrevOrderVisible);
+  const getNameXLabel = (value, arr) => {
+    // Buscar el objeto con el value dado
+    let objeto = arr.find((item) => item.value === value);
+    // Si se encuentra el objeto, devolver su label; de lo contrario, devolver null
+    return objeto ? objeto.label : null;
   };
 
-  const GoPreviewPDF = () => {
-    navigation.navigate("PrevOrder");
-  };
-
-  const onSubmit = async (data) => {
-    const newFormData = {
+  const onContinue = async (data) => {
+    const dataPDF = {
       ...data,
-      entry_date: getDateTime(),
-      client,
-      service_number: await getServiceNumber(),
       received_by: auth.id,
       state: setStateOrder(),
-      admitted_date: state === "admited" ? getDateTime() : "",
+      // entry_date: new Date().toString(),
+      // admitted_date:
+      //   setStateOrder() === "admitted" ? new Date().toString() : "",
       is_guarantee: setIsGuarantee(),
+      service_number: await getServiceNumber(),
+      client: client.id,
+      client_fullname: client.fullname,
+      client_address: client.address,
+      client_municipality: client.municipality,
+      client_phone_number: client.phone_number,
+      category_name: getNameXLabel(watch("category"), category),
+      brand_name: getNameXLabel(watch("brand"), brand),
+      reference_name: getNameXLabel(watch("reference"), reference),
     };
-    setFormData(newFormData);
-    toggleModalPrevOrder;
-    // try {
-    //   setIsLoading(true);
-
-    //   const response = await addNewOrderApi(formData);
-    //   setIsLoading(false);
-    //   generatePDF(response).then(async (result) => {
-    //     await shareAsync(result.uri);
-    //     navigation.popToTop();
-    //     navigation.navigate("Home");
-    //   });
-    // } catch (error) {
-    //   throw new Error(error);
-    // }
+    try {
+      // Valida el formulario con Yup
+      await schema.validate(dataPDF, { abortEarly: true });
+      navigation.navigate("PrevOrder", {
+        data: dataPDF,
+      });
+    } catch (err) {
+      // Si hay errores de validación, muestra los mensajes de error
+      setError(err.errors.join("\n"));
+    }
   };
 
   return (
@@ -467,7 +480,7 @@ export default function NewOrderRegister({ navigation, route }) {
 
             {/* price_for_revision */}
             <View>
-              {watch("is_guarantee") === false && (
+              {watch("type_service") === "collect" && (
                 <>
                   <Text style={styles.labelText}>Valor de la revision</Text>
                   <Controller
@@ -489,12 +502,13 @@ export default function NewOrderRegister({ navigation, route }) {
               )}
             </View>
           </ScrollView>
-          <Pressable onPress={GoPreviewPDF} style={styles.BtnPrevOrder}>
+          {/* <Pressable onPress={GoPreviewPDF} style={styles.BtnPrevOrder}>
             <Text style={styles.txtBtn}>Previsualizar orden</Text>
+          </Pressable> */}
+          <Pressable onPress={handleSubmit(onContinue)}>
+            <Text style={styles.btnSave}>Continuar</Text>
           </Pressable>
-          <Pressable onPress={handleSubmit(onSubmit)}>
-            <Text style={styles.btnSave}>Guardar</Text>
-          </Pressable>
+          {error && <Text style={styles.error}>{error}</Text>}
         </>
       ) : (
         <View>
@@ -602,5 +616,10 @@ const styles = StyleSheet.create({
     paddingVertical: verticalScale(8),
     borderRadius: moderateScale(50),
     marginTop: verticalScale(10),
+  },
+  error: {
+    color: colors[theme].error,
+    textAlign: "center",
+    marginTop: 10,
   },
 });

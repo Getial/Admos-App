@@ -9,6 +9,7 @@ import React, { useState } from "react";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { WebView } from "react-native-webview";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { shareAsync } from "expo-sharing";
 
 import { colors, theme, fontFamily } from "../../utils/desing";
 import {
@@ -16,9 +17,13 @@ import {
   horizontalScale,
   moderateScale,
 } from "../../utils/metrics";
+import generatePDF from "../../utils/generatePDF";
+import { addNewOrderApi } from "../../api/orders";
 
-export default function PrevOrder({ navigation }) {
-  const html = `<!DOCTYPE html>
+export default function PrevOrder({ navigation, route }) {
+  const { data } = route.params;
+
+  const html = `
   <html>
   <head>
     <meta charset="UTF-8">
@@ -53,21 +58,39 @@ export default function PrevOrder({ navigation }) {
   <body>
     <header>
       <h1>Servicios Tecnicos Tesla</h1>
-      <h3>Orden de servicio <span style="color: red">00001</span></h1>
+      <h3>Orden de servicio <br/> <span style="color: red">${
+        data.service_number
+      }</span></h1>
     </header>
     <Section>
       <h3>Detalles del usuario</h3>
-      <p class="label">Nombre: <span class="description">Pepito Perez</span></p>
-      <p class="label">Direccion: <span class="description">Calle 4 #25-12 - Pasto</span></p>
-      <p class="label">Celular: <span class="description">3005475476</span></p>
+      <p class="label">Nombre: <span class="description">${
+        data.client_fullname
+      }</span></p>
+      <p class="label">Direccion: <span class="description">${
+        data.client_address ? data.client_address : ""
+      } ${data.client_municipality} </span></p>
+      <p class="label">Celular: <span class="description">${
+        data.client_phone_number
+      }</span></p>
     </Section>
     <section>
       <h3>Detalles del producto</h3>
-      <p class="label">Categoria: <span class="description">Pistola de calor</span></p>
-      <p class="label">Marca: <span class="description">Makita</span></p>
-      <p class="label">Referencia: <span class="description">HG6031V</span></p>
-      <p class="label">Motivo del ingreso: <span class="description">No prende</span></p>
-      <p class="label">Estado en el que se recibe el producto: <span class="description">Se recibe producto en regulares condiciones sin accesorios</span></p>
+      <p class="label">Categoria: <span class="description">${
+        data.category_name
+      }</span></p>
+      <p class="label">Marca: <span class="description">${
+        data.brand_name
+      }</span></p>
+      <p class="label">Referencia: <span class="description">${
+        data.reference_name
+      }</span></p>
+      <p class="label">Motivo del ingreso: <span class="description">${
+        data.reason_for_entry
+      }</span></p>
+      <p class="label">Estado en el que se recibe el producto: <span class="description">${
+        data.observations
+      }</span></p>
       <p class="conditions">Nota: Declaro que el producto que entregue se encuentra en las condiciones registradas en el campo anterior </p>
     </section>
     <section style="display: flex; justify-content: space-around">
@@ -80,7 +103,37 @@ export default function PrevOrder({ navigation }) {
       <p style="text-align: center; font-weight: bold; font-size: large">GRACIAS POR CONFIAR EN NOSOTROS</p>
     </footer>
   </body>
-  </html>`;
+  </html>
+  `;
+
+  delete data.client_fullname;
+  delete data.client_address;
+  delete data.client_municipality;
+  delete data.client_phone_number;
+  delete data.category_name;
+  delete data.brand_name;
+  delete data.reference_name;
+
+  const onSubmit = async () => {
+    try {
+      const newFormData = {
+        ...data,
+        entry_date: new Date(),
+        admitted_date: data.state === "admitted" ? new Date() : "",
+      };
+      // setIsLoading(true);
+      const response = await addNewOrderApi(newFormData);
+      // setIsLoading(false);
+      generatePDF(response).then(async (result) => {
+        await shareAsync(result.uri);
+        navigation.popToTop();
+        navigation.navigate("Home");
+      });
+    } catch (error) {
+      console.log(error.request._response);
+      throw new Error(error);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -98,7 +151,7 @@ export default function PrevOrder({ navigation }) {
         originWhitelist={["*"]}
         source={{ html: html }}
       />
-      <Pressable onPress={() => console.log("guardar")} style={styles.btnSave}>
+      <Pressable onPress={onSubmit} style={styles.btnSave}>
         <Text style={styles.txtBtn}>Guardar e imprimir</Text>
       </Pressable>
     </SafeAreaView>
@@ -123,7 +176,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: moderateScale(28),
     marginTop: verticalScale(55),
-    marginBottom: verticalScale(30),
+    marginBottom: verticalScale(28),
     // marginVertical: moderateScale(39),
   },
   viewPdf: {
@@ -141,7 +194,7 @@ const styles = StyleSheet.create({
     marginVertical: verticalScale(30),
   },
   txtBtn: {
-    color: colors[theme].background,
+    color: colors[theme].text,
     textAlign: "center",
   },
 });

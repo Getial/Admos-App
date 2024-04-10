@@ -45,7 +45,7 @@ export default function SearchClient({ navigation }) {
     <TouchableOpacity
       style={styles.item}
       onPress={() =>
-        navigation.navigate("NewOrderRegister", { client: client.id })
+        navigation.navigate("NewOrderRegister", { client: client })
       }
     >
       <Text style={styles.name}>{client.fullname}</Text>

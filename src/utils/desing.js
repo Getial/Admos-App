@@ -21,6 +21,6 @@ export const colors = {
   },
 };
 
-export const theme = "light";
+export const theme = "dark";
 
 export const fontFamily = "sans-serif";

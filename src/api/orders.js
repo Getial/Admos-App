@@ -28,7 +28,7 @@ export async function addNewOrderApi(formData) {
     const result = await response.data;
     return result;
   } catch (error) {
-    throw error;
+    throw error.response;
   }
 }
 
