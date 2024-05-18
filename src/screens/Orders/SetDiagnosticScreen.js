@@ -150,6 +150,7 @@ export default function SetDiagnosticScreen({ navigation, route }) {
             placeholder="Precio total"
             placeholderTextColor={colors[theme].placeholder}
             style={styles.input}
+            inputMode="numeric"
             value={formik.values.price_estimate_for_repair}
             onChangeText={(text) =>
               formik.setFieldValue("price_estimate_for_repair", text)

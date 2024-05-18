@@ -15,6 +15,12 @@ export default function OrderCard(props) {
   const goToDetailsOrder = () => {
     navigation.navigate("DetailOrder", { id: order.id });
   };
+
+  const borderState = (state) => {
+    return {
+      borderColor: colors[theme].progress[state],
+    };
+  };
   return (
     <TouchableWithoutFeedback onPress={goToDetailsOrder}>
       <View style={styles.cardContainer}>
@@ -24,7 +30,9 @@ export default function OrderCard(props) {
           </Text>
           <Text style={styles.subtitle}>{order.client_name}</Text>
         </View>
-        <View style={styles.stateContainer}>
+        <View
+          style={[styles.stateContainer, borderState(order.state_description)]}
+        >
           <Text style={styles.textState}>{order.state_description}</Text>
         </View>
       </View>
@@ -37,7 +45,7 @@ const styles = StyleSheet.create({
     width: "95%",
     height: verticalScale(60),
     marginBottom: verticalScale(10),
-    borderColor: colors[theme].card,
+    borderColor: colors[theme].input,
     borderBottomWidth: 1,
     borderRadius: moderateScale(10),
     paddingTop: verticalScale(10),
@@ -61,9 +69,10 @@ const styles = StyleSheet.create({
   },
   stateContainer: {
     width: "25%",
-    maxHeight: verticalScale(25),
+    height: verticalScale(30),
+    maxHeight: verticalScale(40),
     borderWidth: 2,
-    borderColor: colors[theme].input,
+    // borderColor: colors[theme].input,
     borderRadius: moderateScale(20),
     paddingTop: verticalScale(5),
   },

@@ -67,6 +67,7 @@ export default function DetailOrderScreen({ route, navigation }) {
     generatePDF(order).then(async (result) => {
       await shareAsync(result.uri);
     });
+    setIsMenuVisible(false);
   };
 
   const Menu = () => {
@@ -92,11 +93,12 @@ export default function DetailOrderScreen({ route, navigation }) {
 
         <Pressable
           style={styles.menuButton}
-          onPress={() =>
+          onPress={() => {
             navigation.navigate("AllDetailOrder", {
               order: order,
-            })
-          }
+            });
+            setIsMenuVisible(false);
+          }}
         >
           <Text style={styles.menuButtonText}>Ver mas detalles</Text>
         </Pressable>
@@ -159,13 +161,6 @@ export default function DetailOrderScreen({ route, navigation }) {
         <Text style={styles.subtitle}>Detalles del producto</Text>
         {!isLoading ? (
           <View>
-            <Pressable
-              onPress={toggleModalManager}
-              style={styles.stateContainer}
-            >
-              <Text style={styles.titleState}> {order.state_description}</Text>
-              <Icon name="angle-down" color={colors[theme].card} size={30} />
-            </Pressable>
             <View style={styles.infoContainer}>
               <Text style={styles.titleInfo}>Producto: </Text>
               <Text style={styles.info}>
@@ -182,6 +177,13 @@ export default function DetailOrderScreen({ route, navigation }) {
                 {order.observations}
               </Text>
             </View>
+            <Pressable
+              onPress={toggleModalManager}
+              style={styles.stateContainer}
+            >
+              <Text style={styles.titleState}> {order.state_description}</Text>
+              <Icon name="angle-down" color={colors[theme].card} size={30} />
+            </Pressable>
             {/* <View style={styles.btnsContainer}>
               <Pressable style={styles.btn} onPress={printOrder}>
                 <Text style={styles.textBtn}>Imprimir orden</Text>
@@ -292,7 +294,7 @@ const styles = StyleSheet.create({
   title: {
     color: colors[theme].title,
     fontFamily: fontFamily,
-    fontWeight: "bold",
+    fontWeight: "900",
     // textAlign: "center",
     fontSize: moderateScale(25),
     // backgroundColor: "red",
@@ -334,6 +336,7 @@ const styles = StyleSheet.create({
     paddingBottom: verticalScale(5),
     paddingRight: horizontalScale(2),
     marginBottom: verticalScale(30),
+    marginTop: verticalScale(30),
   },
   infoContainer: {
     display: "flex",

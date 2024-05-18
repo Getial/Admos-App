@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useMemo } from "react";
 import { ActivityIndicator, StyleSheet, FlatList, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
@@ -39,6 +39,43 @@ const HomeScreen = () => {
     }, [])
   );
 
+  //order service orders
+  const sortedOrders = useMemo(() => {
+    return orders.sort((a, b) => {
+      // Mueve "Listo para entregar" al final
+      if (
+        a.state_description === "Listo para entregar" &&
+        b.state_description !== "Listo para entregar"
+      ) {
+        return 1;
+      }
+      if (
+        a.state_description !== "Listo para entregar" &&
+        b.state_description === "Listo para entregar"
+      ) {
+        return -1;
+      }
+
+      //prioriza los que tienen "state_description" igual a "Ingresado"
+      if (
+        a.state_description === "Ingresado" &&
+        b.state_description !== "Ingresado"
+      ) {
+        return -1;
+      }
+      if (
+        a.state_description !== "Ingresado" &&
+        b.state_description === "Ingresado"
+      ) {
+        return 1;
+      }
+
+      const dateA = new Date(a.entry_date);
+      const dateB = new Date(b.entry_date);
+      return dateA - dateB;
+    });
+  }, [orders]);
+
   const searchOrder = async (searchValue) => {
     setIsLoading(true);
     try {
@@ -77,6 +114,7 @@ const styles = StyleSheet.create({
   flatlistContainer: {
     position: "absolute",
     top: verticalScale(50),
+    paddingBottom: verticalScale(50),
     left: 0,
     width: "100%",
   },
