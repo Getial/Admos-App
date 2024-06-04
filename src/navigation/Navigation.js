@@ -4,10 +4,11 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 
-import { colors, theme } from "../utils/desing";
+import { colors } from "../utils/desing";
 import HomeNavigation from "./HomeNavigation";
 import NewOrderNavigation from "./NewOrderNavigation";
 import useAuth from "../hooks/useAuth";
+import useTheme from "../hooks/useTheme";
 import SettingsScreen from "../screens/SettingsScreen";
 import AuthNavigation from "./AuthNavigation";
 import { getSesionApi } from "../api/sesionStorage";
@@ -21,24 +22,29 @@ const Tab = createBottomTabNavigator();
 
 const Navigation = () => {
   const { auth, login } = useAuth();
+  const { theme } = useTheme();
+
+  const styles = createStyles(theme);
+
   useEffect(() => {
     (async () => {
       const response = await getSesionApi();
       if (response) login(response);
     })();
   }, []);
+
   return (
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: colors[theme].background,
+          backgroundColor: theme.background,
           paddingBottom: 10,
-          borderColor: colors[theme].card,
+          borderColor: theme.primary,
           borderTopWidth: 2,
         },
-        tabBarActiveTintColor: colors[theme].text,
-        tabBarInactiveTintColor: colors[theme].card,
+        tabBarActiveTintColor: theme.text,
+        tabBarInactiveTintColor: theme.primary,
       }}
     >
       {auth ? (
@@ -63,9 +69,9 @@ const Navigation = () => {
                   return { display: "none" };
                 }
                 return {
-                  backgroundColor: colors[theme].background,
+                  backgroundColor: theme.background,
                   // paddingVertical: 10,
-                  borderColor: colors[theme].card,
+                  borderColor: theme.primary,
                   borderTopWidth: 2,
                   height: verticalScale(48),
                   paddingBottom: verticalScale(5),
@@ -86,7 +92,7 @@ const Navigation = () => {
               tabBarIcon: () => (
                 <Icon
                   name="plus"
-                  color={colors[theme].card}
+                  color={theme.primary}
                   size={moderateScale(30)}
                   style={styles.iconPlus}
                 />
@@ -99,9 +105,9 @@ const Navigation = () => {
             component={SettingsScreen}
             options={{
               tabBarStyle: {
-                backgroundColor: colors[theme].background,
+                backgroundColor: theme.background,
                 // paddingVertical: 10,
-                borderColor: colors[theme].card,
+                borderColor: theme.primary,
                 borderTopWidth: 2,
                 height: verticalScale(48),
                 paddingBottom: verticalScale(5),
@@ -127,26 +133,27 @@ const Navigation = () => {
   );
 };
 
-const styles = StyleSheet.create({
-  iconPlus: {
-    position: "absolute",
-    top: verticalScale(-23),
-    width: verticalScale(60),
-    height: verticalScale(55),
-    backgroundColor: colors[theme].background,
-    borderWidth: 2,
-    borderColor: colors[theme].card,
-    borderRadius: 20,
-    alignItems: "center",
-    textAlign: "center",
-    paddingTop: verticalScale(5),
-  },
-  labelPlus: {
-    paddingBottom: verticalScale(20),
-    color: colors[theme].card,
-    fontSize: moderateScale(11),
-    fontWeight: "bold",
-  },
-});
+const createStyles = (theme) =>
+  StyleSheet.create({
+    iconPlus: {
+      position: "absolute",
+      top: verticalScale(-23),
+      width: verticalScale(60),
+      height: verticalScale(55),
+      backgroundColor: theme.background,
+      borderWidth: 2,
+      borderColor: theme.primary,
+      borderRadius: 20,
+      alignItems: "center",
+      textAlign: "center",
+      paddingTop: verticalScale(5),
+    },
+    labelPlus: {
+      paddingBottom: verticalScale(20),
+      color: theme.primary,
+      fontSize: moderateScale(11),
+      fontWeight: "bold",
+    },
+  });
 
 export default Navigation;

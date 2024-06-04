@@ -29,6 +29,9 @@ export default function OrderCard(props) {
             Orden de servicio {order.service_number}
           </Text>
           <Text style={styles.subtitle}>{order.client_name}</Text>
+          <Text style={styles.subtitle}>
+            {order.category_name} {order.brand_name}
+          </Text>
         </View>
         <View
           style={[styles.stateContainer, borderState(order.state_description)]}

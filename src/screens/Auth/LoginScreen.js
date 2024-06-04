@@ -170,8 +170,8 @@ const styles = StyleSheet.create({
     marginBottom: 50,
   },
   input: {
-    backgroundColor: colors[theme].input,
-    color: colors[theme].text,
+    backgroundColor: colors[theme].inputBackground,
+    color: colors[theme].textSecondary,
     minWidth: "50%",
     height: 40,
     borderRadius: 4,
