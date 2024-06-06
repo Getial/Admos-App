@@ -3,7 +3,8 @@ import React from "react";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { SafeAreaView } from "react-native-safe-area-context";
 import moment from "moment";
-import { colors, theme, fontFamily } from "../../utils/desing";
+import useTheme from "../../hooks/useTheme";
+import { fontFamily } from "../../utils/desing";
 import {
   verticalScale,
   horizontalScale,
@@ -12,6 +13,8 @@ import {
 
 export default function AllDetailOrderScreen({ route, navigation }) {
   const { order } = route.params;
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
 
   // Función para formatear la fecha
   const formatFecha = (fechaISO) => {
@@ -21,11 +24,7 @@ export default function AllDetailOrderScreen({ route, navigation }) {
     <SafeAreaView style={styles.container}>
       {/* button back */}
       <Pressable onPress={navigation.goBack} style={styles.buttonBack}>
-        <Icon
-          name="arrow-left"
-          color={colors[theme].card}
-          size={moderateScale(30)}
-        />
+        <Icon name="arrow-left" color={theme.card} size={moderateScale(30)} />
       </Pressable>
 
       <View style={styles.containerTitle}>
@@ -90,58 +89,59 @@ export default function AllDetailOrderScreen({ route, navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors[theme].background,
-    alignItems: "center",
-    justifyContent: "space-evenly",
-    paddingVertical: verticalScale(50),
-  },
-  buttonBack: {
-    position: "absolute",
-    top: verticalScale(30),
-    left: horizontalScale(30),
-  },
-  containerTitle: {
-    position: "absolute",
-    top: verticalScale(30),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  },
-  title: {
-    color: colors[theme].title,
-    fontFamily: fontFamily,
-    fontWeight: "bold",
-    fontSize: moderateScale(25),
-  },
-  txtOrderNumber: {
-    color: colors[theme].card,
-    fontFamily: fontFamily,
-    fontWeight: "bold",
-    fontSize: moderateScale(26),
-  },
-  subtitle: {
-    color: colors[theme].placeholder,
-  },
-  scrollView: {
-    // backgroundColor: "blue",
-    width: "100%",
-    marginTop: verticalScale(30),
-  },
-  wrapper: {
-    display: "flex",
-    flexDirection: "row",
-    // backgroundColor: "red",
-    // justifyContent: "space-around",
-  },
-  label: {
-    color: colors[theme].text,
-    width: "40%",
-  },
-  info: {
-    color: colors[theme].text,
-    width: "60%",
-  },
-});
+const createStyles = (theme) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.background,
+      alignItems: "center",
+      justifyContent: "space-evenly",
+      paddingVertical: verticalScale(50),
+    },
+    buttonBack: {
+      position: "absolute",
+      top: verticalScale(30),
+      left: horizontalScale(30),
+    },
+    containerTitle: {
+      position: "absolute",
+      top: verticalScale(30),
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+    },
+    title: {
+      color: theme.title,
+      fontFamily: fontFamily,
+      fontWeight: "bold",
+      fontSize: moderateScale(25),
+    },
+    txtOrderNumber: {
+      color: theme.card,
+      fontFamily: fontFamily,
+      fontWeight: "bold",
+      fontSize: moderateScale(26),
+    },
+    subtitle: {
+      color: theme.placeholder,
+    },
+    scrollView: {
+      // backgroundColor: "blue",
+      width: "100%",
+      marginTop: verticalScale(30),
+    },
+    wrapper: {
+      display: "flex",
+      flexDirection: "row",
+      // backgroundColor: "red",
+      // justifyContent: "space-around",
+    },
+    label: {
+      color: theme.text,
+      width: "40%",
+    },
+    info: {
+      color: theme.text,
+      width: "60%",
+    },
+  });

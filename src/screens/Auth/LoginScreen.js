@@ -15,7 +15,8 @@ import * as Yup from "yup";
 import axios from "axios";
 import useAuth from "../../hooks/useAuth";
 
-import { colors, fontFamily, theme } from "../../utils/desing";
+import useTheme from "../../hooks/useTheme";
+import { fontFamily } from "../../utils/desing";
 import {
   verticalScale,
   horizontalScale,
@@ -28,6 +29,9 @@ const LoginScreen = ({ navigation }) => {
   React.useLayoutEffect(() => {
     navigation.setOptions({ tabBarStyle: { display: "none" } });
   }, [navigation]);
+
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
 
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -86,7 +90,7 @@ const LoginScreen = ({ navigation }) => {
       <View>
         <TextInput
           placeholder="Email"
-          placeholderTextColor={colors[theme].placeholder}
+          placeholderTextColor={theme.placeholder}
           style={styles.input}
           value={formik.values.email}
           inputMode="email"
@@ -96,7 +100,7 @@ const LoginScreen = ({ navigation }) => {
       <View>
         <TextInput
           placeholder="Contraseña"
-          placeholderTextColor={colors[theme].placeholder}
+          placeholderTextColor={theme.placeholder}
           style={styles.input}
           value={formik.values.password}
           secureTextEntry={!showPassword}
@@ -109,15 +113,11 @@ const LoginScreen = ({ navigation }) => {
           <Icon
             name={showPassword ? "eye-slash" : "eye"}
             size={moderateScale(15)}
-            color={colors[theme].placeholder}
+            color={theme.placeholder}
           />
         </Pressable>
       </View>
-      <Button
-        title="Entrar"
-        color={colors[theme].card}
-        onPress={formik.handleSubmit}
-      />
+      <Button title="Entrar" color={theme.card} onPress={formik.handleSubmit} />
       <Pressable
         style={styles.btnRegister}
         onPress={() => navigation.navigate("Register")}
@@ -134,7 +134,7 @@ const LoginScreen = ({ navigation }) => {
       {isLoading && (
         <ActivityIndicator
           size="large"
-          color={colors[theme].card}
+          color={theme.card}
           style={styles.error}
         />
       )}
@@ -155,57 +155,58 @@ function validationSchema() {
   };
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: colors[theme].background,
-  },
-  title: {
-    fontFamily: fontFamily,
-    fontSize: 35,
-    fontWeight: "bold",
-    color: colors[theme].title,
-    marginBottom: 50,
-  },
-  input: {
-    backgroundColor: colors[theme].inputBackground,
-    color: colors[theme].textSecondary,
-    minWidth: "50%",
-    height: 40,
-    borderRadius: 4,
-    paddingLeft: 5,
-    marginBottom: 15,
-    fontFamily: fontFamily,
-  },
-  showPassword: {
-    position: "absolute",
-    right: horizontalScale(10),
-    top: verticalScale(9),
-  },
-  button: {
-    fontFamily: fontFamily,
-  },
-  btnRegister: {
-    // backgroundColor: colors[theme].card,
-    alignSelf: "center",
-    width: horizontalScale(80),
-    paddingVertical: verticalScale(5),
-    borderRadius: moderateScale(10),
-    marginTop: verticalScale(20),
-    borderWidth: moderateScale(1),
-    borderColor: colors[theme].card,
-  },
-  textBtn: {
-    color: colors[theme].text,
-    textAlign: "center",
-    fontSize: moderateScale(12),
-  },
-  error: {
-    color: colors[theme].error,
-    marginTop: 30,
-  },
-});
+const createStyles = (theme) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: theme.background,
+    },
+    title: {
+      fontFamily: fontFamily,
+      fontSize: 35,
+      fontWeight: "bold",
+      color: theme.title,
+      marginBottom: 50,
+    },
+    input: {
+      backgroundColor: theme.inputBackground,
+      color: theme.textSecondary,
+      minWidth: "50%",
+      height: 40,
+      borderRadius: 4,
+      paddingLeft: 5,
+      marginBottom: 15,
+      fontFamily: fontFamily,
+    },
+    showPassword: {
+      position: "absolute",
+      right: horizontalScale(10),
+      top: verticalScale(9),
+    },
+    button: {
+      fontFamily: fontFamily,
+    },
+    btnRegister: {
+      // backgroundColor: theme.card,
+      alignSelf: "center",
+      width: horizontalScale(80),
+      paddingVertical: verticalScale(5),
+      borderRadius: moderateScale(10),
+      marginTop: verticalScale(20),
+      borderWidth: moderateScale(1),
+      borderColor: theme.card,
+    },
+    textBtn: {
+      color: theme.text,
+      textAlign: "center",
+      fontSize: moderateScale(12),
+    },
+    error: {
+      color: theme.error,
+      marginTop: 30,
+    },
+  });
 
 export default LoginScreen;

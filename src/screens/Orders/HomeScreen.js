@@ -4,7 +4,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
 
 import OrderCard from "../../components/OrderCard";
-import { colors, fontFamily, theme } from "../../utils/desing";
+import useTheme from "../../hooks/useTheme";
+// import { fontFamily } from "../utils/desing";
 import { getSimpleOrdersApi, getSearchOrdersApi } from "../../api/orders";
 import { verticalScale } from "../../utils/metrics";
 import BarSearch from "../../components/BarSearch";
@@ -12,6 +13,8 @@ import BarSearch from "../../components/BarSearch";
 const HomeScreen = () => {
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
 
   //get orders
   useFocusEffect(
@@ -98,26 +101,27 @@ const HomeScreen = () => {
           keyExtractor={(item) => item.id}
         />
       ) : (
-        <ActivityIndicator size="large" color={colors[theme].card} />
+        <ActivityIndicator size="large" color={theme.card} />
       )}
       <BarSearch searchOrder={searchOrder} />
     </SafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors[theme].background,
-    justifyContent: "center",
-  },
-  flatlistContainer: {
-    position: "absolute",
-    top: verticalScale(50),
-    paddingBottom: verticalScale(50),
-    left: 0,
-    width: "100%",
-  },
-});
+const createStyles = (theme) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.background,
+      justifyContent: "center",
+    },
+    flatlistContainer: {
+      position: "absolute",
+      top: verticalScale(50),
+      paddingBottom: verticalScale(50),
+      left: 0,
+      width: "100%",
+    },
+  });
 
 export default HomeScreen;

@@ -18,7 +18,8 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-import { colors, fontFamily, theme } from "../../utils/desing";
+import useTheme from "../../hooks/useTheme";
+import { fontFamily } from "../../utils/desing";
 import {
   verticalScale,
   horizontalScale,
@@ -34,6 +35,8 @@ export default function SetDiagnosticScreen({ navigation, route }) {
   const { images, setEvidences, setEditedEvidence } = useEvidences();
   const { id, step } = route.params;
   const { auth } = useAuth();
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
 
   const formik = useFormik({
     initialValues: initialValues(),
@@ -133,11 +136,7 @@ export default function SetDiagnosticScreen({ navigation, route }) {
   return (
     <SafeAreaView style={styles.container}>
       <Pressable onPress={navigation.goBack} style={styles.buttonBack}>
-        <Icon
-          name="arrow-left"
-          color={colors[theme].card}
-          size={moderateScale(30)}
-        />
+        <Icon name="arrow-left" color={theme.card} size={moderateScale(30)} />
       </Pressable>
 
       <Text style={styles.title}>Detalles de la revision</Text>
@@ -148,7 +147,7 @@ export default function SetDiagnosticScreen({ navigation, route }) {
           <TextInput
             multiline
             placeholder="Precio total"
-            placeholderTextColor={colors[theme].placeholder}
+            placeholderTextColor={theme.placeholder}
             style={styles.input}
             inputMode="numeric"
             value={formik.values.price_estimate_for_repair}
@@ -164,7 +163,7 @@ export default function SetDiagnosticScreen({ navigation, route }) {
         <TextInput
           multiline
           placeholder="Mencione las fallas que presenta la maquina"
-          placeholderTextColor={colors[theme].placeholder}
+          placeholderTextColor={theme.placeholder}
           style={styles.input}
           value={formik.values.diagnostic}
           onChangeText={(text) => formik.setFieldValue("diagnostic", text)}
@@ -177,9 +176,7 @@ export default function SetDiagnosticScreen({ navigation, route }) {
           <Switch
             trackColor={{ false: "#767577", true: "#6c5b8f" }}
             thumbColor={
-              formik.values.is_necesary_spare_parts
-                ? colors[theme].card
-                : "#f4f3f4"
+              formik.values.is_necesary_spare_parts ? theme.card : "#f4f3f4"
             }
             onValueChange={(text) =>
               formik.setFieldValue("is_necesary_spare_parts", text)
@@ -193,7 +190,7 @@ export default function SetDiagnosticScreen({ navigation, route }) {
             <TextInput
               multiline
               placeholder="nombre o numero de la pieza, cantidad y medida."
-              placeholderTextColor={colors[theme].placeholder}
+              placeholderTextColor={theme.placeholder}
               style={styles.input}
               value={formik.values.spare_parts_list}
               onChangeText={(text) =>
@@ -207,11 +204,7 @@ export default function SetDiagnosticScreen({ navigation, route }) {
       <View style={[styles.wrapper, StyleContainerEvidences()]}>
         <Pressable onPress={pickImageAsync} style={styles.btnEvidences}>
           <Text style={styles.textBtn}>Subir evidencias</Text>
-          <Icon
-            name="camera"
-            color={colors[theme].card}
-            size={moderateScale(25)}
-          />
+          <Icon name="camera" color={theme.card} size={moderateScale(25)} />
         </Pressable>
         <ScrollView style={styles.containerImages} horizontal={true}>
           {images?.map((image, index) => (
@@ -222,7 +215,7 @@ export default function SetDiagnosticScreen({ navigation, route }) {
               >
                 <Icon
                   name="trash-alt"
-                  color={colors[theme].card}
+                  color={theme.card}
                   size={moderateScale(20)}
                 />
               </Pressable>
@@ -253,7 +246,7 @@ export default function SetDiagnosticScreen({ navigation, route }) {
         ) : (
           <View>
             <Text style={styles.textBtn}>Guardando cambios</Text>
-            <ActivityIndicator size="large" color={colors[theme].card} />
+            <ActivityIndicator size="large" color={theme.card} />
           </View>
         )}
       </View>
@@ -297,129 +290,130 @@ function validationSchema(step) {
   };
 }
 
-const styles = StyleSheet.create({
-  container: {
-    height: "100%",
-    width: "100%",
-    backgroundColor: colors[theme].background,
-    alignItems: "center",
-    justifyContent: "space-evenly",
-    paddingVertical: verticalScale(50),
-  },
-  buttonBack: {
-    position: "absolute",
-    top: verticalScale(50),
-    left: horizontalScale(30),
-  },
-  title: {
-    color: colors[theme].title,
-    fontFamily: fontFamily,
-    fontWeight: "bold",
-    marginBottom: verticalScale(15),
-    fontSize: moderateScale(28),
-    position: "absolute",
-    top: moderateScale(100),
-  },
-  wrapper: {
-    width: "90%",
-    position: "absolute",
-  },
-  containerPrice: {
-    top: moderateScale(150),
-  },
-  containerDiagnostic: {
-    top: moderateScale(250),
-  },
-  containerSpareParts: {
-    top: verticalScale(280),
-  },
-  containerQuestion: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-  },
+const createStyles = (theme) =>
+  StyleSheet.create({
+    container: {
+      height: "100%",
+      width: "100%",
+      backgroundColor: theme.background,
+      alignItems: "center",
+      justifyContent: "space-evenly",
+      paddingVertical: verticalScale(50),
+    },
+    buttonBack: {
+      position: "absolute",
+      top: verticalScale(50),
+      left: horizontalScale(30),
+    },
+    title: {
+      color: theme.title,
+      fontFamily: fontFamily,
+      fontWeight: "bold",
+      marginBottom: verticalScale(15),
+      fontSize: moderateScale(28),
+      position: "absolute",
+      top: moderateScale(100),
+    },
+    wrapper: {
+      width: "90%",
+      position: "absolute",
+    },
+    containerPrice: {
+      top: moderateScale(150),
+    },
+    containerDiagnostic: {
+      top: moderateScale(250),
+    },
+    containerSpareParts: {
+      top: verticalScale(280),
+    },
+    containerQuestion: {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+    },
 
-  containerImages: {
-    marginTop: verticalScale(10),
-    display: "flex",
-    flexDirection: "row",
-  },
-  imageContainer: {
-    padding: moderateScale(5),
-  },
-  containerErrors: {
-    top: verticalScale(480),
-  },
-  containerBtnSave: {
-    top: verticalScale(530),
-  },
-  labelText: {
-    color: colors[theme].subtitle,
-    fontSize: moderateScale(15),
-    fontWeight: "bold",
-    marginHorizontal: horizontalScale(10),
-    marginBottom: verticalScale(10),
-  },
-  input: {
-    backgroundColor: colors[theme].input,
-    color: colors[theme].text,
-    width: "95%",
-    maxWidth: "95%",
-    height: verticalScale(35),
-    borderRadius: 5,
-    paddingHorizontal: 5,
-    marginBottom: 25,
-    fontFamily: fontFamily,
-    alignSelf: "center",
-  },
-  btnEvidences: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-around",
-    width: "60%",
-    height: verticalScale(40),
-    borderWidth: 1,
-    borderColor: colors[theme].input,
-    borderRadius: moderateScale(10),
-    marginHorizontal: horizontalScale(10),
-  },
-  btnDeleteEvidence: {
-    position: "relative",
-    top: verticalScale(3),
-    left: horizontalScale(120),
-    width: moderateScale(34),
-    height: moderateScale(34),
-    backgroundColor: colors[theme].placeholder,
-    borderColor: colors[theme].card,
-    borderWidth: 1,
-    borderRadius: moderateScale(17),
-    zIndex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  image: {
-    position: "relative",
-    top: verticalScale(-30),
-    width: verticalScale(120),
-    height: verticalScale(130),
-    borderRadius: 10,
-    marginRight: horizontalScale(5),
-  },
-  btnSave: {
-    backgroundColor: colors[theme].card,
-    alignSelf: "center",
-    width: horizontalScale(100),
-    paddingVertical: verticalScale(10),
-    borderRadius: moderateScale(10),
-    marginTop: verticalScale(20),
-  },
-  textBtn: {
-    color: colors[theme].text,
-    textAlign: "center",
-  },
-  error: {
-    color: colors[theme].error,
-    marginTop: 20,
-  },
-});
+    containerImages: {
+      marginTop: verticalScale(10),
+      display: "flex",
+      flexDirection: "row",
+    },
+    imageContainer: {
+      padding: moderateScale(5),
+    },
+    containerErrors: {
+      top: verticalScale(480),
+    },
+    containerBtnSave: {
+      top: verticalScale(530),
+    },
+    labelText: {
+      color: theme.subtitle,
+      fontSize: moderateScale(15),
+      fontWeight: "bold",
+      marginHorizontal: horizontalScale(10),
+      marginBottom: verticalScale(10),
+    },
+    input: {
+      backgroundColor: theme.input,
+      color: theme.text,
+      width: "95%",
+      maxWidth: "95%",
+      height: verticalScale(35),
+      borderRadius: 5,
+      paddingHorizontal: 5,
+      marginBottom: 25,
+      fontFamily: fontFamily,
+      alignSelf: "center",
+    },
+    btnEvidences: {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-around",
+      width: "60%",
+      height: verticalScale(40),
+      borderWidth: 1,
+      borderColor: theme.input,
+      borderRadius: moderateScale(10),
+      marginHorizontal: horizontalScale(10),
+    },
+    btnDeleteEvidence: {
+      position: "relative",
+      top: verticalScale(3),
+      left: horizontalScale(120),
+      width: moderateScale(34),
+      height: moderateScale(34),
+      backgroundColor: theme.placeholder,
+      borderColor: theme.card,
+      borderWidth: 1,
+      borderRadius: moderateScale(17),
+      zIndex: 1,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    image: {
+      position: "relative",
+      top: verticalScale(-30),
+      width: verticalScale(120),
+      height: verticalScale(130),
+      borderRadius: 10,
+      marginRight: horizontalScale(5),
+    },
+    btnSave: {
+      backgroundColor: theme.card,
+      alignSelf: "center",
+      width: horizontalScale(100),
+      paddingVertical: verticalScale(10),
+      borderRadius: moderateScale(10),
+      marginTop: verticalScale(20),
+    },
+    textBtn: {
+      color: theme.text,
+      textAlign: "center",
+    },
+    error: {
+      color: theme.error,
+      marginTop: 20,
+    },
+  });

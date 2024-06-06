@@ -12,7 +12,8 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import { BlurView } from "expo-blur";
 import { useNavigation } from "@react-navigation/native";
 
-import { colors, theme } from "../utils/desing";
+import useTheme from "../hooks/useTheme";
+import { fontFamily } from "../utils/desing";
 import {
   verticalScale,
   horizontalScale,
@@ -104,8 +105,9 @@ export default function ModalManageOrder({
       type: "A",
     },
   ];
-
   const [isLoading, setIsLoading] = useState(false);
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
 
   //autoscroll
   const getItemLayout = (data, index) => {
@@ -135,9 +137,9 @@ export default function ModalManageOrder({
   const isSelectedState = (title) => {
     if (title === stateOrder) {
       return {
-        backgroundColor: colors[theme].input,
+        backgroundColor: theme.input,
         borderWidth: 1,
-        borderColor: colors[theme].card,
+        borderColor: theme.card,
       };
     } else {
       return {};
@@ -289,7 +291,7 @@ export default function ModalManageOrder({
               onPress={toggleModalManager}
               style={styles.closeContainer}
             >
-              <Icon name="close" color={colors[theme].card} size={30} />
+              <Icon name="close" color={theme.card} size={30} />
             </Pressable>
             <FlatList
               data={getOptions()}
@@ -300,58 +302,58 @@ export default function ModalManageOrder({
             />
           </>
         ) : (
-          <ActivityIndicator size="large" color={colors[theme].card} />
+          <ActivityIndicator size="large" color={theme.card} />
         )}
       </View>
     </BlurView>
   );
 }
-
-const styles = StyleSheet.create({
-  centeredView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  modalView: {
-    marginVertical: verticalScale(20),
-    marginHorizontal: horizontalScale(20),
-    borderRadius: moderateScale(20),
-    paddingVertical: verticalScale(35),
-  },
-  flatlistContainer: {
-    backgroundColor: colors[theme].background,
-    borderColor: colors[theme].card,
-    borderWidth: 1,
-    borderRadius: moderateScale(20),
-    paddingHorizontal: horizontalScale(35),
-    paddingVertical: verticalScale(5),
-    marginBottom: moderateScale(60),
-    maxHeight: verticalScale(180),
-    width: moderateScale(250),
-  },
-  headerContainer: {
-    position: "relative",
-    top: 0,
-  },
-  closeContainer: {
-    position: "relative",
-    top: verticalScale(35),
-    left: moderateScale(210),
-    zIndex: 1,
-  },
-  itemContainer: {
-    marginVertical: verticalScale(10),
-    width: moderateScale(160),
-    // height: verticalScale(25),
-    paddingBottom: verticalScale(5),
-    paddingLeft: horizontalScale(10),
-    borderWidth: 1,
-    borderColor: colors[theme].input,
-    borderRadius: moderateScale(10),
-  },
-  itemTitle: {
-    color: colors[theme].text,
-    // backgroundColor: "red",
-  },
-});
+const createStyles = (theme) =>
+  StyleSheet.create({
+    centeredView: {
+      flex: 1,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    modalView: {
+      marginVertical: verticalScale(20),
+      marginHorizontal: horizontalScale(20),
+      borderRadius: moderateScale(20),
+      paddingVertical: verticalScale(35),
+    },
+    flatlistContainer: {
+      backgroundColor: theme.background,
+      borderColor: theme.card,
+      borderWidth: 1,
+      borderRadius: moderateScale(20),
+      paddingHorizontal: horizontalScale(35),
+      paddingVertical: verticalScale(5),
+      marginBottom: moderateScale(60),
+      maxHeight: verticalScale(180),
+      width: moderateScale(250),
+    },
+    headerContainer: {
+      position: "relative",
+      top: 0,
+    },
+    closeContainer: {
+      position: "relative",
+      top: verticalScale(35),
+      left: moderateScale(210),
+      zIndex: 1,
+    },
+    itemContainer: {
+      marginVertical: verticalScale(10),
+      width: moderateScale(160),
+      // height: verticalScale(25),
+      paddingBottom: verticalScale(5),
+      paddingLeft: horizontalScale(10),
+      borderWidth: 1,
+      borderColor: theme.input,
+      borderRadius: moderateScale(10),
+    },
+    itemTitle: {
+      color: theme.text,
+      // backgroundColor: "red",
+    },
+  });

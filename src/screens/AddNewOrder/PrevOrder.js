@@ -11,7 +11,8 @@ import { WebView } from "react-native-webview";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { shareAsync } from "expo-sharing";
 
-import { colors, theme, fontFamily } from "../../utils/desing";
+import useTheme from "../../hooks/useTheme";
+import { fontFamily } from "../../utils/desing";
 import {
   verticalScale,
   horizontalScale,
@@ -21,6 +22,8 @@ import generatePDF from "../../utils/generatePDF";
 import { addNewOrderApi } from "../../api/orders";
 
 export default function PrevOrder({ navigation, route }) {
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
   const { data } = route.params;
 
   const html = `
@@ -140,7 +143,7 @@ export default function PrevOrder({ navigation, route }) {
       <Pressable onPress={navigation.goBack} style={styles.buttonBack}>
         <Icon
           name="arrow-left"
-          color={colors[theme].card}
+          color={theme.card}
           size={30}
           style={styles.iconPlus}
         />
@@ -158,43 +161,44 @@ export default function PrevOrder({ navigation, route }) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors[theme].background,
-    // alignItems: "center", // Comentado para evitar problemas de visualización del WebView
-  },
-  buttonBack: {
-    position: "absolute",
-    top: verticalScale(50),
-    left: horizontalScale(30),
-  },
-  title: {
-    color: colors[theme].title,
-    fontFamily: fontFamily,
-    alignSelf: "center",
-    fontWeight: "bold",
-    fontSize: moderateScale(28),
-    marginTop: verticalScale(55),
-    marginBottom: verticalScale(28),
-    // marginVertical: moderateScale(39),
-  },
-  viewPdf: {
-    width: "95%",
-    alignSelf: "center",
-    // marginVertical: moderateScale(5),
-  },
-  btnSave: {
-    backgroundColor: colors[theme].card,
-    color: colors[theme].text,
-    width: horizontalScale(150),
-    alignSelf: "center",
-    paddingVertical: verticalScale(8),
-    borderRadius: moderateScale(50),
-    marginVertical: verticalScale(30),
-  },
-  txtBtn: {
-    color: colors[theme].text,
-    textAlign: "center",
-  },
-});
+const createStyles = (theme) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.background,
+      // alignItems: "center", // Comentado para evitar problemas de visualización del WebView
+    },
+    buttonBack: {
+      position: "absolute",
+      top: verticalScale(50),
+      left: horizontalScale(30),
+    },
+    title: {
+      color: theme.title,
+      fontFamily: fontFamily,
+      alignSelf: "center",
+      fontWeight: "bold",
+      fontSize: moderateScale(28),
+      marginTop: verticalScale(55),
+      marginBottom: verticalScale(28),
+      // marginVertical: moderateScale(39),
+    },
+    viewPdf: {
+      width: "95%",
+      alignSelf: "center",
+      // marginVertical: moderateScale(5),
+    },
+    btnSave: {
+      backgroundColor: theme.card,
+      color: theme.text,
+      width: horizontalScale(150),
+      alignSelf: "center",
+      paddingVertical: verticalScale(8),
+      borderRadius: moderateScale(50),
+      marginVertical: verticalScale(30),
+    },
+    txtBtn: {
+      color: theme.text,
+      textAlign: "center",
+    },
+  });

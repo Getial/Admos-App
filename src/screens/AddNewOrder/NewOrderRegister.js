@@ -18,7 +18,8 @@ import useAuth from "../../hooks/useAuth";
 import * as yup from "yup";
 
 import { API_HOST } from "../../utils/constants";
-import { colors, fontFamily, theme } from "../../utils/desing";
+import useTheme from "../../hooks/useTheme";
+import { fontFamily } from "../../utils/desing";
 import {
   verticalScale,
   horizontalScale,
@@ -46,6 +47,8 @@ export default function NewOrderRegister({ navigation, route }) {
   const { auth } = useAuth();
   const [formData, setFormData] = useState({});
   const [error, setError] = useState(null);
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
 
   const [typeServiceOpen, setTypeServiceOpen] = useState(false);
   const [typeServiceValue, setTypeServiceValue] = useState(null);
@@ -171,7 +174,7 @@ export default function NewOrderRegister({ navigation, route }) {
   };
 
   const getServiceNumber = async () => {
-    if (watch("is_guarantee")) {
+    if (watch("type_service") === "warranty") {
       return watch("os_garanty");
     } else {
       response = await axios.get(`${API_HOST}/orders/lastorder/`);
@@ -241,7 +244,7 @@ export default function NewOrderRegister({ navigation, route }) {
       <Pressable onPress={navigation.goBack} style={styles.buttonBack}>
         <Icon
           name="arrow-left"
-          color={colors[theme].card}
+          color={theme.card}
           size={30}
           style={styles.iconPlus}
         />
@@ -265,7 +268,7 @@ export default function NewOrderRegister({ navigation, route }) {
                       textStyle={styles.textStyle}
                       dropDownContainerStyle={styles.dropDownContainerStyle}
                       placeholderStyle={styles.placeholderStyles}
-                      activityIndicatorColor={colors[theme].card}
+                      activityIndicatorColor={theme.card}
                       searchContainerStyle={styles.searchContainerStyle}
                       searchTextInputStyle={styles.searchTextInputStyle}
                       open={typeServiceOpen}
@@ -323,7 +326,7 @@ export default function NewOrderRegister({ navigation, route }) {
                       textStyle={styles.textStyle}
                       dropDownContainerStyle={styles.dropDownContainerStyle}
                       placeholderStyle={styles.placeholderStyles}
-                      activityIndicatorColor={colors[theme].card}
+                      activityIndicatorColor={theme.card}
                       searchContainerStyle={styles.searchContainerStyle}
                       searchTextInputStyle={styles.searchTextInputStyle}
                       open={categoryOpen}
@@ -361,7 +364,7 @@ export default function NewOrderRegister({ navigation, route }) {
                       textStyle={styles.textStyle}
                       dropDownContainerStyle={styles.dropDownContainerStyle}
                       placeholderStyle={styles.placeholderStyles}
-                      activityIndicatorColor={colors[theme].card}
+                      activityIndicatorColor={theme.card}
                       searchContainerStyle={styles.searchContainerStyle}
                       searchTextInputStyle={styles.searchTextInputStyle}
                       open={brandOpen}
@@ -399,7 +402,7 @@ export default function NewOrderRegister({ navigation, route }) {
                       textStyle={styles.textStyle}
                       dropDownContainerStyle={styles.dropDownContainerStyle}
                       placeholderStyle={styles.placeholderStyles}
-                      activityIndicatorColor={colors[theme].card}
+                      activityIndicatorColor={theme.card}
                       searchContainerStyle={styles.searchContainerStyle}
                       searchTextInputStyle={styles.searchTextInputStyle}
                       open={referenceOpen}
@@ -513,113 +516,114 @@ export default function NewOrderRegister({ navigation, route }) {
       ) : (
         <View>
           <Text style={styles.title}>Guardando nueva orden de servicio</Text>
-          <ActivityIndicator size="large" color={colors[theme].card} />
+          <ActivityIndicator size="large" color={theme.card} />
         </View>
       )}
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors[theme].background,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  buttonBack: {
-    position: "absolute",
-    top: verticalScale(50),
-    left: horizontalScale(30),
-  },
-  title: {
-    color: colors[theme].title,
-    fontFamily: fontFamily,
-    fontWeight: "bold",
-    marginBottom: verticalScale(15),
-    fontSize: moderateScale(28),
-  },
-  scrollView: {
-    maxHeight: verticalScale(400),
-    width: "85%",
-  },
-  form: {
-    width: "100%",
-  },
-  input: {
-    borderStyle: "solid",
-    backgroundColor: colors[theme].input,
-    borderColor: colors[theme].card,
-    color: colors[theme].text,
-    borderRadius: moderateScale(7),
-    borderWidth: 1,
-    fontSize: moderateScale(15),
-    height: verticalScale(35),
-    marginHorizontal: horizontalScale(10),
-    paddingStart: horizontalScale(10),
-    marginBottom: verticalScale(15),
-  },
-  labelText: {
-    color: colors[theme].text,
-    fontSize: moderateScale(15),
-    marginHorizontal: horizontalScale(10),
-    marginBottom: verticalScale(10),
-  },
-  dropdown: {
-    backgroundColor: colors[theme].input,
-    borderColor: colors[theme].card,
-    color: colors[theme].text,
-    height: verticalScale(35),
-  },
-  textStyle: {
-    backgroundColor: colors[theme].input,
-    color: colors[theme].text,
-  },
-  dropDownContainerStyle: {
-    borderColor: colors[theme].card,
-    backgroundColor: colors[theme].input,
-  },
-  searchContainerStyle: {
-    borderColor: colors[theme].input,
-  },
-  searchTextInputStyle: {
-    color: colors[theme].text,
-  },
-  placeholderStyles: {
-    color: colors[theme].placeholder,
-  },
-  dropdownGender: {
-    marginHorizontal: horizontalScale(10),
-    width: "50%",
-    marginBottom: verticalScale(15),
-  },
-  dropdownCompany: {
-    marginHorizontal: horizontalScale(10),
-    marginBottom: verticalScale(15),
-  },
-  BtnPrevOrder: {
-    borderWidth: 1,
-    borderColor: colors[theme].card,
-    borderRadius: moderateScale(10),
-    paddingVertical: verticalScale(2),
-    paddingHorizontal: horizontalScale(5),
-  },
-  txtBtn: {
-    color: colors[theme].text,
-  },
-  btnSave: {
-    backgroundColor: colors[theme].card,
-    color: colors[theme].text,
-    textAlign: "center",
-    width: horizontalScale(100),
-    marginHorizontal: horizontalScale(60),
-    paddingVertical: verticalScale(8),
-    borderRadius: moderateScale(50),
-    marginTop: verticalScale(10),
-  },
-  error: {
-    color: colors[theme].error,
-    textAlign: "center",
-    marginTop: 10,
-  },
-});
+const createStyles = (theme) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.background,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    buttonBack: {
+      position: "absolute",
+      top: verticalScale(50),
+      left: horizontalScale(30),
+    },
+    title: {
+      color: theme.title,
+      fontFamily: fontFamily,
+      fontWeight: "bold",
+      marginBottom: verticalScale(15),
+      fontSize: moderateScale(28),
+    },
+    scrollView: {
+      maxHeight: verticalScale(400),
+      width: "85%",
+    },
+    form: {
+      width: "100%",
+    },
+    input: {
+      borderStyle: "solid",
+      backgroundColor: theme.input,
+      borderColor: theme.card,
+      color: theme.text,
+      borderRadius: moderateScale(7),
+      borderWidth: 1,
+      fontSize: moderateScale(15),
+      height: verticalScale(35),
+      marginHorizontal: horizontalScale(10),
+      paddingStart: horizontalScale(10),
+      marginBottom: verticalScale(15),
+    },
+    labelText: {
+      color: theme.text,
+      fontSize: moderateScale(15),
+      marginHorizontal: horizontalScale(10),
+      marginBottom: verticalScale(10),
+    },
+    dropdown: {
+      backgroundColor: theme.input,
+      borderColor: theme.card,
+      color: theme.text,
+      height: verticalScale(35),
+    },
+    textStyle: {
+      backgroundColor: theme.input,
+      color: theme.text,
+    },
+    dropDownContainerStyle: {
+      borderColor: theme.card,
+      backgroundColor: theme.input,
+    },
+    searchContainerStyle: {
+      borderColor: theme.input,
+    },
+    searchTextInputStyle: {
+      color: theme.text,
+    },
+    placeholderStyles: {
+      color: theme.placeholder,
+    },
+    dropdownGender: {
+      marginHorizontal: horizontalScale(10),
+      width: "50%",
+      marginBottom: verticalScale(15),
+    },
+    dropdownCompany: {
+      marginHorizontal: horizontalScale(10),
+      marginBottom: verticalScale(15),
+    },
+    BtnPrevOrder: {
+      borderWidth: 1,
+      borderColor: theme.card,
+      borderRadius: moderateScale(10),
+      paddingVertical: verticalScale(2),
+      paddingHorizontal: horizontalScale(5),
+    },
+    txtBtn: {
+      color: theme.text,
+    },
+    btnSave: {
+      backgroundColor: theme.card,
+      color: theme.text,
+      textAlign: "center",
+      width: horizontalScale(100),
+      marginHorizontal: horizontalScale(60),
+      paddingVertical: verticalScale(8),
+      borderRadius: moderateScale(50),
+      marginTop: verticalScale(10),
+    },
+    error: {
+      color: theme.error,
+      textAlign: "center",
+      marginTop: 10,
+    },
+  });

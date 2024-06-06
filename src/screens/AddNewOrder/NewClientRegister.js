@@ -17,7 +17,8 @@ import * as Yup from "yup";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import DropDownPicker from "react-native-dropdown-picker";
 
-import { colors, fontFamily, theme } from "../../utils/desing";
+import useTheme from "../../hooks/useTheme";
+import { fontFamily } from "../../utils/desing";
 import { addNewClientApi } from "../../api/clients";
 import {
   moderateScale,
@@ -26,6 +27,9 @@ import {
 } from "../../utils/metrics";
 
 export default function NewClientRegister({ navigation }) {
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
+
   const [isLoading, setIsLoading] = useState(false);
   const [showGenderDropdown, setShowGenderDropdown] = useState(false);
   const [showSecondPhNumber, setShowSecondPhNumber] = useState(false);
@@ -80,7 +84,7 @@ export default function NewClientRegister({ navigation }) {
       <Pressable onPress={navigation.goBack} style={styles.buttonBack}>
         <Icon
           name="arrow-left"
-          color={colors[theme].card}
+          color={theme.card}
           size={30}
           style={styles.iconPlus}
         />
@@ -95,7 +99,7 @@ export default function NewClientRegister({ navigation }) {
               <Text style={styles.labelText}>Nombre Completo</Text>
               <TextInput
                 placeholder="Nombre del cliente o la empresa"
-                placeholderTextColor={colors[theme].placeholder}
+                placeholderTextColor={theme.placeholder}
                 style={styles.input}
                 value={formik.values.fullName}
                 onChangeText={(text) => formik.setFieldValue("fullname", text)}
@@ -111,7 +115,7 @@ export default function NewClientRegister({ navigation }) {
                 textStyle={styles.textStyle}
                 dropDownContainerStyle={styles.dropDownContainerStyle}
                 placeholderStyle={styles.placeholderStyles}
-                activityIndicatorColor={colors[theme].card}
+                activityIndicatorColor={theme.card}
                 searchContainerStyle={styles.searchContainerStyle}
                 searchTextInputStyle={styles.searchTextInputStyle}
                 open={entityOpen}
@@ -143,7 +147,7 @@ export default function NewClientRegister({ navigation }) {
                   textStyle={styles.textStyle}
                   dropDownContainerStyle={styles.dropDownContainerStyle}
                   placeholderStyle={styles.placeholderStyles}
-                  activityIndicatorColor={colors[theme].card}
+                  activityIndicatorColor={theme.card}
                   searchContainerStyle={styles.searchContainerStyle}
                   searchTextInputStyle={styles.searchTextInputStyle}
                   open={genredOpen}
@@ -167,7 +171,7 @@ export default function NewClientRegister({ navigation }) {
               <Text style={styles.labelText}>CC o NIT</Text>
               <TextInput
                 placeholder="Numero de documento o Nit"
-                placeholderTextColor={colors[theme].placeholder}
+                placeholderTextColor={theme.placeholder}
                 style={styles.input}
                 value={formik.values.document}
                 onChangeText={(text) => formik.setFieldValue("document", text)}
@@ -179,7 +183,7 @@ export default function NewClientRegister({ navigation }) {
               <Text style={styles.labelText}>Contactos</Text>
               <TextInput
                 placeholder="Numero de celular o telefono"
-                placeholderTextColor={colors[theme].placeholder}
+                placeholderTextColor={theme.placeholder}
                 style={styles.input}
                 value={formik.values.phone_number}
                 inputMode="tel"
@@ -194,7 +198,7 @@ export default function NewClientRegister({ navigation }) {
               >
                 <Icon
                   name={showSecondPhNumber ? "minus" : "plus"}
-                  color={colors[theme].placeholder}
+                  color={theme.placeholder}
                   size={moderateScale(20)}
                 />
               </Pressable>
@@ -202,7 +206,7 @@ export default function NewClientRegister({ navigation }) {
               {showSecondPhNumber && (
                 <TextInput
                   placeholder="Numero de celular o telefono"
-                  placeholderTextColor={colors[theme].placeholder}
+                  placeholderTextColor={theme.placeholder}
                   style={styles.input}
                   value={formik.values.second_phone_number}
                   inputMode="tel"
@@ -218,7 +222,7 @@ export default function NewClientRegister({ navigation }) {
               <Text style={styles.labelText}>Correo Electronico</Text>
               <TextInput
                 placeholder="Ej: pepitoperez@mail.com"
-                placeholderTextColor={colors[theme].placeholder}
+                placeholderTextColor={theme.placeholder}
                 style={styles.input}
                 value={formik.values.email}
                 inputMode="email"
@@ -231,7 +235,7 @@ export default function NewClientRegister({ navigation }) {
               <Text style={styles.labelText}>Direccion</Text>
               <TextInput
                 placeholder="Ej: calle 20 #12-12"
-                placeholderTextColor={colors[theme].placeholder}
+                placeholderTextColor={theme.placeholder}
                 style={styles.input}
                 value={formik.values.address}
                 onChangeText={(text) => formik.setFieldValue("address", text)}
@@ -243,7 +247,7 @@ export default function NewClientRegister({ navigation }) {
               <Text style={styles.labelText}>Ciudad o Municipio</Text>
               <TextInput
                 placeholder="Ej: Ipiales"
-                placeholderTextColor={colors[theme].placeholder}
+                placeholderTextColor={theme.placeholder}
                 style={styles.input}
                 value={formik.values.municipality}
                 onChangeText={(text) =>
@@ -275,7 +279,7 @@ export default function NewClientRegister({ navigation }) {
       ) : (
         <View>
           <Text style={styles.title}>Guardando nuevo cliente</Text>
-          <ActivityIndicator size="large" color={colors[theme].card} />
+          <ActivityIndicator size="large" color={theme.card} />
         </View>
       )}
     </SafeAreaView>
@@ -310,114 +314,115 @@ function validationSchema() {
   };
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors[theme].background,
-    alignItems: "center",
-    justifyContent: "space-around",
-  },
-  buttonBack: {
-    position: "absolute",
-    top: verticalScale(50),
-    left: horizontalScale(30),
-  },
-  title: {
-    color: colors[theme].title,
-    fontFamily: fontFamily,
-    fontSize: 32,
-    textAlign: "center",
-    marginBottom: 25,
-  },
-  wrapper: {
-    marginBottom: 10,
-    width: "100%",
-  },
-  scrollView: {
-    maxHeight: verticalScale(400),
-    width: "80%",
-    // backgroundColor: "red",
-  },
-  switchContainer: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    // backgroundColor: colors[theme].error,
-  },
-  labelText: {
-    color: colors[theme].subtitle,
-    // width: "50%",
-    fontSize: moderateScale(15),
-    fontWeight: "bold",
-    marginHorizontal: horizontalScale(10),
-    marginBottom: verticalScale(10),
-  },
-  input: {
-    backgroundColor: colors[theme].input,
-    color: colors[theme].text,
-    width: "90%",
-    height: 40,
-    borderRadius: 5,
-    paddingLeft: 5,
-    marginBottom: 25,
-    fontFamily: fontFamily,
-  },
-  buttonPlusPhoneNumber: {
-    width: moderateScale(45),
-    height: moderateScale(35),
-    alignItems: "center",
-    justifyContent: "center",
-    position: "absolute",
-    top: verticalScale(26),
-    right: horizontalScale(32),
-    borderLeftWidth: moderateScale(2),
-    // borderRadius: moderateScale(15),
-    borderColor: colors[theme].background,
-  },
-  dropDownContainerStyle: {
-    borderColor: colors[theme].card,
-    padding: 10,
-    backgroundColor: colors[theme].input,
-  },
-  dropdown: {
-    backgroundColor: colors[theme].input,
-    // borderColor: colors[theme].card,
-    color: colors[theme].text,
-    height: verticalScale(30),
-  },
-  dropdownCompany: {
-    // marginHorizontal: horizontalScale(10),
-    width: "80%",
-    marginBottom: verticalScale(15),
-  },
-  dropdownGender: {
-    // marginHorizontal: horizontalScale(10),
-    width: "70%",
-    marginBottom: verticalScale(15),
-  },
-  textStyle: {
-    backgroundColor: colors[theme].input,
-    color: colors[theme].text,
-  },
-  btnSave: {
-    backgroundColor: colors[theme].card,
-    alignSelf: "center",
-    width: horizontalScale(100),
-    paddingVertical: verticalScale(10),
-    borderRadius: moderateScale(10),
-    marginTop: verticalScale(10),
-  },
-  textBtn: {
-    color: colors[theme].text,
-    textAlign: "center",
-  },
-  errorsScrollView: {
-    // backgroundColor: colors[theme].card,
-    width: "70%",
-    maxHeight: verticalScale(50),
-  },
-  error: {
-    color: colors[theme].error,
-    marginTop: 10,
-  },
-});
+const createStyles = (theme) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.background,
+      alignItems: "center",
+      justifyContent: "space-around",
+    },
+    buttonBack: {
+      position: "absolute",
+      top: verticalScale(50),
+      left: horizontalScale(30),
+    },
+    title: {
+      color: theme.title,
+      fontFamily: fontFamily,
+      fontSize: 32,
+      textAlign: "center",
+      marginBottom: 25,
+    },
+    wrapper: {
+      marginBottom: 10,
+      width: "100%",
+    },
+    scrollView: {
+      maxHeight: verticalScale(400),
+      width: "80%",
+      // backgroundColor: "red",
+    },
+    switchContainer: {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      // backgroundColor: theme.error,
+    },
+    labelText: {
+      color: theme.subtitle,
+      // width: "50%",
+      fontSize: moderateScale(15),
+      fontWeight: "bold",
+      marginHorizontal: horizontalScale(10),
+      marginBottom: verticalScale(10),
+    },
+    input: {
+      backgroundColor: theme.input,
+      color: theme.text,
+      width: "90%",
+      height: 40,
+      borderRadius: 5,
+      paddingLeft: 5,
+      marginBottom: 25,
+      fontFamily: fontFamily,
+    },
+    buttonPlusPhoneNumber: {
+      width: moderateScale(45),
+      height: moderateScale(35),
+      alignItems: "center",
+      justifyContent: "center",
+      position: "absolute",
+      top: verticalScale(26),
+      right: horizontalScale(32),
+      borderLeftWidth: moderateScale(2),
+      // borderRadius: moderateScale(15),
+      borderColor: theme.background,
+    },
+    dropDownContainerStyle: {
+      borderColor: theme.card,
+      padding: 10,
+      backgroundColor: theme.input,
+    },
+    dropdown: {
+      backgroundColor: theme.input,
+      // borderColor: theme.card,
+      color: theme.text,
+      height: verticalScale(30),
+    },
+    dropdownCompany: {
+      // marginHorizontal: horizontalScale(10),
+      width: "80%",
+      marginBottom: verticalScale(15),
+    },
+    dropdownGender: {
+      // marginHorizontal: horizontalScale(10),
+      width: "70%",
+      marginBottom: verticalScale(15),
+    },
+    textStyle: {
+      backgroundColor: theme.input,
+      color: theme.text,
+    },
+    btnSave: {
+      backgroundColor: theme.card,
+      alignSelf: "center",
+      width: horizontalScale(100),
+      paddingVertical: verticalScale(10),
+      borderRadius: moderateScale(10),
+      marginTop: verticalScale(10),
+    },
+    textBtn: {
+      color: theme.text,
+      textAlign: "center",
+    },
+    errorsScrollView: {
+      // backgroundColor: theme.card,
+      width: "70%",
+      maxHeight: verticalScale(50),
+    },
+    error: {
+      color: theme.error,
+      marginTop: 10,
+    },
+  });

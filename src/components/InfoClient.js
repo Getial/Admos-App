@@ -8,7 +8,8 @@ import {
   ActivityIndicator,
 } from "react-native";
 
-import { colors, theme, fontFamily } from "../utils/desing";
+import useTheme from "../hooks/useTheme";
+import { fontFamily } from "../utils/desing";
 import { getClientApi } from "../api/clients";
 import {
   verticalScale,
@@ -19,7 +20,10 @@ import {
 export default function InfoClient({ clientId }) {
   const [isLoading, setIsLoading] = useState(false);
   const [client, setClient] = useState("");
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
 
+  //get info client
   useEffect(() => {
     (async () => {
       setIsLoading(true);
@@ -87,60 +91,61 @@ export default function InfoClient({ clientId }) {
           </View>
         </>
       ) : (
-        <ActivityIndicator size="large" color={colors[theme].card} />
+        <ActivityIndicator size="large" color={theme.card} />
       )}
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    width: "75%",
-  },
-  subtitle: {
-    color: colors[theme].title,
-    fontFamily: fontFamily,
-    textAlign: "center",
-    marginBottom: verticalScale(25),
-    fontSize: moderateScale(23),
-  },
-  infoContainer: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "flex-end",
-    // backgroundColor: "red",
-    marginBottom: verticalScale(5),
-    // justifyContent: "space-around",
-  },
-  titleInfo: {
-    color: colors[theme].title,
-    fontFamily: fontFamily,
-    fontWeight: "bold",
-    textAlign: "left",
-    marginBottom: verticalScale(15),
-    fontSize: moderateScale(18),
-  },
-  info: {
-    color: colors[theme].title,
-    fontFamily: fontFamily,
-    textAlign: "right",
-    marginBottom: verticalScale(15),
-    fontSize: moderateScale(14),
-  },
-  btn: {
-    width: "25%",
-    maxWidth: 150,
-    borderColor: colors[theme].input,
-    borderWidth: 1,
-    borderRadius: moderateScale(15),
-    paddingTop: verticalScale(5),
-    paddingBottom: verticalScale(8),
-    marginLeft: horizontalScale(10),
-    alignSelf: "flex-start",
-    // marginBottom: verticalScale(30),
-  },
-  textBtn: {
-    color: colors[theme].text,
-    textAlign: "center",
-  },
-});
+const createStyles = (theme) =>
+  StyleSheet.create({
+    container: {
+      width: "75%",
+    },
+    subtitle: {
+      color: theme.title,
+      fontFamily: fontFamily,
+      textAlign: "center",
+      marginBottom: verticalScale(25),
+      fontSize: moderateScale(23),
+    },
+    infoContainer: {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "flex-end",
+      // backgroundColor: "red",
+      marginBottom: verticalScale(5),
+      // justifyContent: "space-around",
+    },
+    titleInfo: {
+      color: theme.title,
+      fontFamily: fontFamily,
+      fontWeight: "bold",
+      textAlign: "left",
+      marginBottom: verticalScale(15),
+      fontSize: moderateScale(18),
+    },
+    info: {
+      color: theme.title,
+      fontFamily: fontFamily,
+      textAlign: "right",
+      marginBottom: verticalScale(15),
+      fontSize: moderateScale(14),
+    },
+    btn: {
+      width: "25%",
+      maxWidth: 150,
+      borderColor: theme.input,
+      borderWidth: 1,
+      borderRadius: moderateScale(15),
+      paddingTop: verticalScale(5),
+      paddingBottom: verticalScale(8),
+      marginLeft: horizontalScale(10),
+      alignSelf: "flex-start",
+      // marginBottom: verticalScale(30),
+    },
+    textBtn: {
+      color: theme.text,
+      textAlign: "center",
+    },
+  });

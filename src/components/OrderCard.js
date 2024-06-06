@@ -1,7 +1,8 @@
 import React from "react";
 import { View, Text, TouchableWithoutFeedback, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { colors, theme } from "../utils/desing";
+import useTheme from "../hooks/useTheme";
+import { fontFamily } from "../utils/desing";
 import {
   verticalScale,
   horizontalScale,
@@ -11,6 +12,8 @@ import {
 export default function OrderCard(props) {
   const { order } = props;
   const navigation = useNavigation();
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
 
   const goToDetailsOrder = () => {
     navigation.navigate("DetailOrder", { id: order.id });
@@ -18,9 +21,10 @@ export default function OrderCard(props) {
 
   const borderState = (state) => {
     return {
-      borderColor: colors[theme].progress[state],
+      borderColor: theme.progress[state],
     };
   };
+
   return (
     <TouchableWithoutFeedback onPress={goToDetailsOrder}>
       <View style={styles.cardContainer}>
@@ -43,45 +47,46 @@ export default function OrderCard(props) {
   );
 }
 
-const styles = StyleSheet.create({
-  cardContainer: {
-    width: "95%",
-    height: verticalScale(60),
-    marginBottom: verticalScale(10),
-    borderColor: colors[theme].input,
-    borderBottomWidth: 1,
-    borderRadius: moderateScale(10),
-    paddingTop: verticalScale(10),
-    paddingHorizontal: horizontalScale(10),
-    alignSelf: "center",
-    flexDirection: "row",
-    justifyContent: "center",
-  },
-  infoContainer: {
-    width: "70%",
-  },
-  title: {
-    color: colors[theme].title,
-    fontWeight: "bold",
-    fontSize: moderateScale(18),
-  },
-  subtitle: {
-    color: colors[theme].title,
-    fontWeight: "300",
-    fontSize: moderateScale(12),
-  },
-  stateContainer: {
-    width: "25%",
-    height: verticalScale(30),
-    maxHeight: verticalScale(40),
-    borderWidth: 2,
-    // borderColor: colors[theme].input,
-    borderRadius: moderateScale(20),
-    paddingTop: verticalScale(5),
-  },
-  textState: {
-    color: colors[theme].text,
-    fontSize: moderateScale(12),
-    textAlign: "center",
-  },
-});
+const createStyles = (theme) =>
+  StyleSheet.create({
+    cardContainer: {
+      width: "95%",
+      height: verticalScale(60),
+      marginBottom: verticalScale(10),
+      borderColor: theme.input,
+      borderBottomWidth: 1,
+      borderRadius: moderateScale(10),
+      paddingTop: verticalScale(10),
+      paddingHorizontal: horizontalScale(10),
+      alignSelf: "center",
+      flexDirection: "row",
+      justifyContent: "center",
+    },
+    infoContainer: {
+      width: "70%",
+    },
+    title: {
+      color: theme.title,
+      fontWeight: "bold",
+      fontSize: moderateScale(18),
+    },
+    subtitle: {
+      color: theme.title,
+      fontWeight: "300",
+      fontSize: moderateScale(12),
+    },
+    stateContainer: {
+      width: "25%",
+      height: verticalScale(30),
+      maxHeight: verticalScale(40),
+      borderWidth: 2,
+      // borderColor: theme.input,
+      borderRadius: moderateScale(20),
+      paddingTop: verticalScale(5),
+    },
+    textState: {
+      color: theme.text,
+      fontSize: moderateScale(12),
+      textAlign: "center",
+    },
+  });

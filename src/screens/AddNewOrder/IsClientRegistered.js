@@ -7,15 +7,19 @@ import {
   horizontalScale,
   moderateScale,
 } from "../../utils/metrics";
-import { colors, fontFamily, theme } from "../../utils/desing";
+import useTheme from "../../hooks/useTheme";
+import { fontFamily } from "../../utils/desing";
 
 const IsClientRegistered = ({ navigation }) => {
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
+
   return (
     <SafeAreaView style={styles.container}>
       <Pressable onPress={navigation.goBack} style={styles.buttonBack}>
         <Icon
           name="arrow-left"
-          color={colors[theme].card}
+          color={theme.card}
           size={30}
           style={styles.iconPlus}
         />
@@ -24,13 +28,13 @@ const IsClientRegistered = ({ navigation }) => {
       <View style={styles.buttonsContainer}>
         <Button
           title="Si, Buscar cliente"
-          color={colors[theme].card}
+          color={theme.card}
           style={styles.buton}
           onPress={() => navigation.navigate("SearchClient")}
         />
         <Button
           title="No, Registrar nuevo cliente"
-          color={colors[theme].card}
+          color={theme.card}
           style={styles.buton}
           onPress={() => navigation.navigate("NewClientRegister")}
         />
@@ -39,32 +43,33 @@ const IsClientRegistered = ({ navigation }) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors[theme].background,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  buttonBack: {
-    position: "absolute",
-    top: verticalScale(50),
-    left: horizontalScale(30),
-  },
-  title: {
-    color: colors[theme].title,
-    fontSize: 25,
-    marginBottom: 40,
-    fontFamily: fontFamily,
-  },
-  buttonsContainer: {
-    height: 100,
-    flexDirection: "column",
-    justifyContent: "space-around",
-  },
-  buton: {
-    fontFamily: fontFamily,
-  },
-});
+const createStyles = (theme) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.background,
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    buttonBack: {
+      position: "absolute",
+      top: verticalScale(50),
+      left: horizontalScale(30),
+    },
+    title: {
+      color: theme.title,
+      fontSize: 25,
+      marginBottom: 40,
+      fontFamily: fontFamily,
+    },
+    buttonsContainer: {
+      height: 100,
+      flexDirection: "column",
+      justifyContent: "space-around",
+    },
+    buton: {
+      fontFamily: fontFamily,
+    },
+  });
 
 export default IsClientRegistered;

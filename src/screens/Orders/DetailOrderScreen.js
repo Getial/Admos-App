@@ -18,7 +18,8 @@ import ModalManageOrder from "../../components/ModalManageOrder";
 import ModalAddServiceNumber from "../../components/ModalAddServiceNumber";
 import { getOrderDetailsApi } from "../../api/orders";
 import generatePDF from "../../utils/generatePDF";
-import { colors, theme, fontFamily } from "../../utils/desing";
+import useTheme from "../../hooks/useTheme";
+import { fontFamily } from "../../utils/desing";
 import {
   verticalScale,
   horizontalScale,
@@ -33,6 +34,8 @@ export default function DetailOrderScreen({ route, navigation }) {
   const [modalManagerVisible, setModalManagerVisible] = useState(false);
   const [modalServiceNumberVisible, setModalServiceOrderVisible] =
     useState(false);
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
 
   //get details order
   useEffect(() => {
@@ -110,11 +113,7 @@ export default function DetailOrderScreen({ route, navigation }) {
     <SafeAreaView style={styles.container}>
       {/* button back */}
       <Pressable onPress={navigation.goBack} style={styles.buttonBack}>
-        <Icon
-          name="arrow-left"
-          color={colors[theme].card}
-          size={moderateScale(30)}
-        />
+        <Icon name="arrow-left" color={theme.card} size={moderateScale(30)} />
       </Pressable>
 
       {/* button options */}
@@ -124,7 +123,7 @@ export default function DetailOrderScreen({ route, navigation }) {
       >
         <Icon
           name={isMenuVisible ? "times" : "ellipsis-v"} //times for close icon and ellipsis-v for options icon
-          color={colors[theme].card}
+          color={theme.card}
           size={moderateScale(30)}
         />
       </Pressable>
@@ -152,7 +151,7 @@ export default function DetailOrderScreen({ route, navigation }) {
         {order.client ? (
           <InfoClient clientId={order.client} />
         ) : (
-          <ActivityIndicator size="large" color={colors[theme].card} />
+          <ActivityIndicator size="large" color={theme.card} />
         )}
       </View>
 
@@ -182,7 +181,7 @@ export default function DetailOrderScreen({ route, navigation }) {
               style={styles.stateContainer}
             >
               <Text style={styles.titleState}> {order.state_description}</Text>
-              <Icon name="angle-down" color={colors[theme].card} size={30} />
+              <Icon name="angle-down" color={theme.card} size={30} />
             </Pressable>
             {/* <View style={styles.btnsContainer}>
               <Pressable style={styles.btn} onPress={printOrder}>
@@ -201,7 +200,7 @@ export default function DetailOrderScreen({ route, navigation }) {
             </View> */}
           </View>
         ) : (
-          <ActivityIndicator size="large" color={colors[theme].card} />
+          <ActivityIndicator size="large" color={theme.card} />
         )}
       </View>
 
@@ -238,161 +237,162 @@ export default function DetailOrderScreen({ route, navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors[theme].background,
-    alignItems: "center",
-    justifyContent: "space-evenly",
-    paddingVertical: verticalScale(50),
-  },
-  buttonBack: {
-    position: "absolute",
-    top: verticalScale(30),
-    left: horizontalScale(30),
-  },
-  buttonOptions: {
-    width: horizontalScale(30),
-    alignItems: "center",
-    position: "absolute",
-    top: verticalScale(30),
-    right: horizontalScale(20),
-  },
-  menuContainer: {
-    position: "absolute",
-    top: verticalScale(65),
-    right: horizontalScale(20),
-    padding: moderateScale(10),
-    backgroundColor: colors[theme].background,
-    borderRadius: moderateScale(5),
-    shadowColor: colors[theme].card,
-    // shadowOffset: {
-    //   width: 0,
-    //   height: 0,
-    // },
-    // shadowOpacity: 0.1,
-    // shadowRadius: 1,
-    elevation: 5,
-    zIndex: 1,
-  },
-  menuButton: {
-    paddingVertical: 5,
-    paddingHorizontal: 10,
-    marginBottom: 5,
-  },
-  menuButtonText: {
-    fontSize: moderateScale(18),
-    color: colors[theme].text,
-  },
-  containerTitle: {
-    position: "absolute",
-    top: verticalScale(30),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  },
-  title: {
-    color: colors[theme].title,
-    fontFamily: fontFamily,
-    fontWeight: "900",
-    // textAlign: "center",
-    fontSize: moderateScale(25),
-    // backgroundColor: "red",
-  },
-  containerOrderNumber: {
-    marginBottom: verticalScale(25),
-  },
-  txtOrderNumber: {
-    color: colors[theme].card,
-    fontFamily: fontFamily,
-    fontWeight: "bold",
-    fontSize: moderateScale(26),
-  },
-  infoClientContainer: {
-    marginTop: verticalScale(20),
-  },
-  detailsOrderContainer: {
-    width: "75%",
-  },
-  subtitle: {
-    color: colors[theme].title,
-    fontFamily: fontFamily,
-    textAlign: "center",
-    marginBottom: verticalScale(25),
-    fontSize: moderateScale(23),
-  },
-  stateContainer: {
-    display: "flex",
-    flexDirection: "row",
-    width: "70%",
-    maxWidth: moderateScale(190),
-    borderColor: colors[theme].card,
-    borderWidth: 1,
-    borderRadius: moderateScale(10),
-    justifyContent: "space-around",
-    alignItems: "center",
-    alignSelf: "center",
-    paddingTop: verticalScale(7),
-    paddingBottom: verticalScale(5),
-    paddingRight: horizontalScale(2),
-    marginBottom: verticalScale(30),
-    marginTop: verticalScale(30),
-  },
-  infoContainer: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "flex-end",
-  },
-  infoObservations: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-start",
-  },
-  titleState: {
-    color: colors[theme].title,
-    width: "70%",
-    textAlign: "left",
-    // backgroundColor: "red",
-    // textAlign: "left",
-  },
-  titleInfo: {
-    color: colors[theme].title,
-    fontFamily: fontFamily,
-    fontWeight: "bold",
-    textAlign: "left",
-    marginBottom: verticalScale(10),
-    fontSize: moderateScale(16),
-  },
-  info: {
-    color: colors[theme].title,
-    fontFamily: fontFamily,
-    textAlign: "right",
-    marginBottom: verticalScale(10),
-    fontSize: moderateScale(14),
-  },
-  infoTxtObservations: {
-    color: colors[theme].text,
-    fontSize: moderateScale(14),
-  },
-  btnsContainer: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-around",
-    width: "100%",
-    // backgroundColor: "aqua",
-  },
-  btn: {
-    width: "45%",
-    maxWidth: 150,
-    borderColor: colors[theme].input,
-    borderWidth: 1,
-    borderRadius: moderateScale(10),
-    paddingTop: verticalScale(7),
-    paddingBottom: verticalScale(10),
-    // marginBottom: verticalScale(30),
-  },
-  textBtn: {
-    color: colors[theme].text,
-    textAlign: "center",
-  },
-});
+const createStyles = (theme) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.background,
+      alignItems: "center",
+      justifyContent: "space-evenly",
+      paddingVertical: verticalScale(50),
+    },
+    buttonBack: {
+      position: "absolute",
+      top: verticalScale(30),
+      left: horizontalScale(30),
+    },
+    buttonOptions: {
+      width: horizontalScale(30),
+      alignItems: "center",
+      position: "absolute",
+      top: verticalScale(30),
+      right: horizontalScale(20),
+    },
+    menuContainer: {
+      position: "absolute",
+      top: verticalScale(65),
+      right: horizontalScale(20),
+      padding: moderateScale(10),
+      backgroundColor: theme.background,
+      borderRadius: moderateScale(5),
+      shadowColor: theme.card,
+      // shadowOffset: {
+      //   width: 0,
+      //   height: 0,
+      // },
+      // shadowOpacity: 0.1,
+      // shadowRadius: 1,
+      elevation: 5,
+      zIndex: 1,
+    },
+    menuButton: {
+      paddingVertical: 5,
+      paddingHorizontal: 10,
+      marginBottom: 5,
+    },
+    menuButtonText: {
+      fontSize: moderateScale(18),
+      color: theme.text,
+    },
+    containerTitle: {
+      position: "absolute",
+      top: verticalScale(30),
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+    },
+    title: {
+      color: theme.title,
+      fontFamily: fontFamily,
+      fontWeight: "900",
+      // textAlign: "center",
+      fontSize: moderateScale(25),
+      // backgroundColor: "red",
+    },
+    containerOrderNumber: {
+      marginBottom: verticalScale(25),
+    },
+    txtOrderNumber: {
+      color: theme.card,
+      fontFamily: fontFamily,
+      fontWeight: "bold",
+      fontSize: moderateScale(26),
+    },
+    infoClientContainer: {
+      marginTop: verticalScale(20),
+    },
+    detailsOrderContainer: {
+      width: "75%",
+    },
+    subtitle: {
+      color: theme.title,
+      fontFamily: fontFamily,
+      textAlign: "center",
+      marginBottom: verticalScale(25),
+      fontSize: moderateScale(23),
+    },
+    stateContainer: {
+      display: "flex",
+      flexDirection: "row",
+      width: "70%",
+      maxWidth: moderateScale(190),
+      borderColor: theme.card,
+      borderWidth: 1,
+      borderRadius: moderateScale(10),
+      justifyContent: "space-around",
+      alignItems: "center",
+      alignSelf: "center",
+      paddingTop: verticalScale(7),
+      paddingBottom: verticalScale(5),
+      paddingRight: horizontalScale(2),
+      marginBottom: verticalScale(30),
+      marginTop: verticalScale(30),
+    },
+    infoContainer: {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "flex-end",
+    },
+    infoObservations: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "flex-start",
+    },
+    titleState: {
+      color: theme.title,
+      width: "70%",
+      textAlign: "left",
+      // backgroundColor: "red",
+      // textAlign: "left",
+    },
+    titleInfo: {
+      color: theme.title,
+      fontFamily: fontFamily,
+      fontWeight: "bold",
+      textAlign: "left",
+      marginBottom: verticalScale(10),
+      fontSize: moderateScale(16),
+    },
+    info: {
+      color: theme.title,
+      fontFamily: fontFamily,
+      textAlign: "right",
+      marginBottom: verticalScale(10),
+      fontSize: moderateScale(14),
+    },
+    infoTxtObservations: {
+      color: theme.text,
+      fontSize: moderateScale(14),
+    },
+    btnsContainer: {
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "space-around",
+      width: "100%",
+      // backgroundColor: "aqua",
+    },
+    btn: {
+      width: "45%",
+      maxWidth: 150,
+      borderColor: theme.input,
+      borderWidth: 1,
+      borderRadius: moderateScale(10),
+      paddingTop: verticalScale(7),
+      paddingBottom: verticalScale(10),
+      // marginBottom: verticalScale(30),
+    },
+    textBtn: {
+      color: theme.text,
+      textAlign: "center",
+    },
+  });

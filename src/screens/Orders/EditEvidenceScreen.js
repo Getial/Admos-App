@@ -18,7 +18,8 @@ import {
   verticalScale,
   moderateScale,
 } from "../../utils/metrics";
-import { colors, theme, fontFamily } from "../../utils/desing";
+import useTheme from "../../hooks/useTheme";
+import { fontFamily } from "../../utils/desing";
 import EmojiPicker from "../../components/EmojiPicker";
 import EmojiList from "../../components/EmojiList";
 import EmojiSticker from "../../components/EmojiSticker";
@@ -26,13 +27,13 @@ import useEvidences from "../../hooks/useEvidences";
 
 export default function EditEvidenceScreen({ navigation, route }) {
   const { img } = route.params;
-
   const { setEditedEvidence } = useEvidences();
-
   const imageRef = useRef();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [pickedEmoji, setPickedEmoji] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
 
   const onReset = () => {
     // setShowAppOptions(false);
@@ -80,11 +81,7 @@ export default function EditEvidenceScreen({ navigation, route }) {
   return (
     <SafeAreaView style={styles.container}>
       <Pressable onPress={navigation.goBack} style={styles.buttonBack}>
-        <Icon
-          name="arrow-left"
-          color={colors[theme].card}
-          size={moderateScale(30)}
-        />
+        <Icon name="arrow-left" color={theme.card} size={moderateScale(30)} />
       </Pressable>
       <Text style={styles.title}>Editar evidencia</Text>
       <View style={styles.imageContainer}>
@@ -109,7 +106,7 @@ export default function EditEvidenceScreen({ navigation, route }) {
         ) : (
           <View style={styles.loader}>
             <Text style={styles.titleLoader}>Guardando cambios</Text>
-            <ActivityIndicator size={40} color={colors[theme].card} />
+            <ActivityIndicator size={40} color={theme.card} />
           </View>
         )}
       </View>
@@ -120,43 +117,44 @@ export default function EditEvidenceScreen({ navigation, route }) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors[theme].background,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  buttonBack: {
-    position: "absolute",
-    top: verticalScale(50),
-    left: horizontalScale(30),
-  },
-  title: {
-    color: colors[theme].title,
-    fontFamily: fontFamily,
-    fontWeight: "bold",
-    marginBottom: verticalScale(25),
-    fontSize: moderateScale(28),
-    position: "absolute",
-    top: moderateScale(100),
-  },
-  optionsContainer: {
-    position: "absolute",
-    bottom: 80,
-  },
-  optionsRow: {
-    alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-  },
-  loader: {
-    width: "100%",
-  },
-  titleLoader: {
-    color: colors[theme].title,
-    textAlign: "center",
-    fontSize: moderateScale(25),
-    marginTop: verticalScale(10),
-  },
-});
+const createStyles = (theme) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.background,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    buttonBack: {
+      position: "absolute",
+      top: verticalScale(50),
+      left: horizontalScale(30),
+    },
+    title: {
+      color: theme.title,
+      fontFamily: fontFamily,
+      fontWeight: "bold",
+      marginBottom: verticalScale(25),
+      fontSize: moderateScale(28),
+      position: "absolute",
+      top: moderateScale(100),
+    },
+    optionsContainer: {
+      position: "absolute",
+      bottom: 80,
+    },
+    optionsRow: {
+      alignItems: "center",
+      flexDirection: "row",
+      justifyContent: "space-evenly",
+    },
+    loader: {
+      width: "100%",
+    },
+    titleLoader: {
+      color: theme.title,
+      textAlign: "center",
+      fontSize: moderateScale(25),
+      marginTop: verticalScale(10),
+    },
+  });

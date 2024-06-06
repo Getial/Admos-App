@@ -12,7 +12,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-import { colors, fontFamily, theme } from "../../utils/desing";
+import useTheme from "../../hooks/useTheme";
+import { fontFamily } from "../../utils/desing";
 import {
   verticalScale,
   horizontalScale,
@@ -26,6 +27,8 @@ export default function RegisterScreen({ navigation }) {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const { login } = useAuth();
+  const { theme } = useTheme();
+  const styles = createStyles(theme);
 
   const formik = useFormik({
     initialValues: initialValues(),
@@ -64,7 +67,7 @@ export default function RegisterScreen({ navigation }) {
       <Pressable onPress={navigation.goBack} style={styles.buttonBack}>
         <Icon
           name="arrow-left"
-          color={colors[theme].card}
+          color={theme.card}
           size={30}
           style={styles.iconPlus}
         />
@@ -76,7 +79,7 @@ export default function RegisterScreen({ navigation }) {
           <Text style={styles.labelText}>Nombre</Text>
           <TextInput
             placeholder="Pepito"
-            placeholderTextColor={colors[theme].placeholder}
+            placeholderTextColor={theme.placeholder}
             style={styles.input}
             value={formik.values.first_name}
             onChangeText={(text) => formik.setFieldValue("first_name", text)}
@@ -93,7 +96,7 @@ export default function RegisterScreen({ navigation }) {
           <Text style={styles.labelText}>Apellido</Text>
           <TextInput
             placeholder="Perez"
-            placeholderTextColor={colors[theme].placeholder}
+            placeholderTextColor={theme.placeholder}
             style={styles.input}
             value={formik.values.last_name}
             onChangeText={(text) => formik.setFieldValue("last_name", text)}
@@ -113,7 +116,7 @@ export default function RegisterScreen({ navigation }) {
           <Text style={styles.labelText}>Cargo</Text>
           <TextInput
             placeholder="Tecnico electricista"
-            placeholderTextColor={colors[theme].placeholder}
+            placeholderTextColor={theme.placeholder}
             style={styles.input}
             value={formik.values.occupation}
             onChangeText={(text) => formik.setFieldValue("occupation", text)}
@@ -127,7 +130,7 @@ export default function RegisterScreen({ navigation }) {
           <Text style={styles.labelText}>Correo Electronico</Text>
           <TextInput
             placeholder="pepito99@example.com"
-            placeholderTextColor={colors[theme].placeholder}
+            placeholderTextColor={theme.placeholder}
             inputMode="email"
             style={styles.input}
             value={formik.values.email}
@@ -142,7 +145,7 @@ export default function RegisterScreen({ navigation }) {
           <Text style={styles.labelText}>Contraseña</Text>
           <TextInput
             placeholder="********"
-            placeholderTextColor={colors[theme].placeholder}
+            placeholderTextColor={theme.placeholder}
             secureTextEntry={!showPassword}
             style={styles.input}
             value={formik.values.password}
@@ -155,7 +158,7 @@ export default function RegisterScreen({ navigation }) {
             <Icon
               name={showPassword ? "eye-slash" : "eye"}
               size={moderateScale(18)}
-              color={colors[theme].placeholder}
+              color={theme.placeholder}
             />
           </Pressable>
           {formik.errors.password && formik.values.password && (
@@ -167,7 +170,7 @@ export default function RegisterScreen({ navigation }) {
           <Text style={styles.labelText}>Confirmar contraseña</Text>
           <TextInput
             placeholder="********"
-            placeholderTextColor={colors[theme].placeholder}
+            placeholderTextColor={theme.placeholder}
             secureTextEntry={!showPassword}
             style={styles.input}
             value={formik.values.password_confirmation}
@@ -182,7 +185,7 @@ export default function RegisterScreen({ navigation }) {
             <Icon
               name={showPassword ? "eye-slash" : "eye"}
               size={moderateScale(18)}
-              color={colors[theme].placeholder}
+              color={theme.placeholder}
             />
           </Pressable>
           {formik.errors.password_confirmation && (
@@ -235,70 +238,71 @@ function validationSchema() {
   };
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: colors[theme].background,
-  },
-  buttonBack: {
-    position: "absolute",
-    top: verticalScale(50),
-    left: horizontalScale(30),
-  },
-  title: {
-    fontFamily: fontFamily,
-    fontSize: moderateScale(30),
-    fontWeight: "bold",
-    color: colors[theme].title,
-    marginBottom: 50,
-  },
-  form: {
-    width: "60%",
-  },
-  wrapper: {
-    marginBottom: verticalScale(12),
-  },
-  labelText: {
-    color: colors[theme].subtitle,
-    fontSize: moderateScale(15),
-    fontWeight: "bold",
-  },
-  input: {
-    borderBottomWidth: moderateScale(1),
-    borderBottomColor: colors[theme].input,
-    color: colors[theme].text,
-    width: "100%",
-    height: verticalScale(25),
-    fontFamily: fontFamily,
-    fontSize: moderateScale(14),
-  },
-  showPassword: {
-    position: "absolute",
-    right: horizontalScale(10),
-    top: verticalScale(20),
-  },
-  btnRegister: {
-    backgroundColor: colors[theme].card,
-    alignSelf: "center",
-    width: horizontalScale(80),
-    paddingVertical: verticalScale(5),
-    borderRadius: moderateScale(10),
-    marginTop: verticalScale(20),
-    borderWidth: moderateScale(1),
-    borderColor: colors[theme].card,
-  },
-  textBtn: {
-    color: colors[theme].text,
-    textAlign: "center",
-    fontSize: moderateScale(12),
-  },
-  errorsScrollView: {
-    width: "70%",
-    maxHeight: verticalScale(50),
-  },
-  error: {
-    color: colors[theme].error,
-  },
-});
+const createStyles = (theme) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: theme.background,
+    },
+    buttonBack: {
+      position: "absolute",
+      top: verticalScale(50),
+      left: horizontalScale(30),
+    },
+    title: {
+      fontFamily: fontFamily,
+      fontSize: moderateScale(30),
+      fontWeight: "bold",
+      color: theme.title,
+      marginBottom: 50,
+    },
+    form: {
+      width: "60%",
+    },
+    wrapper: {
+      marginBottom: verticalScale(12),
+    },
+    labelText: {
+      color: theme.subtitle,
+      fontSize: moderateScale(15),
+      fontWeight: "bold",
+    },
+    input: {
+      borderBottomWidth: moderateScale(1),
+      borderBottomColor: theme.input,
+      color: theme.text,
+      width: "100%",
+      height: verticalScale(25),
+      fontFamily: fontFamily,
+      fontSize: moderateScale(14),
+    },
+    showPassword: {
+      position: "absolute",
+      right: horizontalScale(10),
+      top: verticalScale(20),
+    },
+    btnRegister: {
+      backgroundColor: theme.card,
+      alignSelf: "center",
+      width: horizontalScale(80),
+      paddingVertical: verticalScale(5),
+      borderRadius: moderateScale(10),
+      marginTop: verticalScale(20),
+      borderWidth: moderateScale(1),
+      borderColor: theme.card,
+    },
+    textBtn: {
+      color: theme.text,
+      textAlign: "center",
+      fontSize: moderateScale(12),
+    },
+    errorsScrollView: {
+      width: "70%",
+      maxHeight: verticalScale(50),
+    },
+    error: {
+      color: theme.error,
+    },
+  });
