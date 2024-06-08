@@ -214,14 +214,50 @@ export default function ModalManageOrder({
 
       case "revised":
         toggleModalManager();
-        navigation.navigate("SetDiagnostic", { id: id, step: "revised" });
+        navigation.navigate("SetDiagnostic", {
+          id,
+          is_guarantee,
+          step: "revised",
+        });
         break;
 
       case "quoted":
         if (stateOrder === "Ingresado" || stateOrder === "En revision") {
-          navigation.navigate("SetDiagnostic", { id: id, step: "quoted" });
+          navigation.navigate("SetDiagnostic", {
+            id,
+            is_guarantee,
+            step: "quoted",
+          });
         } else {
           navigation.navigate("SetRepairPrice", { id: id, step: "quoted" });
+        }
+        toggleModalManager();
+        break;
+
+      case "waiting_response_brand":
+        if (stateOrder === "Ingresado" || stateOrder === "En revision") {
+          navigation.navigate("SetDiagnostic", {
+            id,
+            is_guarantee,
+            step: "waiting_response_brand",
+          });
+        } else {
+          setSelectedOption(optionSelected.name);
+        }
+        toggleModalManager();
+        break;
+
+      //analizar si es mejor un alert
+      //task: create screen or  modal for set reason for warranty denial
+      case "warranty_denial":
+        if (stateOrder === "Ingresado" || stateOrder === "En revision") {
+          navigation.navigate("SetDiagnostic", {
+            id,
+            is_guarantee,
+            step: "warranty_denial",
+          });
+        } else {
+          console.log("set reason for warranty denial");
         }
         toggleModalManager();
         break;
@@ -229,7 +265,8 @@ export default function ModalManageOrder({
       case "waiting_for_spare_parts":
         if (stateOrder === "Ingresado" || stateOrder === "En revision") {
           navigation.navigate("SetDiagnostic", {
-            id: id,
+            id,
+            is_guarantee,
             step: "waiting_for_spare_parts",
           });
           toggleModalManager();
@@ -247,11 +284,12 @@ export default function ModalManageOrder({
       case "spare_parts_ready":
         if (stateOrder === "Ingresado" || stateOrder === "En revision") {
           navigation.navigate("SetDiagnostic", {
-            id: id,
+            id,
+            is_guarantee,
             step: "spare_parts_ready",
           });
           toggleModalManager();
-        } else if (stateOrder === "Revisado") {
+        } else if (stateOrder === "Revisado" && !is_guarantee) {
           navigation.navigate("SetRepairPrice", {
             id: id,
             step: "spare_parts_ready",

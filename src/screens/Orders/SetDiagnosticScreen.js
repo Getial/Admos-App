@@ -33,7 +33,7 @@ import useAuth from "../../hooks/useAuth";
 export default function SetDiagnosticScreen({ navigation, route }) {
   const [isLoading, setIsLoading] = useState(false);
   const { images, setEvidences, setEditedEvidence } = useEvidences();
-  const { id, step } = route.params;
+  const { id, is_guarantee, step } = route.params;
   const { auth } = useAuth();
   const { theme } = useTheme();
   const styles = createStyles(theme);
@@ -141,7 +141,7 @@ export default function SetDiagnosticScreen({ navigation, route }) {
 
       <Text style={styles.title}>Detalles de la revision</Text>
 
-      {step !== "revised" && (
+      {step !== "revised" && !is_guarantee && (
         <View style={[styles.wrapper, styles.containerPrice]}>
           <Text style={styles.labelText}>Valor de la reparacion</Text>
           <TextInput
