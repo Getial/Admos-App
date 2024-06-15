@@ -300,6 +300,25 @@ export default function ModalManageOrder({
         }
         break;
 
+      case "in_repair":
+        if (stateOrder === "Ingresado" || stateOrder === "En revision") {
+          navigation.navigate("SetDiagnostic", {
+            id,
+            is_guarantee,
+            step: "in_repair",
+          });
+          toggleModalManager();
+        } else if (stateOrder === "Revisado" && !is_guarantee) {
+          navigation.navigate("SetRepairPrice", {
+            id: id,
+            step: "in_repair",
+          });
+          toggleModalManager();
+        } else {
+          setSelectedOption(optionSelected.name);
+        }
+        break;
+
       default:
         setSelectedOption(optionSelected.name);
         break;
